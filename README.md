@@ -1,31 +1,35 @@
-# iw2024-2025-proYectFlow
-Este repositorio contendrá el trabajo de la asignatura Ingeniería Web
+# proYectFlow
 
-Descripción
-Este proyecto es parte de la asignatura Ingeniería Web en la universidad. Aquí se encontrarán los trabajos, prácticas y proyectos desarrollados durante el curso.
+Este repositorio contiene el proyecto realizado para la asignatura de Ingeniería Web, un sistema de gestión de proyectos con el nombre de proYectFlow.
 
-Estructura del Repositorio
-main/: Rama principal del repositorio.
-docs/: Documentación del proyecto.
-src/: Código fuente del proyecto.
 
-Instalación
-Para instalar el proyecto, clona el repositorio y sigue los siguientes pasos:
+## Descripción
 
-git clone https://github.com/EHDEPELUCHE/iw2024-2025-Proyectito.git
-cd iw2024-2025-Proyectito
+Este proyecto se realiza como parte de la asignatura Ingeniería Web en la universidad. Aquí se aloja el proyecto realizado como trabajo en las clases prácticas de la asignatura.
 
-Uso
+
+## Estructura del Repositorio
+
+El repositorio se organizará en torno a dos directorios principales, source y assets. Una pequeña explicación de ambos:
+
+- **source/** : Directorio principal de proyecto, contiene el código de proYectFlow realizado con la herramienta intelliJ.
+
+- **assets/** : Directorio de apoyo, contiene elementos relacionados al proyecto pero no al código.
+
+
+## Instalación
+Para poder usar el proyecto bastará con descargar el .jar generado, que cuenta con todos los binarios necesarios para el uso y despliegue de proYectFlow
+
+### Aquí meter en un futuro las instrucciones para la instalación.
+
+
+## Uso
+
 Instrucciones sobre cómo usar el proyecto.
 
-Contribuciones
-Las contribuciones son bienvenidas. Por favor, sigue las siguientes normas para contribuir:
+### Aquí meter en un futuro las instrucciones para el uso.
 
-Haz un fork del repositorio.
-Crea una nueva rama (git checkout -b feature/nueva-feature).
-Realiza tus cambios y haz un commit (git commit -m 'Añadir nueva feature').
-Sube tus cambios (git push origin feature/nueva-feature).
-Abre un Pull Request.
 
-Licencia
+## Licencia
+
 Este proyecto no tiene una licencia específica.
