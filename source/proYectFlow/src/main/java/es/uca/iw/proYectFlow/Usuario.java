@@ -10,11 +10,9 @@ import java.util.UUID;
 
 public class Usuario {
     UUID id = UUID.randomUUID();
-    String nombre;
-    String apellido;
-    String correo;
-    String contrasenna;
+    String nombre, apellido, correo, contrasenna;
     Tipo tipo;
+    
     public Usuario(String nombre, String apellido, String correo, String contrasenna) {
         this.nombre = nombre;
         this.apellido = apellido;
