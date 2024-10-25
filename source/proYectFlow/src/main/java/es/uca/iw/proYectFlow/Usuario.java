@@ -1,5 +1,11 @@
 package es.uca.iw.proYectFlow;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.math.BigInteger;
+import java.security.*;
 import java.util.UUID;
 
 public class Usuario {
@@ -7,17 +13,67 @@ public class Usuario {
     String nombre;
     String apellido;
     String correo;
-    //Enum de los tipos o clases??
-
-    public Usuario(String nombre, String apellido, String correo) {
+    String contrasenna;
+    Tipo tipo;
+    public Usuario(String nombre, String apellido, String correo, String contrasenna) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
+        setContrasenna(contrasenna);
+        tipo = Tipo.Solicitante;
+    }
+
+    private static String Encrypt(String plain) {
+        byte[] encryptedBytes = null;
+        try {
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+            kpg.initialize(1024);
+            KeyPair kp = kpg.genKeyPair();
+            PublicKey PublicKey = kp.getPublic();
+            Cipher cipher;
+            cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.ENCRYPT_MODE, PublicKey);
+            encryptedBytes = cipher.doFinal(plain.getBytes());
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException |
+                 BadPaddingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (encryptedBytes != null)
+            return bytesToString(encryptedBytes);
+        else
+            return "Error";
+    }
+
+    public static String bytesToString(byte[] b) {
+        byte[] b2 = new byte[b.length + 1];
+        b2[0] = 1;
+        System.arraycopy(b, 0, b2, 1, b.length);
+        return new BigInteger(b2).toString(36);
+    }
+
+    public Tipo getTipo() {
+        return tipo;
+    }
+
+    //PROTEGER PARA ADMIN
+    private void setTipo(Tipo tipo) {
+        this.tipo = tipo;
+    }
+
+    private String getContrasenna() {
+        return contrasenna;
+    }
+
+    private void setContrasenna(String contrasena) {
+        contrasena = Encrypt(contrasena);
+        this.contrasenna = contrasena;
     }
 
     public UUID getId() {
         return id;
     }
+    //METODO DE COMPARAR CONTRASEÑAS
 
     public String getNombre() {
         return nombre;
@@ -42,4 +98,6 @@ public class Usuario {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
+
+    public enum Tipo {Solicitante, Promotor, CIO, OTP, Administrador}
 }

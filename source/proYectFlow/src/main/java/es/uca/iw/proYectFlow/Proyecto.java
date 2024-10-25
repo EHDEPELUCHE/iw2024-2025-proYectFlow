@@ -1,19 +1,75 @@
 package es.uca.iw.proYectFlow;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Date;
 import java.util.UUID;
 
 public class Proyecto {
     UUID id = UUID.randomUUID();
+
     String nombre;
     String descripcion;
+    String interesados;
+    String alcance;
+    Date fecha;
+    Date fechaSolicitud;
     BigDecimal coste;
     BigDecimal aportacionInicial;
     double puntuacionEstrategica;
     double puntuacionTecnica;
     double puntuacionAval;
-    Aval aval;
+    Usuario aval;
+    Usuario solicitante;
     Estado estado;
+    Collection<Integer> ObjEstrategicos;
+
+    public Proyecto(String nombre, String descripcion, String interesados, String alcance, BigDecimal coste, BigDecimal aportacionInicial,
+                    double puntuacionAval, double puntuacionEstrategica, Usuario aval, Usuario solicitante, Collection<Integer> ObjEstrategicos) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.interesados = interesados;
+        this.alcance = alcance;
+        this.coste = BigDecimal.valueOf(0.0);
+        this.aportacionInicial = aportacionInicial;
+        this.puntuacionEstrategica = -1;
+        this.puntuacionTecnica = -1;
+        this.puntuacionAval = -1;
+        setAval(aval);
+        estado = Estado.pedido;
+        this.solicitante = solicitante;
+        fechaSolicitud = new Date();
+        this.ObjEstrategicos = ObjEstrategicos;
+
+    }
+
+    public Collection<Integer> getObjEstrategicos() {
+        return ObjEstrategicos;
+    }
+
+    public void setObjEstrategicos(Collection<Integer> ObjEstrategicos) {
+        this.ObjEstrategicos = ObjEstrategicos;
+    }
+    
+    public Date getFechaSolicitud() {
+        return fechaSolicitud;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
+    public void setFecha() {
+        this.fecha = new Date();
+    }
+
+    public Usuario getSolicitante() {
+        return solicitante;
+    }
 
     public Estado getEstado() {
         return estado;
@@ -25,13 +81,14 @@ public class Proyecto {
     }
 
     //NO RECUERDO MÁS ATRIBUTOS
-    public Aval getAval() {
+    public Usuario getAval() {
         return aval;
     }
 
     //Este metodo tendria restricción
-    public void setAval(Aval aval) {
-        this.aval = aval;
+    public void setAval(Usuario aval) {
+        if (aval.getTipo() == Usuario.Tipo.Promotor)
+            this.aval = aval;
     }
 
     public UUID getId() {
@@ -88,7 +145,7 @@ public class Proyecto {
         this.puntuacionTecnica = puntuacionTecnica;
     }
 
-    public enum Estado {}
+    public enum Estado {pedido, avalado, evaluadotecnicamente, evaluadoestrategicamente, Enproceso, Denegado}
 
 
 }
