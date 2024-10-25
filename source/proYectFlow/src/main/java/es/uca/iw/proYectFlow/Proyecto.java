@@ -8,19 +8,11 @@ import java.util.UUID;
 public class Proyecto {
     UUID id = UUID.randomUUID();
 
-    String nombre;
-    String descripcion;
-    String interesados;
-    String alcance;
-    Date fecha;
-    Date fechaSolicitud;
-    BigDecimal coste;
-    BigDecimal aportacionInicial;
-    double puntuacionEstrategica;
-    double puntuacionTecnica;
-    double puntuacionAval;
-    Usuario aval;
-    Usuario solicitante;
+    String nombre, descripcion, interesados, alcance;
+    Date fecha, fechaSolicitud;
+    BigDecimal coste, aportacionInicial;
+    double puntuacionEstrategica, puntuacionTecnica, puntuacionAval;
+    Usuario aval, solicitante;
     Estado estado;
     Collection<Integer> ObjEstrategicos;
 
@@ -146,6 +138,5 @@ public class Proyecto {
     }
 
     public enum Estado {pedido, avalado, evaluadotecnicamente, evaluadoestrategicamente, Enproceso, Denegado}
-
 
 }
