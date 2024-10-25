@@ -13,6 +13,16 @@ public class Proyecto {
     double puntuacionTecnica;
     double puntuacionAval;
     Aval aval;
+    Estado estado;
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    //El solicitante no lo puede usar
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
 
     //NO RECUERDO MÁS ATRIBUTOS
     public Aval getAval() {
@@ -77,6 +87,8 @@ public class Proyecto {
     public void setPuntuacionTecnica(double puntuacionTecnica) {
         this.puntuacionTecnica = puntuacionTecnica;
     }
+
+    public enum Estado {}
 
 
 }
