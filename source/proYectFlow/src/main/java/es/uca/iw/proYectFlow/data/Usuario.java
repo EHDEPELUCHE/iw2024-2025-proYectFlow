@@ -1,4 +1,4 @@
-package es.uca.iw.proYectFlow;
+package es.uca.iw.proYectFlow.data;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
