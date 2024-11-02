@@ -1,4 +1,4 @@
-package es.uca.iw.proYectFlow;
+package es.uca.iw.proYectFlow.data;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

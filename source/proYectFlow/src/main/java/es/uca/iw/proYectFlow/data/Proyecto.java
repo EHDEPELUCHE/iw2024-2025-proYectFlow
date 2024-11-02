@@ -1,4 +1,4 @@
-package es.uca.iw.proYectFlow;
+package es.uca.iw.proYectFlow.data;
 
 import java.math.BigDecimal;
 import java.util.Collection;
