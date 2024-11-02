@@ -1,0 +1,24 @@
+.estado-proyectos-view {
+  display: block;
+  height: 100%;
+}
+.estado-proyectos-view vaadin-grid-pro {
+  height: 100%;
+}
+.estado-proyectos-view vaadin-grid-filter,
+.estado-proyectos-view vaadin-grid-filter > * {
+  width: 100%;
+}
+.estado-proyectos-view vaadin-grid-pro vaadin-horizontal-layout {
+  align-items: center;
+}
+.estado-proyectos-view vaadin-grid-pro img {
+  border-radius: 50%;
+  flex-shrink: 0;
+  height: var(--lumo-size-m);
+  width: var(--lumo-size-m);
+}
+.estado-proyectos-view .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
