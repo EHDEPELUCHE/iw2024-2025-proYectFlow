@@ -9,7 +9,7 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@PageTitle("Hello World")
+@PageTitle("ProYectFlow")
 @Route("")
 @Menu(order = 0, icon = "line-awesome/svg/globe-solid.svg")
 public class HelloWorldView extends HorizontalLayout {
@@ -18,6 +18,7 @@ public class HelloWorldView extends HorizontalLayout {
     private Button sayHello;
 
     public HelloWorldView() {
+
         name = new TextField("Your name");
         sayHello = new Button("Say hello");
         sayHello.addClickListener(e -> {
