@@ -3,8 +3,13 @@ package es.uca.iw.views;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.SvgIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -23,6 +28,7 @@ import java.util.List;
  */
 @Layout
 @AnonymousAllowed
+@StyleSheet("../frontend/styles/styles.css")
 public class MainLayout extends AppLayout {
 
     private H1 viewTitle;
@@ -37,8 +43,10 @@ public class MainLayout extends AppLayout {
         DrawerToggle toggle = new DrawerToggle();
         toggle.setAriaLabel("Menu toggle");
         HorizontalLayout horAux = new HorizontalLayout();
+        HorizontalLayout horAuxFondo = new HorizontalLayout();
         horAux.setSpacing(true);
         horAux.setMargin(true);
+        horAux.setPadding(true);
         horAux.setAlignItems(FlexComponent.Alignment.CENTER);
 
         Image image = new Image("favicon.ico", "My Streamed Image");
@@ -51,14 +59,35 @@ public class MainLayout extends AppLayout {
 
         viewTitle = new H1();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE);
+
         Avatar avatarBasic = new Avatar();
         avatarBasic.setName("Usuario");
         avatarBasic.setWidth("40px");
         avatarBasic.setHeight("40px");
+        avatarBasic.addClassNames(LumoUtility.AlignSelf.END);
+        MenuBar menuBar = new MenuBar();
+        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
 
-        horAux.add(toggle, image, viewTitle, avatarBasic);
+        MenuItem menuItem = menuBar.addItem(avatarBasic);
+        SubMenu subMenu = menuItem.getSubMenu();
+        subMenu.addItem("Profile");
+        subMenu.addItem("Settings");
+        subMenu.addItem("Help");
+        subMenu.addItem("Sign out");
 
-        horAux.expand(viewTitle, avatarBasic);
+
+        horAuxFondo.add(menuBar);
+        horAux.add(toggle, image, viewTitle, horAuxFondo);
+
+        horAuxFondo.setAlignItems(FlexComponent.Alignment.END);
+        horAux.setSizeFull();
+        horAux.setSpacing(true);
+        horAuxFondo.setSpacing(true);
+        horAuxFondo.setSizeFull();
+        horAuxFondo.addClassNames(LumoUtility.AlignItems.CENTER, LumoUtility.JustifyContent.END);
+
+        //horAux.addClassName("fondo");
+        //horAux.expand(viewTitle, avatarBasic);
         addToNavbar(true, toggle, horAux);
     }
 

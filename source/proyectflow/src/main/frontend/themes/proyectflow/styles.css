@@ -1,10 +1,18 @@
 @import url('./main-layout.css');
 @import url('./views/estado-proyectos-view.css');
-@import url('./views/proyectos-view.css');    html {
-      --lumo-primary-color-50pct: rgba(69, 90, 100, 0.5);
-      --lumo-primary-color-10pct: rgba(69, 90, 100, 0.1);
-      --lumo-primary-color: rgb(69, 90, 100);
-      --lumo-primary-text-color: rgb(56, 72, 80);
-      --lumo-body-text-color: hsla(214, 0%, 0%, 0.94);
+@import url('./views/proyectos-view.css');
 
-    }
+html {
+    --lumo-primary-color-50pct: rgba(69, 90, 100, 0.5);
+    --lumo-primary-color-10pct: rgba(69, 90, 100, 0.1);
+    --lumo-primary-color: rgb(69, 90, 100);
+    --lumo-fondo-color: rgb(69, 81, 117);
+    --lumo-primary-text-color: rgb(56, 72, 80);
+    --lumo-body-text-color: hsla(214, 0%, 0%, 0.94);
+
+}
+
+.fondo {
+    background-color: rgb(69, 81, 117);
+    --lumo-primary-color-50pct: rgba(255, 255, 255);
+}
