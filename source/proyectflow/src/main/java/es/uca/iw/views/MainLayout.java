@@ -42,6 +42,7 @@ public class MainLayout extends AppLayout {
     private void addHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();
         toggle.setAriaLabel("Menu toggle");
+        toggle.setClassName("fondo");
         HorizontalLayout horAux = new HorizontalLayout();
         HorizontalLayout horAuxFondo = new HorizontalLayout();
         horAux.setSpacing(true);
@@ -58,15 +59,17 @@ public class MainLayout extends AppLayout {
         });
 
         viewTitle = new H1();
-        viewTitle.addClassNames(LumoUtility.FontSize.LARGE);
+        viewTitle.addClassNames(LumoUtility.FontSize.LARGE, "fondo");
 
         Avatar avatarBasic = new Avatar();
         avatarBasic.setName("Usuario");
         avatarBasic.setWidth("40px");
         avatarBasic.setHeight("40px");
-        avatarBasic.addClassNames(LumoUtility.AlignSelf.END);
+        avatarBasic.addClassNames(LumoUtility.AlignSelf.END, "fondoAvatar");
         MenuBar menuBar = new MenuBar();
+
         menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
+
 
         MenuItem menuItem = menuBar.addItem(avatarBasic);
         SubMenu subMenu = menuItem.getSubMenu();
@@ -75,7 +78,7 @@ public class MainLayout extends AppLayout {
         subMenu.addItem("Help");
         subMenu.addItem("Sign out");
 
-
+        menuItem.addClassName("fondo");
         horAuxFondo.add(menuBar);
         horAux.add(toggle, image, viewTitle, horAuxFondo);
 
@@ -86,16 +89,16 @@ public class MainLayout extends AppLayout {
         horAuxFondo.setSizeFull();
         horAuxFondo.addClassNames(LumoUtility.AlignItems.CENTER, LumoUtility.JustifyContent.END);
 
-        //horAux.addClassName("fondo");
+        horAux.addClassName("fondo");
         //horAux.expand(viewTitle, avatarBasic);
-        addToNavbar(true, toggle, horAux);
+        addToNavbar(true, horAux);
     }
 
     private void addDrawerContent() {
         Span appName = new Span("proYectFlow");
         appName.addClassNames(LumoUtility.FontWeight.SEMIBOLD, LumoUtility.FontSize.LARGE);
         Header header = new Header(appName);
-
+        header.addClassName("fondo");
         Scroller scroller = new Scroller(createNavigation());
 
         addToDrawer(header, scroller, createFooter());

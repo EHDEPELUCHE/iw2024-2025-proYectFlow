@@ -15,4 +15,11 @@ html {
 .fondo {
     background-color: rgb(69, 81, 117);
     --lumo-primary-color-50pct: rgba(255, 255, 255);
+    color: rgba(255, 255, 255);
+}
+
+.fondoAvatar {
+    background-color: rgb(255, 255, 255);
+    --lumo-primary-color-50pct: rgba(255, 255, 255);
+
 }
