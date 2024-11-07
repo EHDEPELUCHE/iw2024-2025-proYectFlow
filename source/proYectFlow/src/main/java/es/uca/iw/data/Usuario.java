@@ -1,4 +1,8 @@
-package es.uca.iw.proYectFlow.data;
+package es.uca.iw.data;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import org.springframework.data.annotation.Id;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -8,17 +12,24 @@ import java.math.BigInteger;
 import java.security.*;
 import java.util.UUID;
 
-public class Usuario {
+@Entity
+public class Usuario extends AbstractEntity {
+    @Id
+    @GeneratedValue
     UUID id = UUID.randomUUID();
     String nombre, apellido, correo, contrasenna;
     Tipo tipo;
-    
+
     public Usuario(String nombre, String apellido, String correo, String contrasenna) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
         setContrasenna(contrasenna);
         tipo = Tipo.Solicitante;
+    }
+
+    public Usuario() {
+
     }
 
     private static String Encrypt(String plain) {

@@ -20,6 +20,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 @PageTitle("Registro de usuario")
 @Route("registro-usuario")
 @Menu(order = 1, icon = "line-awesome/svg/user.svg")
+//@RolesAllowed("ADMIN")
 public class RegistrodeusuarioView extends Composite<VerticalLayout> {
 
     public RegistrodeusuarioView() {

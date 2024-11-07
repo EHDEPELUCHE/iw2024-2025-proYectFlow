@@ -1,23 +1,38 @@
-package es.uca.iw.proYectFlow.data;
+package es.uca.iw.data;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
-public class Proyecto {
+
+@Entity
+public class Proyecto extends AbstractEntity {
+    @Id
+    @GeneratedValue
     UUID id = UUID.randomUUID();
 
     String nombre, descripcion, interesados, alcance;
     Date fecha, fechaSolicitud;
     BigDecimal coste, aportacionInicial;
     double puntuacionEstrategica, puntuacionTecnica, puntuacionAval;
-    Usuario aval, solicitante;
+    @ManyToOne
+    @JoinColumn(name = "aval_id")
+    Usuario aval;
+
+    @ManyToOne
+    @JoinColumn(name = "solicitante_id")
+    Usuario solicitante;
     Estado estado;
-    Collection<Integer> ObjEstrategicos;
+    //List<Integer> ObjEstrategicos;
 
     public Proyecto(String nombre, String descripcion, String interesados, String alcance, BigDecimal coste, BigDecimal aportacionInicial,
-                    double puntuacionAval, double puntuacionEstrategica, Usuario aval, Usuario solicitante, Collection<Integer> ObjEstrategicos) {
+                    double puntuacionAval, double puntuacionEstrategica, Usuario aval, Usuario solicitante/*List<int> ObjEstrategicos*/) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.interesados = interesados;
@@ -31,21 +46,25 @@ public class Proyecto {
         estado = Estado.pedido;
         this.solicitante = solicitante;
         fechaSolicitud = new Date();
-        this.ObjEstrategicos = ObjEstrategicos;
+        //this.ObjEstrategicos = ObjEstrategicos;
 
     }
 
-    public Collection<Integer> getObjEstrategicos() {
+    public Proyecto() {
+
+    }
+
+    public Date getFechaSolicitud() {
+        return fechaSolicitud;
+    }
+/*
+    public List<int> getObjEstrategicos() {
         return ObjEstrategicos;
     }
 
     public void setObjEstrategicos(Collection<Integer> ObjEstrategicos) {
         this.ObjEstrategicos = ObjEstrategicos;
-    }
-    
-    public Date getFechaSolicitud() {
-        return fechaSolicitud;
-    }
+    }*/
 
     public Date getFecha() {
         return fecha;
@@ -61,6 +80,10 @@ public class Proyecto {
 
     public Usuario getSolicitante() {
         return solicitante;
+    }
+
+    public void setSolicitante(Usuario solicitante) {
+        this.solicitante = solicitante;
     }
 
     public Estado getEstado() {
