@@ -16,10 +16,12 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.Layout;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.iw.views.Misdatos.MisDatosView;
 
 import java.util.List;
 
@@ -37,7 +39,9 @@ public class MainLayout extends AppLayout {
         setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addHeaderContent();
+
     }
+
 
     private void addHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();
@@ -73,7 +77,7 @@ public class MainLayout extends AppLayout {
 
         MenuItem menuItem = menuBar.addItem(avatarBasic);
         SubMenu subMenu = menuItem.getSubMenu();
-        subMenu.addItem("Profile");
+        subMenu.addItem(new RouterLink("Profile", MisDatosView.class));
         subMenu.addItem("Settings");
         subMenu.addItem("Help");
         subMenu.addItem("Sign out");
@@ -121,7 +125,7 @@ public class MainLayout extends AppLayout {
 
     private Footer createFooter() {
         Footer layout = new Footer();
-
+        // layout.addClassName("fondo");
         return layout;
     }
 

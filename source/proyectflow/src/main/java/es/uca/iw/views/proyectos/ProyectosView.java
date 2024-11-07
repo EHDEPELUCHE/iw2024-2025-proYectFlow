@@ -25,15 +25,12 @@ import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.data.SamplePerson;
 import es.uca.iw.services.SamplePersonService;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @PageTitle("Proyectos")
 @Route("proyectos")
@@ -41,10 +38,9 @@ import org.springframework.data.jpa.domain.Specification;
 @Uses(Icon.class)
 public class ProyectosView extends Div {
 
-    private Grid<SamplePerson> grid;
-
-    private Filters filters;
     private final SamplePersonService samplePersonService;
+    private Grid<SamplePerson> grid;
+    private Filters filters;
 
     public ProyectosView(SamplePersonService SamplePersonService) {
         this.samplePersonService = SamplePersonService;
@@ -81,6 +77,29 @@ public class ProyectosView extends Div {
             }
         });
         return mobileFilters;
+    }
+
+    private Component createGrid() {
+        grid = new Grid<>(SamplePerson.class, false);
+        grid.addColumn("firstName").setAutoWidth(true);
+        grid.addColumn("lastName").setAutoWidth(true);
+        grid.addColumn("email").setAutoWidth(true);
+        grid.addColumn("phone").setAutoWidth(true);
+        grid.addColumn("dateOfBirth").setAutoWidth(true);
+        grid.addColumn("occupation").setAutoWidth(true);
+        grid.addColumn("role").setAutoWidth(true);
+
+        grid.setItems(query -> samplePersonService.list(
+                PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)),
+                filters).stream());
+        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+        grid.addClassNames(LumoUtility.Border.TOP, LumoUtility.BorderColor.CONTRAST_10);
+
+        return grid;
+    }
+
+    private void refreshGrid() {
+        grid.getDataProvider().refreshAll();
     }
 
     public static class Filters extends Div implements Specification<SamplePerson> {
@@ -206,7 +225,7 @@ public class ProyectosView extends Div {
         }
 
         private Expression<String> ignoreCharacters(String characters, CriteriaBuilder criteriaBuilder,
-                Expression<String> inExpression) {
+                                                    Expression<String> inExpression) {
             Expression<String> expression = inExpression;
             for (int i = 0; i < characters.length(); i++) {
                 expression = criteriaBuilder.function("replace", String.class, expression,
@@ -215,29 +234,6 @@ public class ProyectosView extends Div {
             return expression;
         }
 
-    }
-
-    private Component createGrid() {
-        grid = new Grid<>(SamplePerson.class, false);
-        grid.addColumn("firstName").setAutoWidth(true);
-        grid.addColumn("lastName").setAutoWidth(true);
-        grid.addColumn("email").setAutoWidth(true);
-        grid.addColumn("phone").setAutoWidth(true);
-        grid.addColumn("dateOfBirth").setAutoWidth(true);
-        grid.addColumn("occupation").setAutoWidth(true);
-        grid.addColumn("role").setAutoWidth(true);
-
-        grid.setItems(query -> samplePersonService.list(
-                PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)),
-                filters).stream());
-        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        grid.addClassNames(LumoUtility.Border.TOP, LumoUtility.BorderColor.CONTRAST_10);
-
-        return grid;
-    }
-
-    private void refreshGrid() {
-        grid.getDataProvider().refreshAll();
     }
 
 }

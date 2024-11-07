@@ -19,6 +19,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import es.uca.iw.components.pricefield.PriceField;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,9 +93,6 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         layoutRow.add(buttonSecondary);
     }
 
-    record SampleItem(String value, String label, Boolean disabled) {
-    }
-
     private void setComboBoxSampleData(ComboBox comboBox) {
         List<SampleItem> sampleItems = new ArrayList<>();
         sampleItems.add(new SampleItem("first", "First", null));
@@ -103,5 +101,8 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         sampleItems.add(new SampleItem("fourth", "Fourth", null));
         comboBox.setItems(sampleItems);
         comboBox.setItemLabelGenerator(item -> ((SampleItem) item).label());
+    }
+
+    record SampleItem(String value, String label, Boolean disabled) {
     }
 }
