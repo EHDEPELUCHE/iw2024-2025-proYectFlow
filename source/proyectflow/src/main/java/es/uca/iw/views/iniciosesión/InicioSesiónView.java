@@ -26,8 +26,7 @@ public class InicioSesiónView extends Composite<VerticalLayout> {
         layoutColumn2.setMaxWidth("800px");
         layoutColumn2.setHeight("min-content");
         layoutColumn2.setAlignSelf(FlexComponent.Alignment.CENTER, loginForm);
-        //loginForm.setWidth("350px");
-        //loginForm.setHeight("406px");
+
         getContent().add(layoutColumn2);
         layoutColumn2.add(loginForm);
     }
