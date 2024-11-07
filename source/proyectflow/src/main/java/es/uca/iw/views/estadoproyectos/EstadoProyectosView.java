@@ -31,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 
 @PageTitle("Estado Proyectos")
 @Route("estado-proyectos")
-@Menu(order = 4, icon = "line-awesome/svg/th-solid.svg")
+@Menu(order = 5, icon = "line-awesome/svg/th-solid.svg")
 public class EstadoProyectosView extends Div {
 
     private GridPro<Client> grid;

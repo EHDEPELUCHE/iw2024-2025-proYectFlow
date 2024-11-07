@@ -34,7 +34,7 @@ import java.util.List;
 
 @PageTitle("Proyectos")
 @Route("proyectos")
-@Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg")
+@Menu(order = 6, icon = "line-awesome/svg/archive-solid.svg")
 @Uses(Icon.class)
 public class ProyectosView extends Div {
 

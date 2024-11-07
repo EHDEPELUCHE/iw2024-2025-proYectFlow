@@ -1,4 +1,4 @@
-package es.uca.iw.views.registroproyecto;
+package es.uca.iw.views.registroproyectoalineamiento;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -23,12 +23,12 @@ import es.uca.iw.components.pricefield.PriceField;
 import java.util.ArrayList;
 import java.util.List;
 
-@PageTitle("Registro Proyecto")
-@Route("registro-proyecto")
-@Menu(order = 3, icon = "line-awesome/svg/egg-solid.svg")
-public class RegistroProyectoView extends Composite<VerticalLayout> {
+@PageTitle("Registro Proyecto Alineamiento")
+@Route("registro-proyecto-alineamiento")
+@Menu(order = 4, icon = "line-awesome/svg/egg-solid.svg")
+public class RegistroProyectoAlineamientoView extends Composite<VerticalLayout> {
 
-    public RegistroProyectoView() {
+    public RegistroProyectoAlineamientoView() {
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
@@ -49,7 +49,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         layoutColumn2.setWidth("100%");
         layoutColumn2.setMaxWidth("800px");
         layoutColumn2.setHeight("min-content");
-h3.setText("Registro de proyecto: Alineamiento");
+        h3.setText("Alineamiento con los objetivos estratégicos.");
         h3.setWidth("100%");
         formLayout2Col.setWidth("100%");
         emailField.setLabel("Solicitante");

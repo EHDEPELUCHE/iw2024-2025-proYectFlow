@@ -18,7 +18,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 @PageTitle("Mis datos")
 @Route("Ver-mis-datos")
-@Menu(order = 6, icon = "line-awesome/svg/user.svg")
+@Menu(order = 7, icon = "line-awesome/svg/user.svg")
 public class MisDatosView extends Composite<VerticalLayout> {
     public MisDatosView() {
         VerticalLayout layoutColumn2 = new VerticalLayout();
