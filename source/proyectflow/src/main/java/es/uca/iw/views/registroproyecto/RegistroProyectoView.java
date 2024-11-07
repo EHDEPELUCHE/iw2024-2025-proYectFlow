@@ -49,7 +49,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         layoutColumn2.setWidth("100%");
         layoutColumn2.setMaxWidth("800px");
         layoutColumn2.setHeight("min-content");
-h3.setText("Registro de proyecto: Alineamiento");
+        h3.setText("Registro de proyecto");
         h3.setWidth("100%");
         formLayout2Col.setWidth("100%");
         emailField.setLabel("Solicitante");
