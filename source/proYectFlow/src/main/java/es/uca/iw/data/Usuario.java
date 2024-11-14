@@ -92,16 +92,3 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.correo = correo;
     }
 
-    public String getHashedPassword() {
-        return contrasenna;
-    }
-
-    public void setRegisterCode(String substring) {
-    }
-
-    public enum Tipo {
-        Solicitante, Promotor, CIO, OTP, Administrador;
-
-
-    }
-}
