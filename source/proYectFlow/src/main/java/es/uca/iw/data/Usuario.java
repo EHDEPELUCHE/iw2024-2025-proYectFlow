@@ -6,12 +6,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.math.BigInteger;
-import java.security.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -21,11 +15,12 @@ public class Usuario extends AbstractEntity implements UserDetails {
     @Id
     @GeneratedValue
     UUID id = UUID.randomUUID();
-    String nombre, apellido, correo, contrasenna;
+
+    String username, apellido, correo, contrasenna;
     Tipo tipo;
 
     public Usuario(String nombre, String apellido, String correo, String contrasenna) {
-        this.nombre = nombre;
+        this.username = nombre;
         this.apellido = apellido;
         this.correo = correo;
         setContrasenna(contrasenna);
@@ -36,41 +31,12 @@ public class Usuario extends AbstractEntity implements UserDetails {
 
     }
 
-    private static String Encrypt(String plain) {
-        byte[] encryptedBytes = null;
-        try {
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-            kpg.initialize(1024);
-            KeyPair kp = kpg.genKeyPair();
-            PublicKey PublicKey = kp.getPublic();
-            Cipher cipher;
-            cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.ENCRYPT_MODE, PublicKey);
-            encryptedBytes = cipher.doFinal(plain.getBytes());
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException |
-                 BadPaddingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        if (encryptedBytes != null)
-            return bytesToString(encryptedBytes);
-        else
-            return "Error";
-    }
-
-    public static String bytesToString(byte[] b) {
-        byte[] b2 = new byte[b.length + 1];
-        b2[0] = 1;
-        System.arraycopy(b, 0, b2, 1, b.length);
-        return new BigInteger(b2).toString(36);
-    }
-
     public Tipo getTipo() {
         return tipo;
     }
 
     //PROTEGER PARA ADMIN
-    private void setTipo(Tipo tipo) {
+    public void setTipo(Tipo tipo) {
         this.tipo = tipo;
     }
 
@@ -79,21 +45,35 @@ public class Usuario extends AbstractEntity implements UserDetails {
     }
 
     private void setContrasenna(String contrasena) {
-        contrasena = Encrypt(contrasena);
+
         this.contrasenna = contrasena;
     }
 
     public UUID getId() {
         return id;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
     //METODO DE COMPARAR CONTRASEÑAS
 
-    public String getNombre() {
-        return nombre;
+    @Override
+    public String getPassword() {
+        return contrasenna;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    private void setPassword(String password) {
+        this.contrasenna = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String nombre) {
+        this.username = nombre;
     }
 
     public String getApellido() {
@@ -112,20 +92,3 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.correo = correo;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
-
-    @Override
-    public String getPassword() {
-        return "";
-    }
-
-    @Override
-    public String getUsername() {
-        return "";
-    }
-
-    public enum Tipo {Solicitante, Promotor, CIO, OTP, Administrador}
-}

@@ -1,4 +1,4 @@
-package es.uca.iw.proYectFlow.data;
+package es.uca.iw.data;
 
 public class Persona {
     String nombre, apellido;

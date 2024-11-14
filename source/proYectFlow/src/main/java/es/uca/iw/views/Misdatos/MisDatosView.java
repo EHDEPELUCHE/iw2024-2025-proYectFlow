@@ -5,22 +5,33 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.Menu;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.router.internal.RouteUtil;
+import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.iw.security.AuthenticatedUser;
+import jakarta.annotation.security.PermitAll;
+
 
 @PageTitle("Mis datos")
 @Route("Ver-mis-datos")
 @Menu(order = 7, icon = "line-awesome/svg/user.svg")
-public class MisDatosView extends Composite<VerticalLayout> {
-    public MisDatosView() {
+@PermitAll
+public class MisDatosView extends Composite<VerticalLayout> implements BeforeEnterObserver {
+    private final AuthenticatedUser authenticatedUser;
+    LoginOverlay loginOverlay = new LoginOverlay();
+
+    public MisDatosView(AuthenticatedUser authenticatedUser) {
+        this.authenticatedUser = authenticatedUser;
+        loginOverlay.setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
+        VerticalLayout layout = new VerticalLayout();
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
@@ -71,5 +82,41 @@ public class MisDatosView extends Composite<VerticalLayout> {
         layoutColumn2.add(layoutRow);
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
+        loginOverlay.setOpened(true);
     }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        if (authenticatedUser.get().isPresent()) {
+            loginOverlay.setOpened(false);
+            event.forwardTo("");
+        } else {
+            getUI().ifPresent(ui -> ui.navigate("inicio-sesion"));
+        }
+        loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
+    }
+    /*  private void setAction(String routePath) {
+       getUI().ifPresent(ui -> ui.navigate(routePath));
+   }
+
+
+
+
+
+
+    private void setAction(String routePath) {
+        getUI().ifPresent(ui -> ui.navigate(routePath));
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        BeforeEvent event = null;
+        if (authenticatedUser.get().isPresent()) {
+            // Already logged in
+
+            event.forwardTo("");
+        }
+    }
+    */
+
 }
