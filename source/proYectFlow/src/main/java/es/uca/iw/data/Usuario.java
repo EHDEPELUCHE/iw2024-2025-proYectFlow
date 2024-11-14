@@ -3,6 +3,8 @@ package es.uca.iw.data;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import org.springframework.data.annotation.Id;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -10,10 +12,12 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.math.BigInteger;
 import java.security.*;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class Usuario extends AbstractEntity {
+public class Usuario extends AbstractEntity implements UserDetails {
     @Id
     @GeneratedValue
     UUID id = UUID.randomUUID();
@@ -106,6 +110,21 @@ public class Usuario extends AbstractEntity {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public String getPassword() {
+        return "";
+    }
+
+    @Override
+    public String getUsername() {
+        return "";
     }
 
     public enum Tipo {Solicitante, Promotor, CIO, OTP, Administrador}
