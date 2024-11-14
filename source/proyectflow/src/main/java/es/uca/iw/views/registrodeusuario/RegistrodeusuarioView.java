@@ -15,11 +15,13 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
 @PageTitle("Registro de usuario")
 @Route("registro-usuario")
 @Menu(order = 1, icon = "line-awesome/svg/user.svg")
+@AnonymousAllowed
 //@RolesAllowed("ADMIN")
 public class RegistrodeusuarioView extends Composite<VerticalLayout> {
 

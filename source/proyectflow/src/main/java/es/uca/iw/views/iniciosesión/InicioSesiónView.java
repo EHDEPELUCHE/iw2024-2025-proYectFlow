@@ -9,17 +9,19 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 
 @StyleSheet("../../frontend/styles/styles.css")
 @PageTitle("Inicio Sesión")
 @Route("inicio-sesion")
 @Menu(order = 2, icon = "line-awesome/svg/user.svg")
+@AnonymousAllowed
 public class InicioSesiónView extends Composite<VerticalLayout> {
 
 
     public InicioSesiónView() {
-        
+
         VerticalLayout layoutColumn2 = new VerticalLayout();
 
         LoginI18n i18n = LoginI18n.createDefault();

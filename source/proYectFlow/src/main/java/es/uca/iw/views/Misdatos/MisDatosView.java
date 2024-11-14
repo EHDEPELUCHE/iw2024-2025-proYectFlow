@@ -11,16 +11,24 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.Menu;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.router.internal.RouteUtil;
+import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.iw.security.AuthenticatedUser;
 
+//@AnonymousAllowed
 @PageTitle("Mis datos")
 @Route("Ver-mis-datos")
 @Menu(order = 7, icon = "line-awesome/svg/user.svg")
-public class MisDatosView extends Composite<VerticalLayout> {
+
+public class MisDatosView extends Composite<VerticalLayout> implements BeforeEnterObserver {
+    private AuthenticatedUser authenticatedUser = null;
+
     public MisDatosView() {
+        this.authenticatedUser = authenticatedUser;
+        setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
+
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
@@ -72,4 +80,30 @@ public class MisDatosView extends Composite<VerticalLayout> {
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
     }
+
+    private void setAction(String routePath) {
+        getUI().ifPresent(ui -> ui.navigate(routePath));
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        BeforeEvent event = null;
+        if (authenticatedUser.get().isPresent()) {
+            // Already logged in
+
+            event.forwardTo("");
+        }
+
+    }
+
+   /* @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        if (authenticatedUser.get().isPresent()) {
+            // Already logged in
+            setOpened(false);
+            event.forwardTo("");
+        }
+
+        setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
+    }*/
 }

@@ -4,12 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import org.springframework.data.annotation.Id;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.math.BigInteger;
-import java.security.*;
 import java.util.UUID;
 
 @Entity
@@ -17,11 +11,12 @@ public class Usuario extends AbstractEntity {
     @Id
     @GeneratedValue
     UUID id = UUID.randomUUID();
-    String nombre, apellido, correo, contrasenna;
+
+    String username, apellido, correo, contrasenna;
     Tipo tipo;
 
     public Usuario(String nombre, String apellido, String correo, String contrasenna) {
-        this.nombre = nombre;
+        this.username = nombre;
         this.apellido = apellido;
         this.correo = correo;
         setContrasenna(contrasenna);
@@ -32,34 +27,6 @@ public class Usuario extends AbstractEntity {
 
     }
 
-    private static String Encrypt(String plain) {
-        byte[] encryptedBytes = null;
-        try {
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-            kpg.initialize(1024);
-            KeyPair kp = kpg.genKeyPair();
-            PublicKey PublicKey = kp.getPublic();
-            Cipher cipher;
-            cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.ENCRYPT_MODE, PublicKey);
-            encryptedBytes = cipher.doFinal(plain.getBytes());
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException |
-                 BadPaddingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        if (encryptedBytes != null)
-            return bytesToString(encryptedBytes);
-        else
-            return "Error";
-    }
-
-    public static String bytesToString(byte[] b) {
-        byte[] b2 = new byte[b.length + 1];
-        b2[0] = 1;
-        System.arraycopy(b, 0, b2, 1, b.length);
-        return new BigInteger(b2).toString(36);
-    }
 
     public Tipo getTipo() {
         return tipo;
@@ -75,7 +42,7 @@ public class Usuario extends AbstractEntity {
     }
 
     private void setContrasenna(String contrasena) {
-        contrasena = Encrypt(contrasena);
+
         this.contrasenna = contrasena;
     }
 
@@ -84,12 +51,12 @@ public class Usuario extends AbstractEntity {
     }
     //METODO DE COMPARAR CONTRASEÑAS
 
-    public String getNombre() {
-        return nombre;
+    public String getUsername() {
+        return username;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setUsername(String nombre) {
+        this.username = nombre;
     }
 
     public String getApellido() {
@@ -108,5 +75,13 @@ public class Usuario extends AbstractEntity {
         this.correo = correo;
     }
 
-    public enum Tipo {Solicitante, Promotor, CIO, OTP, Administrador}
+    public String getHashedPassword() {
+        return contrasenna;
+    }
+
+    public enum Tipo {
+        Solicitante, Promotor, CIO, OTP, Administrador;
+
+
+    }
 }
