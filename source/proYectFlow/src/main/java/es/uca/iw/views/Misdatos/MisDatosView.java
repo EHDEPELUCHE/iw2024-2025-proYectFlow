@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -16,19 +17,21 @@ import com.vaadin.flow.router.internal.RouteUtil;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.security.AuthenticatedUser;
+import jakarta.annotation.security.PermitAll;
 
-//@AnonymousAllowed
+
 @PageTitle("Mis datos")
 @Route("Ver-mis-datos")
 @Menu(order = 7, icon = "line-awesome/svg/user.svg")
-
+@PermitAll
 public class MisDatosView extends Composite<VerticalLayout> implements BeforeEnterObserver {
-    private AuthenticatedUser authenticatedUser = null;
+    private final AuthenticatedUser authenticatedUser;
+    LoginOverlay loginOverlay = new LoginOverlay();
 
-    public MisDatosView() {
+    public MisDatosView(AuthenticatedUser authenticatedUser) {
         this.authenticatedUser = authenticatedUser;
-        setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
-
+        loginOverlay.setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
+        VerticalLayout layout = new VerticalLayout();
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
@@ -79,7 +82,27 @@ public class MisDatosView extends Composite<VerticalLayout> implements BeforeEnt
         layoutColumn2.add(layoutRow);
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
+        loginOverlay.setOpened(true);
     }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        if (authenticatedUser.get().isPresent()) {
+            loginOverlay.setOpened(false);
+            event.forwardTo("");
+        } else {
+            getUI().ifPresent(ui -> ui.navigate("inicio-sesion"));
+        }
+        loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
+    }
+    /*  private void setAction(String routePath) {
+       getUI().ifPresent(ui -> ui.navigate(routePath));
+   }
+
+
+
+
+
 
     private void setAction(String routePath) {
         getUI().ifPresent(ui -> ui.navigate(routePath));
@@ -93,17 +116,7 @@ public class MisDatosView extends Composite<VerticalLayout> implements BeforeEnt
 
             event.forwardTo("");
         }
-
     }
+    */
 
-   /* @Override
-    public void beforeEnter(BeforeEnterEvent event) {
-        if (authenticatedUser.get().isPresent()) {
-            // Already logged in
-            setOpened(false);
-            event.forwardTo("");
-        }
-
-        setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
-    }*/
 }

@@ -3,11 +3,15 @@ package es.uca.iw.data;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import org.springframework.data.annotation.Id;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class Usuario extends AbstractEntity {
+public class Usuario extends AbstractEntity implements UserDetails {
     @Id
     @GeneratedValue
     UUID id = UUID.randomUUID();
@@ -27,13 +31,12 @@ public class Usuario extends AbstractEntity {
 
     }
 
-
     public Tipo getTipo() {
         return tipo;
     }
 
     //PROTEGER PARA ADMIN
-    private void setTipo(Tipo tipo) {
+    public void setTipo(Tipo tipo) {
         this.tipo = tipo;
     }
 
@@ -49,7 +52,21 @@ public class Usuario extends AbstractEntity {
     public UUID getId() {
         return id;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
     //METODO DE COMPARAR CONTRASEÑAS
+
+    @Override
+    public String getPassword() {
+        return contrasenna;
+    }
+
+    private void setPassword(String password) {
+        this.contrasenna = password;
+    }
 
     public String getUsername() {
         return username;
@@ -77,6 +94,9 @@ public class Usuario extends AbstractEntity {
 
     public String getHashedPassword() {
         return contrasenna;
+    }
+
+    public void setRegisterCode(String substring) {
     }
 
     public enum Tipo {

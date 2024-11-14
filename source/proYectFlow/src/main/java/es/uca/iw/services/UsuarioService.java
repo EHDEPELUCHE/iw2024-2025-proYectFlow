@@ -18,8 +18,13 @@ public class UsuarioService {
         this.repository = repository;
     }
 
+
     public Optional<Usuario> get(UUID id) {
         return repository.findById(id);
+    }
+
+    public Optional<Usuario> getnombre(String nombre) {
+        return Optional.of(repository.findByUsername(nombre));
     }
 
     public Usuario update(Usuario entity) {
