@@ -47,7 +47,6 @@ public class Proyecto extends AbstractEntity {
         this.solicitante = solicitante;
         fechaSolicitud = new Date();
         //this.ObjEstrategicos = ObjEstrategicos;
-
     }
 
     public Proyecto() {
@@ -57,7 +56,8 @@ public class Proyecto extends AbstractEntity {
     public Date getFechaSolicitud() {
         return fechaSolicitud;
     }
-/*
+
+    /*
     public List<int> getObjEstrategicos() {
         return ObjEstrategicos;
     }
@@ -102,7 +102,7 @@ public class Proyecto extends AbstractEntity {
 
     //Este metodo tendria restricción
     public void setAval(Usuario aval) {
-        if (aval.getTipo() == Usuario.Tipo.Promotor)
+        if (aval.getTipo() == Roles.PROMOTOR)
             this.aval = aval;
     }
 

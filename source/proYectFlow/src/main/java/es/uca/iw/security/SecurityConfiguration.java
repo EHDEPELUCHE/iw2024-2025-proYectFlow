@@ -1,7 +1,7 @@
 package es.uca.iw.security;
 
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
-import es.uca.iw.views.iniciosesión.InicioSesiónView;
+import es.uca.iw.views.iniciosesion.InicioSesionView;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,17 +20,17 @@ public class SecurityConfiguration extends VaadinWebSecurity {
     }
 
     @Override
-    protected void configure(HttpSecurity https) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
         //https.requiresChannel().anyRequest().requiresSecure();
-        https.authorizeHttpRequests(
+        http.authorizeHttpRequests(
                 authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/images/*.png")).permitAll());
 
         // Icons from the line-awesome addon
-        https.authorizeHttpRequests(authorize -> authorize
+        http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(new AntPathRequestMatcher("/line-awesome/**/*.svg")).permitAll());
 
-        super.configure(https);
-        setLoginView(https, InicioSesiónView.class);
+        super.configure(http);
+        setLoginView(http, InicioSesionView.class);
     }
 
 }

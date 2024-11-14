@@ -1,4 +1,4 @@
-package es.uca.iw.views.helloworld;
+package es.uca.iw.views.pantallainicio;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
@@ -18,12 +18,12 @@ import es.uca.iw.data.Proyecto;
 @PageTitle("ProYectFlow")
 @Route("")
 @Menu(order = 0, icon = "line-awesome/svg/globe-solid.svg")
-public class HelloWorldView extends VerticalLayout {
+public class PantallaInicioView extends VerticalLayout {
 
     private H2 titulo;
     private Button CrearProyecto;
 
-    public HelloWorldView() {
+    public PantallaInicioView() {
         Image imagenfondo = new Image("img/fondo_uca.jpg", "fondouca");
 
         titulo = new H2("Bienvenido a ProYectFlow. " +

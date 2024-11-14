@@ -2,7 +2,7 @@ package es.uca.iw;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
-import es.uca.iw.data.SamplePersonRepository;
+import es.uca.iw.repositories.SamplePersonRepository;
 import javax.sql.DataSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

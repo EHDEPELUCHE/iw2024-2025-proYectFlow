@@ -17,26 +17,26 @@ public class Usuario extends AbstractEntity implements UserDetails {
     UUID id = UUID.randomUUID();
 
     String username, apellido, correo, contrasenna;
-    Tipo tipo;
+    Roles tipo;
 
     public Usuario(String nombre, String apellido, String correo, String contrasenna) {
         this.username = nombre;
         this.apellido = apellido;
         this.correo = correo;
         setContrasenna(contrasenna);
-        tipo = Tipo.Solicitante;
+        tipo = Roles.SOLICITANTE;
     }
 
     public Usuario() {
 
     }
 
-    public Tipo getTipo() {
+    public Roles getTipo() {
         return tipo;
     }
 
     //PROTEGER PARA ADMIN
-    public void setTipo(Tipo tipo) {
+    public void setTipo(Roles tipo) {
         this.tipo = tipo;
     }
 
@@ -92,3 +92,5 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.correo = correo;
     }
 
+    public String getHashedPassword() { return contrasenna; }
+}

@@ -1,7 +1,7 @@
 package es.uca.iw.services;
 
 import es.uca.iw.data.Proyecto;
-import es.uca.iw.data.ProyectoRepository;
+import es.uca.iw.repositories.ProyectoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

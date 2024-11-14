@@ -1,7 +1,7 @@
 package es.uca.iw.services;
 
 import es.uca.iw.data.Usuario;
-import es.uca.iw.data.UsuarioRepository;
+import es.uca.iw.repositories.UsuarioRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

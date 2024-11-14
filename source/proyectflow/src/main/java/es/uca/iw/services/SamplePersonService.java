@@ -1,7 +1,7 @@
 package es.uca.iw.services;
 
 import es.uca.iw.data.SamplePerson;
-import es.uca.iw.data.SamplePersonRepository;
+import es.uca.iw.repositories.SamplePersonRepository;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

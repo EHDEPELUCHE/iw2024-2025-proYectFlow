@@ -1,4 +1,4 @@
-package es.uca.iw.views.iniciosesión;
+package es.uca.iw.views.iniciosesion;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.dependency.StyleSheet;
@@ -17,9 +17,9 @@ import es.uca.iw.services.UsuarioService;
 @Route("inicio-sesion")
 @Menu(order = 2, icon = "line-awesome/svg/user.svg")
 @AnonymousAllowed
-public class InicioSesiónView extends Composite<VerticalLayout> {
+public class InicioSesionView extends Composite<VerticalLayout> {
 
-    public InicioSesiónView(UsuarioService usuarioService) {
+    public InicioSesionView(UsuarioService usuarioService) {
 
         VerticalLayout layoutColumn2 = new VerticalLayout();
 
