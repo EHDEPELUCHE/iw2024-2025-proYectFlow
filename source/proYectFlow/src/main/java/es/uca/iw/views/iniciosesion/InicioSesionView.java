@@ -6,10 +6,9 @@ import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.Menu;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.services.UsuarioService;
 
 @StyleSheet("../../frontend/styles/styles.css")
@@ -17,10 +16,13 @@ import es.uca.iw.services.UsuarioService;
 @Route("inicio-sesion")
 @Menu(order = 2, icon = "line-awesome/svg/user.svg")
 @AnonymousAllowed
-public class InicioSesionView extends Composite<VerticalLayout> {
+public class InicioSesionView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
-    public InicioSesionView(UsuarioService usuarioService) {
+    private final AuthenticatedUser authenticatedUser;
+    LoginI18n i18n = LoginI18n.createDefault();
 
+    public InicioSesionView(AuthenticatedUser authenticatedUser, UsuarioService usuarioService) {
+        this.authenticatedUser = authenticatedUser;
         VerticalLayout layoutColumn2 = new VerticalLayout();
 
         LoginI18n i18n = LoginI18n.createDefault();
@@ -35,8 +37,8 @@ public class InicioSesionView extends Composite<VerticalLayout> {
         i18n.setForm(i18nForm);
 
         LoginI18n.ErrorMessage i18nErrorMessage = i18n.getErrorMessage();
-        i18nErrorMessage.setTitle("Error con el usuario o contraseña");
-        i18nErrorMessage.setMessage("Ha ocurrido un error.");
+        i18nErrorMessage.setTitle("Error con el usuario o LA contraseña");
+        i18nErrorMessage.setMessage("INICIO DE SESIÓN INCORRECTO.");
         i18n.setErrorMessage(i18nErrorMessage);
 
         LoginForm loginForm = new LoginForm();
@@ -45,9 +47,8 @@ public class InicioSesionView extends Composite<VerticalLayout> {
         loginForm.addLoginListener(event -> {
             String username = event.getUsername();
             String password = event.getPassword();
-            // Aquí puedes añadir la lógica para autenticar al usuario
-            if (authenticate(username, password)) {
-                // Redirigir al usuario a la página principal o dashboard
+            if (usuarioService.authenticate(username, password)) {
+                // Redirigir al usuario a la página de sus datos
                 getUI().ifPresent(ui -> ui.navigate("Ver-mis-datos"));
             } else {
                 loginForm.setError(true);
@@ -67,8 +68,15 @@ public class InicioSesionView extends Composite<VerticalLayout> {
         getContent().add(layoutColumn2);
     }
 
-    private boolean authenticate(String username, String password) {
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        if (authenticatedUser.get().isPresent()) {
+            // Already logged in
+            //i18n.setOpened(false);
+            event.forwardTo("");
+        }
 
-        return true;//UsuarioService.getnombre(username).equals(username) && "contraseña".equals(password);
+        //setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
     }
+
 }

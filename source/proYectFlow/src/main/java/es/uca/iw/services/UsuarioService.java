@@ -1,10 +1,13 @@
 package es.uca.iw.services;
 
+import es.uca.iw.data.Roles;
 import es.uca.iw.data.Usuario;
 import es.uca.iw.repositories.UsuarioRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,9 +16,11 @@ import java.util.UUID;
 @Service
 public class UsuarioService {
     private final UsuarioRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository repository) {
+    public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -45,5 +50,32 @@ public class UsuarioService {
 
     public int count() {
         return (int) repository.count();
+    }
+
+    public boolean authenticate(String username, String password) {
+        //AAAAA
+        Usuario u = repository.findByUsername(username);
+        if (u != null) {
+            //ENCRIPTAR
+            if (u.getPassword().equals(password)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //HACER
+    public boolean registerUser(Usuario user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        //user.setRegisterCode(UUID.randomUUID().toString().substring(0, 5));
+        user.setTipo(Roles.SOLICITANTE);
+
+        try {
+            repository.save(user);
+            //emailService.sendRegistrationEmail(user);
+            return true;
+        } catch (DataIntegrityViolationException e) {
+            return false;
+        }
     }
 }

@@ -64,7 +64,7 @@ public class Usuario extends AbstractEntity implements UserDetails {
         return contrasenna;
     }
 
-    private void setPassword(String password) {
+    public void setPassword(String password) {
         this.contrasenna = password;
     }
 
@@ -92,5 +92,12 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.correo = correo;
     }
 
-    public String getHashedPassword() { return contrasenna; }
+    public String getHashedPassword() {
+        return contrasenna;
+    }
+
+    //NO se pa q lo tiene el profe
+   /* public void setRegisterCode(String substring) {
+        id = substring;
+    }*/
 }
