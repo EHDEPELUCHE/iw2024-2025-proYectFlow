@@ -16,14 +16,15 @@ public class Usuario extends AbstractEntity implements UserDetails {
     @GeneratedValue
     UUID id = UUID.randomUUID();
 
-    String username, apellido, correo, contrasenna;
+    String username, nombre, apellido, correo, contrasenna;
     Roles tipo;
 
-    public Usuario(String nombre, String apellido, String correo, String contrasenna) {
-        this.username = nombre;
+    public Usuario(String nombre, String username, String apellido, String correo, String contrasenna) {
+        this.nombre = nombre;
+        this.username = username;
         this.apellido = apellido;
         this.correo = correo;
-        setContrasenna(contrasenna);
+        this.contrasenna = contrasenna;
         tipo = Roles.SOLICITANTE;
     }
 

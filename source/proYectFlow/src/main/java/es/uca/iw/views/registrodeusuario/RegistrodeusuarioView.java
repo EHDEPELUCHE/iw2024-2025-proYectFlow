@@ -34,6 +34,7 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
     H3 h3 = new H3();
     FormLayout formLayout2Col = new FormLayout();
     TextField username = new TextField();
+    TextField nombre = new TextField();
     TextField apellido = new TextField();
     EmailField correo = new EmailField();
     TextField textField3 = new TextField();
@@ -57,10 +58,12 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         h3.setText("Registro de usuario");
         h3.setWidth("100%");
         formLayout2Col.setWidth("100%");
-        username.setLabel("nombre");
+        username.setLabel("usuario");
+        nombre.setLabel("nombre");
         apellido.setLabel("apellidos");
         correo.setLabel("email");
-        //textField3.setLabel("Teléfono");
+        //Aqui antes iba telefono
+        //textField3.setLabel("Email");
         contrasenna.setLabel("contraseña");
         contrasenna.setWidth("min-content");
         passwordField2.setLabel("Repetir contraseña");
@@ -79,9 +82,10 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         layoutColumn2.add(h3);
         layoutColumn2.add(formLayout2Col);
         formLayout2Col.add(username);
+        formLayout2Col.add(nombre);
         formLayout2Col.add(apellido);
-        //formLayout2Col.add(emailField);
-        formLayout2Col.add(textField3);
+        formLayout2Col.add(correo);
+        //formLayout2Col.add(textField3);
         formLayout2Col.add(contrasenna);
         formLayout2Col.add(passwordField2);
         layoutColumn2.add(layoutRow);
@@ -95,7 +99,7 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
     }
 
     public void onRegisterButtonClick() {
-        Notification.show("PULSADO");
+
         if (binder.validate().isOk() /*&& contrasenna.getValue().equals(passwordField2.getValue())*/) {
             if (servicio.registerUser(binder.getBean())) {
                 status.setText("Great. Please look at your mail inbox!");
@@ -106,7 +110,6 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
             } else {
                 Notification.show("Please, the username is already in use");
             }
-            Notification.show("Primer if noo");
 
 
         } else {
