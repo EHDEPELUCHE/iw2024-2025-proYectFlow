@@ -100,7 +100,13 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
 
     public void onRegisterButtonClick() {
 
-        if (binder.validate().isOk() /*&& contrasenna.getValue().equals(passwordField2.getValue())*/) {
+        if (!contrasenna.getValue().equals(passwordField2.getValue())) {
+            Notification.show("Las contraseñas no coinciden");
+            return;
+        }
+
+        if (binder.validate().isOk()) {
+
             if (servicio.registerUser(binder.getBean())) {
                 status.setText("Great. Please look at your mail inbox!");
                 status.setVisible(true);
@@ -110,11 +116,8 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
             } else {
                 Notification.show("Please, the username is already in use");
             }
-
-
         } else {
             Notification.show("Please, check input data");
         }
-
     }
 }

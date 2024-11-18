@@ -1,7 +1,6 @@
 package es.uca.iw.data;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,10 +13,30 @@ import java.util.UUID;
 public class Usuario extends AbstractEntity implements UserDetails {
     @Id
     @GeneratedValue
-    UUID id = UUID.randomUUID();
+    private UUID id;
 
-    String username, nombre, apellido, correo, contrasenna;
-    Roles tipo;
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String nombre;
+
+    @Column(nullable = false)
+    private String apellido;
+
+    @Column(unique = true, nullable = false)
+    private String correo;
+
+    @Column(nullable = false)
+    private String contrasenna;
+
+    @Enumerated(EnumType.STRING) // Para almacenar el enum como texto
+    @Column(nullable = false)
+
+    private Roles tipo;
+
+    /*private String username, nombre, apellido, correo, contrasenna;
+    Roles tipo;*/
 
     public Usuario(String nombre, String username, String apellido, String correo, String contrasenna) {
         this.nombre = nombre;
