@@ -91,6 +91,7 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
 
         binder = new BeanValidationBinder<>(Usuario.class);
         binder.bindInstanceFields(this);
+        binder.setBean(new Usuario());
     }
 
     public void onRegisterButtonClick() {

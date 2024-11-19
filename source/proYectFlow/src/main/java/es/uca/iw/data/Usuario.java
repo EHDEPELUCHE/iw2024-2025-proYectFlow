@@ -5,7 +5,10 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.util.Collection;
 import java.util.List;
@@ -96,4 +99,11 @@ public class Usuario extends AbstractEntity implements UserDetails {
     public void setRegisterCode(String registerCode) {
         this.registerCode = registerCode;
     }
+        
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(tipo.name()));
+    }
+    
+    @Override
+    public String getPassword() { return contrasenna; }
 }
