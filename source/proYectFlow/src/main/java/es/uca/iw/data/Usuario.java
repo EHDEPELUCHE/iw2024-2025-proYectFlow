@@ -1,6 +1,8 @@
 package es.uca.iw.data;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +15,7 @@ import java.util.UUID;
 public class Usuario extends AbstractEntity implements UserDetails {
     @Id
     @GeneratedValue
+    @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
     @Column(unique = true, nullable = false)
@@ -39,6 +42,7 @@ public class Usuario extends AbstractEntity implements UserDetails {
     Roles tipo;*/
 
     public Usuario(String nombre, String username, String apellido, String correo, String contrasenna) {
+        this.id = UUID.randomUUID();
         this.nombre = nombre;
         this.username = username;
         this.apellido = apellido;
@@ -47,9 +51,7 @@ public class Usuario extends AbstractEntity implements UserDetails {
         tipo = Roles.SOLICITANTE;
     }
 
-    public Usuario() {
-
-    }
+    public Usuario() {}
 
     public Roles getTipo() {
         return tipo;
@@ -65,7 +67,6 @@ public class Usuario extends AbstractEntity implements UserDetails {
     }
 
     private void setContrasenna(String contrasena) {
-
         this.contrasenna = contrasena;
     }
 
@@ -73,11 +74,19 @@ public class Usuario extends AbstractEntity implements UserDetails {
         return id;
     }
 
+    public void setId(UUID id) { this.id = id; }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
     //METODO DE COMPARAR CONTRASEÑAS
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String user) { this.username = user; }
 
     @Override
     public String getPassword() {
@@ -86,14 +95,6 @@ public class Usuario extends AbstractEntity implements UserDetails {
 
     public void setPassword(String password) {
         this.contrasenna = password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String nombre) {
-        this.username = nombre;
     }
 
     public String getApellido() {
