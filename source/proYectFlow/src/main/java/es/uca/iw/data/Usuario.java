@@ -18,28 +18,37 @@ public class Usuario extends AbstractEntity implements UserDetails {
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
+    @NotEmpty
     @Column(unique = true, nullable = false)
     private String username;
 
+    @NotEmpty
     @Column(nullable = false)
     private String nombre;
 
+    @NotEmpty
     @Column(nullable = false)
     private String apellido;
 
+    @NotEmpty
+    @Email
     @Column(unique = true, nullable = false)
     private String correo;
 
+    @NotEmpty
     @Column(nullable = false)
     private String contrasenna;
 
     @Enumerated(EnumType.STRING) // Para almacenar el enum como texto
     @Column(nullable = false)
-
     private Roles tipo;
 
-    /*private String username, nombre, apellido, correo, contrasenna;
-    Roles tipo;*/
+    private String registerCode = "";
+    private boolean enabled = false;
+
+    /*
+    private String username, nombre, apellido, correo, contrasenna;
+    Roles tipo;
 
     public Usuario(String nombre, String username, String apellido, String correo, String contrasenna) {
         this.id = UUID.randomUUID();
@@ -50,75 +59,41 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.contrasenna = contrasenna;
         tipo = Roles.SOLICITANTE;
     }
-
+    
     public Usuario() {}
-
-    public Roles getTipo() {
-        return tipo;
-    }
-
-    //PROTEGER PARA ADMIN
-    public void setTipo(Roles tipo) {
-        this.tipo = tipo;
-    }
-
-    private String getContrasenna() {
-        return contrasenna;
-    }
-
-    private void setContrasenna(String contrasena) {
-        this.contrasenna = contrasena;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
+    */
+    public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
-    //METODO DE COMPARAR CONTRASEÑAS
-
-    public String getUsername() {
-        return username;
-    }
-
+    
+    public String getUsername() { return username; }
     public void setUsername(String user) { this.username = user; }
 
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getApellido() { return apellido; }
+    public void setApellido(String apellido) { this.apellido = apellido; }
+
+    public String getCorreo() { return correo; }
+    public void setCorreo(String correo) { this.correo = correo; }
+
+    public String getContrasenna() { return contrasenna; }
+    public void setContrasenna(String contrasena) { this.contrasenna = contrasena; }
+
+    public Roles getTipo() { return tipo; }
+    public void setTipo(Roles tipo) { this.tipo = tipo; }
+
     @Override
-    public String getPassword() {
-        return contrasenna;
+    public int hashCode() { return (id != null) ? id.hashCode() : super.hashCode(); }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Usuario other)) return false;
+        if (id != null) return id.equals(other.id);
+        return super.equals(other);
     }
 
-    public void setPassword(String password) {
-        this.contrasenna = password;
+    public void setRegisterCode(String registerCode) {
+        this.registerCode = registerCode;
     }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getHashedPassword() {
-        return contrasenna;
-    }
-
-    //NO se pa q lo tiene el profe
-   /* public void setRegisterCode(String substring) {
-        id = substring;
-    }*/
 }

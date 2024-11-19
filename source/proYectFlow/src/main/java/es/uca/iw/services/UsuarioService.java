@@ -53,7 +53,6 @@ public class UsuarioService {
     }
 
     public boolean authenticate(String username, String password) {
-        //AAAAA
         Usuario u = repository.findByUsername(username);
         if (u != null) {
             //ENCRIPTAR
@@ -66,14 +65,12 @@ public class UsuarioService {
 
     //HACER
     public boolean registerUser(Usuario user) {
-        //DEBUG
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        //user.setRegisterCode(UUID.randomUUID().toString().substring(0, 5));
+        user.setContrasenna(passwordEncoder.encode(user.getPassword()));
+        user.setRegisterCode(UUID.randomUUID().toString().substring(0, 5));
         user.setTipo(Roles.SOLICITANTE);
-
         try {
             repository.save(user);
+            //Aun no tenemos emailService
             //emailService.sendRegistrationEmail(user);
             return true;
         } catch (DataIntegrityViolationException e) {
