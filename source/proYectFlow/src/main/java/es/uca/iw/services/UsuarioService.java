@@ -7,14 +7,21 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class UsuarioService {
+public class UsuarioService implements UserDetailsService {
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
 
@@ -23,14 +30,26 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    private static GrantedAuthority getAuthorities(Usuario user) {
+        return new SimpleGrantedAuthority("ROLE_" + user.getTipo());
+    }
+
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Usuario user = repository.findByUsername(username).get();
+        if (user == null) {
+            throw new UsernameNotFoundException("No user present with username: " + username);
+        } else {
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getHashedPassword(),
+                    Collections.singleton(getAuthorities(user)));
+        }
+    }
 
     public Optional<Usuario> get(UUID id) {
         return repository.findById(id);
     }
 
-    public Optional<Usuario> getnombre(String nombre) {
-        return Optional.of(repository.findByUsername(nombre));
-    }
 
     public Usuario update(Usuario entity) {
         return repository.save(entity);
@@ -52,6 +71,7 @@ public class UsuarioService {
         return (int) repository.count();
     }
 
+<<<<<<< Updated upstream
     public boolean authenticate(String username, String password) {
         //AAAAA
         Usuario u = repository.findByUsername(username);
@@ -64,6 +84,8 @@ public class UsuarioService {
         return false;
     }
 
+=======
+>>>>>>> Stashed changes
     //HACER
     public boolean registerUser(Usuario user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));

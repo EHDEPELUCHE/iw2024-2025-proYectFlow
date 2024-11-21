@@ -11,6 +11,8 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.services.UsuarioService;
 
+import static com.vaadin.copilot.ErrorHandler.setError;
+
 @StyleSheet("../../frontend/styles/styles.css")
 @PageTitle("Inicio Sesión")
 @Route("inicio-sesion")
@@ -24,7 +26,6 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
     public InicioSesionView(AuthenticatedUser authenticatedUser, UsuarioService usuarioService) {
         this.authenticatedUser = authenticatedUser;
         VerticalLayout layoutColumn2 = new VerticalLayout();
-
         LoginI18n i18n = LoginI18n.createDefault();
 
         LoginI18n.Form i18nForm = i18n.getForm();
@@ -34,6 +35,7 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         i18nForm.setSubmit("Aceptar");
 
         i18nForm.setForgotPassword("Quiero recuperar mi contraseña");
+
         i18n.setForm(i18nForm);
 
         LoginI18n.ErrorMessage i18nErrorMessage = i18n.getErrorMessage();
@@ -43,18 +45,7 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
 
         LoginForm loginForm = new LoginForm();
         loginForm.setI18n(i18n);
-
-        loginForm.addLoginListener(event -> {
-            String username = event.getUsername();
-            String password = event.getPassword();
-            if (usuarioService.authenticate(username, password)) {
-                // Redirigir al usuario a la página de sus datos
-                getUI().ifPresent(ui -> ui.navigate("Ver-mis-datos"));
-            } else {
-                loginForm.setError(true);
-            }
-        });
-
+        loginForm.setAction("login");
         layoutColumn2.add(loginForm);
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");

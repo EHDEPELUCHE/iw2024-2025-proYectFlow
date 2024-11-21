@@ -1,8 +1,17 @@
 package es.uca.iw.data;
 
+<<<<<<< Updated upstream
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import org.springframework.data.annotation.Id;
+=======
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+>>>>>>> Stashed changes
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -28,7 +37,10 @@ public class Usuario extends AbstractEntity implements UserDetails {
     }
 
     public Usuario() {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     }
 
     public Roles getTipo() {
@@ -72,8 +84,41 @@ public class Usuario extends AbstractEntity implements UserDetails {
         return username;
     }
 
+<<<<<<< Updated upstream
     public void setUsername(String nombre) {
         this.username = nombre;
+=======
+    public void setUsername(String user) {
+        this.username = user;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+>>>>>>> Stashed changes
     }
 
     public String getApellido() {
@@ -96,8 +141,11 @@ public class Usuario extends AbstractEntity implements UserDetails {
         return contrasenna;
     }
 
+<<<<<<< Updated upstream
     //NO se pa q lo tiene el profe
    /* public void setRegisterCode(String substring) {
         id = substring;
     }*/
+=======
+>>>>>>> Stashed changes
 }

@@ -11,8 +11,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.data.Proyecto;
+import es.uca.iw.views.proyectos.ProyectosView;
 
 @AnonymousAllowed
 @PageTitle("ProYectFlow")
@@ -39,7 +41,9 @@ public class PantallaInicioView extends VerticalLayout {
         Grid<Proyecto> tabla = new Grid<>(Proyecto.class);
         setHorizontalComponentAlignment(Alignment.CENTER, imagenfondo, titulo, CrearProyecto, texto2, tabla);
 
-        add(imagenfondo, titulo, CrearProyecto, texto2, tabla);
+
+        RouterLink acceder=new RouterLink("acceder", ProyectosView.class);
+        add(imagenfondo, titulo, CrearProyecto, texto2, tabla,acceder);
     }
 
 }

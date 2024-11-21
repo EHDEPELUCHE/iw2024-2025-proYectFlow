@@ -1,7 +1,7 @@
 package es.uca.iw.security;
 
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
-import es.uca.iw.views.iniciosesion.InicioSesionView;
+import es.uca.iw.views.iniciosesion.UserLoginView;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,7 +30,7 @@ public class SecurityConfiguration extends VaadinWebSecurity {
                 .requestMatchers(new AntPathRequestMatcher("/line-awesome/**/*.svg")).permitAll());
 
         super.configure(http);
-        setLoginView(http, InicioSesionView.class);
+        setLoginView(http, UserLoginView.class);
     }
 
 }
