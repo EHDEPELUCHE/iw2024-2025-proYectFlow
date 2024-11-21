@@ -88,10 +88,10 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         layoutColumn2.add(layoutRow);
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
-
         binder = new BeanValidationBinder<>(Usuario.class);
         binder.bindInstanceFields(this);
-        binder.setBean(new Usuario());
+
+        // binder.setBean(new Usuario());
     }
 
     public void onRegisterButtonClick() {
@@ -99,6 +99,7 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         //Notification.show(usuarioRegistro.getPassword());
         //binder.setBean(usuarioRegistro);
         //Notification.show(binder.getBean().toString());
+
 
         if (!contrasenna.getValue().equals(passwordField2.getValue())) {
             Notification.show("Las contraseñas no coinciden");
