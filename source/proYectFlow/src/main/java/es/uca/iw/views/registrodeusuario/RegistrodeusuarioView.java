@@ -63,8 +63,6 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         nombre.setLabel("nombre");
         apellido.setLabel("apellidos");
         correo.setLabel("email");
-        //Aqui antes iba telefono
-        //textField3.setLabel("Email");
         contrasenna.setLabel("contraseña");
         contrasenna.setWidth("min-content");
         passwordField2.setLabel("Repetir contraseña");
@@ -92,9 +90,10 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         layoutColumn2.add(layoutRow);
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
-
         binder = new BeanValidationBinder<>(Usuario.class);
         binder.bindInstanceFields(this);
+
+        // binder.setBean(new Usuario());
     }
 
     public void onRegisterButtonClick(PasswordField passwordField2) {

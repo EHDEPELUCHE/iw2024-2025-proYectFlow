@@ -2,6 +2,7 @@ package es.uca.iw.data;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -9,27 +10,33 @@ import java.util.List;
 
 @Entity
 public class Usuario extends AbstractEntity implements UserDetails {
+    @Version
+    private Long version;
 
+    @NotEmpty
     @Column(unique = true, nullable = false)
     private String username;
 
+    @NotEmpty
     @Column(nullable = false)
     private String nombre;
 
+    @NotEmpty
     @Column(nullable = false)
     private String apellido;
 
+    @NotEmpty
+    @Email
     @Column(unique = true, nullable = false)
     private String correo;
 
+    @NotEmpty
     @Column(nullable = false)
     private String contrasenna;
 
     @Enumerated(EnumType.STRING) // Para almacenar el enum como texto
     @Column(nullable = false)
-
     private Roles tipo;
-
     /*private String username, nombre, apellido, correo, contrasenna;
     Roles tipo;*/
 
@@ -65,21 +72,21 @@ public class Usuario extends AbstractEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
-    //METODO DE COMPARAR CONTRASEÑAS
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String user) { this.username = user; }
-
-    @Override
-    public String getPassword() {
-        return contrasenna;
+    public void setUsername(String user) {
+        this.username = user;
     }
 
-    public void setPassword(String password) {
-        this.contrasenna = password;
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getApellido() {
@@ -98,12 +105,56 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.correo = correo;
     }
 
-    public String getHashedPassword() {
+    public String getContrasenna() {
         return contrasenna;
     }
 
-    //NO se pa q lo tiene el profe
-   /* public void setRegisterCode(String substring) {
-        id = substring;
-    }*/
+    public void setContrasenna(String contrasena) {
+        this.contrasenna = contrasena;
+    }
+
+    public Roles getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Roles tipo) {
+        this.tipo = tipo;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    @Override
+    public int hashCode() {
+        return (id != null) ? id.hashCode() : super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Usuario other)) return false;
+        if (id != null) return id.equals(other.id);
+        return super.equals(other);
+    }
+
+    public void setRegisterCode(String registerCode) {
+        this.registerCode = registerCode;
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(tipo.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return contrasenna;
+    }
+
+    public String getHashedPassword() {
+        return contrasenna;
+    }
 }
