@@ -30,24 +30,25 @@ import es.uca.iw.services.UsuarioService;
 //@RolesAllowed("ADMIN")
 public class RegistrodeusuarioView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Usuario> binder;
-    VerticalLayout layoutColumn2 = new VerticalLayout();
-    H3 h3 = new H3();
-    FormLayout formLayout2Col = new FormLayout();
     TextField username = new TextField();
     TextField nombre = new TextField();
     TextField apellido = new TextField();
     EmailField correo = new EmailField();
-    TextField textField3 = new TextField();
     PasswordField contrasenna = new PasswordField();
-    PasswordField passwordField2 = new PasswordField();
-    HorizontalLayout layoutRow = new HorizontalLayout();
-    Button buttonPrimary = new Button();
-    Button buttonSecondary = new Button();
+
     UsuarioService servicio;
-    H4 status = new H4();
+
 
     public RegistrodeusuarioView(UsuarioService usuarioService) {
-        servicio = usuarioService;
+
+        PasswordField passwordField2 = new PasswordField();
+        HorizontalLayout layoutRow = new HorizontalLayout();
+        Button buttonPrimary = new Button();
+        Button buttonSecondary = new Button();VerticalLayout layoutColumn2 = new VerticalLayout();
+        H3 h3 = new H3();
+        FormLayout formLayout2Col = new FormLayout();
+
+        this.servicio = usuarioService;
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
         getContent().setJustifyContentMode(JustifyContentMode.START);
@@ -72,7 +73,7 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         layoutRow.setWidth("100%");
         layoutRow.getStyle().set("flex-grow", "1");
         buttonPrimary.setText("Guardar");
-        buttonPrimary.addClickListener(e -> onRegisterButtonClick());
+        buttonPrimary.addClickListener(e -> onRegisterButtonClick(passwordField2));
 
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -96,7 +97,8 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         binder.bindInstanceFields(this);
     }
 
-    public void onRegisterButtonClick() {
+    public void onRegisterButtonClick(PasswordField passwordField2) {
+        H4 status = new H4();
         Usuario usuarioRegistro = new Usuario (nombre.getValue(),
                 username.getValue(), apellido.getValue(),
                 correo.getValue(), contrasenna.getValue());

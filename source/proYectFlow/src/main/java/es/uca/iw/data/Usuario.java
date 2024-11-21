@@ -1,22 +1,14 @@
 package es.uca.iw.data;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 public class Usuario extends AbstractEntity implements UserDetails {
-    @Id
-    @GeneratedValue
-    @JdbcTypeCode(SqlTypes.CHAR)
-    private UUID id;
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -42,7 +34,6 @@ public class Usuario extends AbstractEntity implements UserDetails {
     Roles tipo;*/
 
     public Usuario(String nombre, String username, String apellido, String correo, String contrasenna) {
-        this.id = UUID.randomUUID();
         this.nombre = nombre;
         this.username = username;
         this.apellido = apellido;
@@ -69,12 +60,6 @@ public class Usuario extends AbstractEntity implements UserDetails {
     private void setContrasenna(String contrasena) {
         this.contrasenna = contrasena;
     }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) { this.id = id; }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
