@@ -66,7 +66,6 @@ public class UsuarioService {
     //HACER
     public boolean registerUser(Usuario user) {
         user.setContrasenna(passwordEncoder.encode(user.getPassword()));
-        user.setRegisterCode(UUID.randomUUID().toString().substring(0, 5));
         user.setTipo(Roles.SOLICITANTE);
         try {
             repository.save(user);

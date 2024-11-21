@@ -1,6 +1,8 @@
 package es.uca.iw.data;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,9 +12,6 @@ import java.util.List;
 
 @Entity
 public class Usuario extends AbstractEntity implements UserDetails {
-    @Version
-    private Long version;
-
     @NotEmpty
     @Column(unique = true, nullable = false)
     private String username;
@@ -60,17 +59,12 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.tipo = tipo;
     }
 
-    private String getContrasenna() {
+    public String getContrasenna() {
         return contrasenna;
     }
 
-    private void setContrasenna(String contrasena) {
+    public void setContrasenna(String contrasena) {
         this.contrasenna = contrasena;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
     }
 
     public String getUsername() {
@@ -103,46 +97,6 @@ public class Usuario extends AbstractEntity implements UserDetails {
 
     public void setCorreo(String correo) {
         this.correo = correo;
-    }
-
-    public String getContrasenna() {
-        return contrasenna;
-    }
-
-    public void setContrasenna(String contrasena) {
-        this.contrasenna = contrasena;
-    }
-
-    public Roles getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(Roles tipo) {
-        this.tipo = tipo;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
-    @Override
-    public int hashCode() {
-        return (id != null) ? id.hashCode() : super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Usuario other)) return false;
-        if (id != null) return id.equals(other.id);
-        return super.equals(other);
-    }
-
-    public void setRegisterCode(String registerCode) {
-        this.registerCode = registerCode;
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
