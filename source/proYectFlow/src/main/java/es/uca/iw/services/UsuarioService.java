@@ -23,7 +23,6 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     public Optional<Usuario> get(UUID id) {
         return repository.findById(id);
     }
@@ -55,8 +54,8 @@ public class UsuarioService {
     public boolean authenticate(String username, String password) {
         Usuario u = repository.findByUsername(username);
         if (u != null) {
-            //ENCRIPTAR
-            if (u.getPassword().equals(password)) {
+
+            if (passwordEncoder.matches(password, u.getPassword())) {
                 return true;
             }
         }

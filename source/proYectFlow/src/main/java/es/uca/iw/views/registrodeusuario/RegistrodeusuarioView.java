@@ -113,16 +113,16 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         if (binder.validate().isOk()) {
 
             if (servicio.registerUser(binder.getBean())) {
-                status.setText("Great. Please look at your mail inbox!");
+                status.setText("Excelente. ¡Por favor mira tu bandeja de entrada de correo!");
                 status.setVisible(true);
                 binder.setBean(new Usuario());
-                Notification.show("Primer if");
+                Notification.show("Usuario registrado con éxito");
                 passwordField2.setValue("");
             } else {
-                Notification.show("Please, the username is already in use");
+                Notification.show("El nombre de usuario ya está en uso");
             }
         } else {
-            Notification.show("Please, check input data");
+            Notification.show("Por favor, verifique los datos de entrada");
         }
     }
 }

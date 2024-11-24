@@ -4,12 +4,14 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.services.UsuarioService;
+import es.uca.iw.views.Misdatos.MisDatosView;
 
 @StyleSheet("../../frontend/styles/styles.css")
 @PageTitle("Inicio Sesión")
@@ -37,7 +39,7 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         i18n.setForm(i18nForm);
 
         LoginI18n.ErrorMessage i18nErrorMessage = i18n.getErrorMessage();
-        i18nErrorMessage.setTitle("Error con el usuario o LA contraseña");
+        i18nErrorMessage.setTitle("El usuario o la contraseña son erróneos");
         i18nErrorMessage.setMessage("INICIO DE SESIÓN INCORRECTO.");
         i18n.setErrorMessage(i18nErrorMessage);
 
@@ -49,8 +51,10 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
             String password = event.getPassword();
             if (usuarioService.authenticate(username, password)) {
                 // Redirigir al usuario a la página de sus datos
+                Notification.show("USUARIO Y CONTRASEÑAS MATCH");
                 getUI().ifPresent(ui -> ui.navigate("Ver-mis-datos"));
             } else {
+                Notification.show("Fallo en la autenticación.");
                 loginForm.setError(true);
             }
         });
@@ -73,10 +77,9 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         if (authenticatedUser.get().isPresent()) {
             // Already logged in
             //i18n.setOpened(false);
-            event.forwardTo("");
+            Notification.show("El usuario no está autenticado, redirigiendo a inicio de sesión.");
+            event.forwardTo(MisDatosView.class);
         }
-
         //setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
     }
-
 }

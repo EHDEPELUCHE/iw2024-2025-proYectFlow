@@ -23,7 +23,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private static GrantedAuthority getAuthorities(Usuario user) {
         return new SimpleGrantedAuthority("ROLE_" + user.getTipo());
-
     }
 
     @Override

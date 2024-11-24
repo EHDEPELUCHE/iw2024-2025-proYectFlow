@@ -15,10 +15,10 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.router.internal.RouteUtil;
 import com.vaadin.flow.server.VaadinService;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.PermitAll;
-
 
 @PageTitle("Mis datos")
 @Route("Ver-mis-datos")
@@ -82,41 +82,20 @@ public class MisDatosView extends Composite<VerticalLayout> implements BeforeEnt
         layoutColumn2.add(layoutRow);
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
-        loginOverlay.setOpened(true);
+        //loginOverlay.setOpened(true);
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         if (authenticatedUser.get().isPresent()) {
-            loginOverlay.setOpened(false);
-            event.forwardTo("");
+            //loginOverlay.setOpened(false);
+            //event.forwardTo("");
         } else {
             getUI().ifPresent(ui -> ui.navigate("inicio-sesion"));
         }
-        loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
+        //loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
     }
-    /*  private void setAction(String routePath) {
+      private void setAction(String routePath) {
        getUI().ifPresent(ui -> ui.navigate(routePath));
    }
-
-
-
-
-
-
-    private void setAction(String routePath) {
-        getUI().ifPresent(ui -> ui.navigate(routePath));
-    }
-
-    @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        BeforeEvent event = null;
-        if (authenticatedUser.get().isPresent()) {
-            // Already logged in
-
-            event.forwardTo("");
-        }
-    }
-    */
-
 }
