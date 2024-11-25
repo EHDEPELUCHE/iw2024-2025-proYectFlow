@@ -15,7 +15,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.router.internal.RouteUtil;
 import com.vaadin.flow.server.VaadinService;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.PermitAll;
@@ -31,7 +30,6 @@ public class MisDatosView extends Composite<VerticalLayout> implements BeforeEnt
     public MisDatosView(AuthenticatedUser authenticatedUser) {
         this.authenticatedUser = authenticatedUser;
         loginOverlay.setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
-        VerticalLayout layout = new VerticalLayout();
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
@@ -95,7 +93,4 @@ public class MisDatosView extends Composite<VerticalLayout> implements BeforeEnt
         }
         //loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
     }
-      private void setAction(String routePath) {
-       getUI().ifPresent(ui -> ui.navigate(routePath));
-   }
 }

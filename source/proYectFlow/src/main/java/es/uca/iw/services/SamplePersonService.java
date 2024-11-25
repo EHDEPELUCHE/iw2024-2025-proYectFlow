@@ -3,6 +3,8 @@ package es.uca.iw.services;
 import es.uca.iw.data.SamplePerson;
 import es.uca.iw.repositories.SamplePersonRepository;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,7 +19,7 @@ public class SamplePersonService {
         this.repository = repository;
     }
 
-    public Optional<SamplePerson> get(Long id) {
+    public Optional<SamplePerson> get(UUID id) {
         return repository.findById(id);
     }
 
@@ -25,7 +27,7 @@ public class SamplePersonService {
         return repository.save(entity);
     }
 
-    public void delete(Long id) {
+    public void delete(UUID id) {
         repository.deleteById(id);
     }
 

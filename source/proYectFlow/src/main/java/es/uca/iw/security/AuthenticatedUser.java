@@ -1,7 +1,5 @@
 package es.uca.iw.security;
 
-
-import ch.qos.logback.core.net.SMTPAppenderBase;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import es.uca.iw.data.Usuario;
 import es.uca.iw.repositories.UsuarioRepository;
@@ -24,9 +22,8 @@ public class AuthenticatedUser {
 
     @Transactional
     public Optional<Usuario> get() {
-        SMTPAppenderBase<Object> userDetail = null;
         return authenticationContext.getAuthenticatedUser(UserDetails.class)
-                .map(userDetails -> userRepository.findByUsername(userDetail.getUsername()));
+                .map(userDetails -> userRepository.findByUsername(userDetails.getUsername()));
     }
 
     public void logout() {

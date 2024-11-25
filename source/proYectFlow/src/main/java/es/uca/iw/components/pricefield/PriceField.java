@@ -1,12 +1,11 @@
 package es.uca.iw.components.pricefield;
 
-import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.NumberField;
 
-public class PriceField extends CustomField<PriceField.Price> implements HasSize {
+public class PriceField extends CustomField<PriceField.Price> {
 
     public record Price(Double amount, String currency) {
     };

@@ -33,7 +33,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
         EmailField emailField = new EmailField();
-        ComboBox comboBox = new ComboBox();
+        ComboBox<SampleItem> comboBox = new ComboBox<>();
         TextField textField = new TextField();
         TextField textField2 = new TextField();
         TextField textField3 = new TextField();
@@ -93,7 +93,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         layoutRow.add(buttonSecondary);
     }
 
-    private void setComboBoxSampleData(ComboBox comboBox) {
+    private void setComboBoxSampleData(ComboBox<SampleItem> comboBox) {
         List<SampleItem> sampleItems = new ArrayList<>();
         sampleItems.add(new SampleItem("first", "First", null));
         sampleItems.add(new SampleItem("second", "Second", null));
