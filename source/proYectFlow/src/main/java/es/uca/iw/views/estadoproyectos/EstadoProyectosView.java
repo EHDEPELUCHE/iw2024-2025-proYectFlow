@@ -1,35 +1,15 @@
 package es.uca.iw.views.estadoproyectos;
 
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.Grid.SelectionMode;
-import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.gridpro.GridPro;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.renderer.LocalDateRenderer;
-import com.vaadin.flow.data.renderer.NumberRenderer;
-import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
+import es.uca.iw.data.Usuario;
 import jakarta.annotation.security.PermitAll;
-import org.apache.commons.lang3.StringUtils;
 
 @PageTitle("Estado Proyectos")
 @Route("estado-proyectos")
@@ -37,21 +17,23 @@ import org.apache.commons.lang3.StringUtils;
 @PermitAll
 public class EstadoProyectosView extends Div {
 
-    private GridPro<Client> grid;
-    private GridListDataView<Client> gridListDataView;
+    private GridPro<Usuario> grid;
+    private GridListDataView<Usuario> gridListDataView;
 
-    private Grid.Column<Client> clientColumn;
-    private Grid.Column<Client> amountColumn;
-    private Grid.Column<Client> statusColumn;
-    private Grid.Column<Client> dateColumn;
+    private Grid.Column<Usuario> clientColumn;
+    private Grid.Column<Usuario> amountColumn;
+    private Grid.Column<Usuario> statusColumn;
+    private Grid.Column<Usuario> dateColumn;
 
     public EstadoProyectosView() {
         addClassName("estado-proyectos-view");
         setSizeFull();
-        createGrid();
-        add(grid);
+        H1 prueba = new H1("Estado de tus Proyectos");
+        add(prueba);
+        /*createGrid();
+        add(grid);*/
     }
-
+/*
     private void createGrid() {
         createGridComponent();
         addColumnsToGrid();
@@ -64,7 +46,7 @@ public class EstadoProyectosView extends Div {
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COLUMN_BORDERS);
         grid.setHeight("100%");
 
-        List<Client> clients = getClients();
+        List<Usuario> clients = getClients();
         gridListDataView = grid.setItems(clients);
     }
 
@@ -80,7 +62,7 @@ public class EstadoProyectosView extends Div {
             HorizontalLayout hl = new HorizontalLayout();
             hl.setAlignItems(Alignment.CENTER);
             Image img = new Image(client.getImg(), "");
-            Span span = new Span();
+  ;          Span span = new Span();
             span.setClassName("name");
             span.setText(client.getClient());
             hl.add(img, span);
@@ -90,19 +72,19 @@ public class EstadoProyectosView extends Div {
 
     private void createAmountColumn() {
         amountColumn = grid
-                .addEditColumn(Client::getAmount,
+                .addEditColumn(Usuario::getAmount,
                         new NumberRenderer<>(client -> client.getAmount(), NumberFormat.getCurrencyInstance(Locale.US)))
                 .text((item, newValue) -> item.setAmount(Double.parseDouble(newValue)))
                 .setComparator(client -> client.getAmount()).setHeader("Amount");
     }
 
     private void createStatusColumn() {
-        statusColumn = grid.addEditColumn(Client::getClient, new ComponentRenderer<>(client -> {
-            Span span = new Span();
-            span.setText(client.getStatus());
-            span.getElement().setAttribute("theme", "badge " + client.getStatus().toLowerCase());
-            return span;
-        })).select((item, newValue) -> item.setStatus(newValue), Arrays.asList("Pending", "Success", "Error"))
+        statusColumn = grid.addEditColumn(Usuario::getClient, new ComponentRenderer<>(client -> {
+                    Span span = new Span();
+                    span.setText(client.getStatus());
+                    span.getElement().setAttribute("theme", "badge " + client.getStatus().toLowerCase());
+                    return span;
+                })).select((item, newValue) -> item.setStatus(newValue), Arrays.asList("Pending", "Success", "Error"))
                 .setComparator(client -> client.getStatus()).setHeader("Status");
     }
 
@@ -152,7 +134,7 @@ public class EstadoProyectosView extends Div {
         filterRow.getCell(dateColumn).setComponent(dateFilter);
     }
 
-    private boolean areStatusesEqual(Client client, ComboBox<String> statusFilter) {
+    private boolean areStatusesEqual(Usuario client, ComboBox<String> statusFilter) {
         String statusFilterValue = statusFilter.getValue();
         if (statusFilterValue != null) {
             return StringUtils.equals(client.getStatus(), statusFilterValue);
@@ -160,7 +142,7 @@ public class EstadoProyectosView extends Div {
         return true;
     }
 
-    private boolean areDatesEqual(Client client, DatePicker dateFilter) {
+    private boolean areDatesEqual(Usuario client, DatePicker dateFilter) {
         LocalDate dateFilterValue = dateFilter.getValue();
         if (dateFilterValue != null) {
             LocalDate clientDate = LocalDate.parse(client.getDate());
@@ -169,7 +151,7 @@ public class EstadoProyectosView extends Div {
         return true;
     }
 
-    private List<Client> getClients() {
+    private List<Usuario> getClients() {
         return Arrays.asList(
                 createClient(4957, "https://randomuser.me/api/portraits/women/42.jpg", "Amarachi Nkechi", 47427.0,
                         "Success", "2019-05-09"),
@@ -191,8 +173,8 @@ public class EstadoProyectosView extends Div {
                         "Pending", "2019-02-21"));
     }
 
-    private Client createClient(int id, String img, String client, double amount, String status, String date) {
-        Client c = new Client();
+    private Usuario createClient(int id, String img, String client, double amount, String status, String date) {
+        Usuario c = new Usuario();
         c.setId(id);
         c.setImg(img);
         c.setClient(client);
@@ -201,5 +183,5 @@ public class EstadoProyectosView extends Div {
         c.setDate(date);
 
         return c;
-    }
+    }*/
 };

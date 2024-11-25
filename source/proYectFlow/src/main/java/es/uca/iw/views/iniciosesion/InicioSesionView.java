@@ -4,14 +4,16 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
+import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.router.internal.RouteUtil;
+import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.services.UsuarioService;
-import es.uca.iw.views.Misdatos.MisDatosView;
 
 @StyleSheet("../../frontend/styles/styles.css")
 @PageTitle("Inicio Sesión")
@@ -20,13 +22,14 @@ import es.uca.iw.views.Misdatos.MisDatosView;
 @AnonymousAllowed
 public class InicioSesionView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
+    static LoginOverlay loginOverlay = new LoginOverlay();
     private final AuthenticatedUser authenticatedUser;
     LoginI18n i18n = LoginI18n.createDefault();
 
     public InicioSesionView(AuthenticatedUser authenticatedUser, UsuarioService usuarioService) {
         this.authenticatedUser = authenticatedUser;
         VerticalLayout layoutColumn2 = new VerticalLayout();
-
+        loginOverlay.setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
         LoginI18n i18n = LoginI18n.createDefault();
 
         LoginI18n.Form i18nForm = i18n.getForm();
@@ -46,7 +49,8 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         LoginForm loginForm = new LoginForm();
         loginForm.setI18n(i18n);
 
-        loginForm.addLoginListener(event -> {
+
+      /*  loginForm.addLoginListener(event -> {
             String username = event.getUsername();
             String password = event.getPassword();
             if (usuarioService.authenticate(username, password)) {
@@ -57,9 +61,14 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
                 Notification.show("Fallo en la autenticación.");
                 loginForm.setError(true);
             }
-        });
+        });*/
 
-        layoutColumn2.add(loginForm);
+
+        loginOverlay.setI18n(i18n);
+        loginOverlay.setOpened(true); // Abre el login overlay
+        loginOverlay.setForgotPasswordButtonVisible(true); // Opcional
+
+        layoutColumn2.add(loginOverlay);
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
         getContent().setJustifyContentMode(FlexComponent.JustifyContentMode.START);
@@ -69,6 +78,7 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         layoutColumn2.setHeight("min-content");
         layoutColumn2.setAlignSelf(FlexComponent.Alignment.CENTER, loginForm);
 
+
         getContent().add(layoutColumn2);
     }
 
@@ -76,10 +86,10 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
     public void beforeEnter(BeforeEnterEvent event) {
         if (authenticatedUser.get().isPresent()) {
             // Already logged in
-            //i18n.setOpened(false);
+            loginOverlay.setOpened(false);
             Notification.show("El usuario no está autenticado, redirigiendo a inicio de sesión.");
-            event.forwardTo(MisDatosView.class);
+            event.forwardTo("");
         }
-        //setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
+        loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
     }
 }

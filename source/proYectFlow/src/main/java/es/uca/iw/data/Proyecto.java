@@ -1,21 +1,15 @@
 package es.uca.iw.data;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.UUID;
 
 
 @Entity
 public class Proyecto extends AbstractEntity {
-    @Id
-    @GeneratedValue
-    UUID id = UUID.randomUUID();
 
     String nombre, descripcion, interesados, alcance;
     Date fecha, fechaSolicitud;
@@ -104,10 +98,6 @@ public class Proyecto extends AbstractEntity {
     public void setAval(Usuario aval) {
         if (aval.getTipo() == Roles.PROMOTOR)
             this.aval = aval;
-    }
-
-    public UUID getId() {
-        return id;
     }
 
     public String getNombre() {

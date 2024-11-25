@@ -24,14 +24,14 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import es.uca.iw.data.SamplePerson;
-import es.uca.iw.services.SamplePersonService;
-import jakarta.persistence.criteria.*;
+import es.uca.iw.data.Usuario;
+import es.uca.iw.services.UsuarioService;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @PageTitle("Proyectos")
 @Route("proyectos")
@@ -40,16 +40,21 @@ import java.util.List;
 @AnonymousAllowed
 public class ProyectosView extends Div {
 
-    private final SamplePersonService samplePersonService;
-    private Grid<SamplePerson> grid;
+    private final UsuarioService usuarioService;
+    private Grid<Usuario> grid;
     private Filters filters;
 
-    public ProyectosView(SamplePersonService SamplePersonService) {
-        this.samplePersonService = SamplePersonService;
+    public ProyectosView(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
         setSizeFull();
         addClassNames("proyectos-view");
 
-        filters = new Filters(() -> refreshGrid());
+        filters = new Filters(() -> refreshGrid()) {
+            @Override
+            public Predicate toPredicate(Root<Usuario> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                return null;
+            }
+        };
         VerticalLayout layout = new VerticalLayout(createMobileFilters(), filters, createGrid());
         layout.setSizeFull();
         layout.setPadding(false);
@@ -82,16 +87,13 @@ public class ProyectosView extends Div {
     }
 
     private Component createGrid() {
-        grid = new Grid<>(SamplePerson.class, false);
-        grid.addColumn("firstName").setAutoWidth(true);
-        grid.addColumn("lastName").setAutoWidth(true);
-        grid.addColumn("email").setAutoWidth(true);
-        grid.addColumn("phone").setAutoWidth(true);
-        grid.addColumn("dateOfBirth").setAutoWidth(true);
-        grid.addColumn("occupation").setAutoWidth(true);
-        grid.addColumn("role").setAutoWidth(true);
+        grid = new Grid<>(Usuario.class, false);
+        grid.addColumn("nombre").setAutoWidth(true);
+        grid.addColumn("apellido").setAutoWidth(true);
+        grid.addColumn("correo").setAutoWidth(true);
+        grid.addColumn("tipo").setAutoWidth(true);
 
-        grid.setItems(query -> samplePersonService.list(
+        grid.setItems(query -> usuarioService.list(
                 PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)),
                 filters).stream());
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
@@ -104,7 +106,7 @@ public class ProyectosView extends Div {
         grid.getDataProvider().refreshAll();
     }
 
-    public static class Filters extends Div implements Specification<SamplePerson> {
+    public static abstract class Filters extends Div implements Specification<Usuario> {
 
         private final TextField name = new TextField("Name");
         private final TextField phone = new TextField("Phone");
@@ -163,77 +165,6 @@ public class ProyectosView extends Div {
             dateRangeComponent.addClassName(LumoUtility.Gap.XSMALL);
 
             return dateRangeComponent;
-        }
-
-        @Override
-        public Predicate toPredicate(Root<SamplePerson> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (!name.isEmpty()) {
-                String lowerCaseFilter = name.getValue().toLowerCase();
-                Predicate firstNameMatch = criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")),
-                        lowerCaseFilter + "%");
-                Predicate lastNameMatch = criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")),
-                        lowerCaseFilter + "%");
-                predicates.add(criteriaBuilder.or(firstNameMatch, lastNameMatch));
-            }
-            if (!phone.isEmpty()) {
-                String databaseColumn = "phone";
-                String ignore = "- ()";
-
-                String lowerCaseFilter = ignoreCharacters(ignore, phone.getValue().toLowerCase());
-                Predicate phoneMatch = criteriaBuilder.like(
-                        ignoreCharacters(ignore, criteriaBuilder, criteriaBuilder.lower(root.get(databaseColumn))),
-                        "%" + lowerCaseFilter + "%");
-                predicates.add(phoneMatch);
-
-            }
-            if (startDate.getValue() != null) {
-                String databaseColumn = "dateOfBirth";
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(databaseColumn),
-                        criteriaBuilder.literal(startDate.getValue())));
-            }
-            if (endDate.getValue() != null) {
-                String databaseColumn = "dateOfBirth";
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(criteriaBuilder.literal(endDate.getValue()),
-                        root.get(databaseColumn)));
-            }
-            if (!occupations.isEmpty()) {
-                String databaseColumn = "occupation";
-                List<Predicate> occupationPredicates = new ArrayList<>();
-                for (String occupation : occupations.getValue()) {
-                    occupationPredicates
-                            .add(criteriaBuilder.equal(criteriaBuilder.literal(occupation), root.get(databaseColumn)));
-                }
-                predicates.add(criteriaBuilder.or(occupationPredicates.toArray(Predicate[]::new)));
-            }
-            if (!roles.isEmpty()) {
-                String databaseColumn = "role";
-                List<Predicate> rolePredicates = new ArrayList<>();
-                for (String role : roles.getValue()) {
-                    rolePredicates.add(criteriaBuilder.equal(criteriaBuilder.literal(role), root.get(databaseColumn)));
-                }
-                predicates.add(criteriaBuilder.or(rolePredicates.toArray(Predicate[]::new)));
-            }
-            return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
-        }
-
-        private String ignoreCharacters(String characters, String in) {
-            String result = in;
-            for (int i = 0; i < characters.length(); i++) {
-                result = result.replace("" + characters.charAt(i), "");
-            }
-            return result;
-        }
-
-        private Expression<String> ignoreCharacters(String characters, CriteriaBuilder criteriaBuilder,
-                                                    Expression<String> inExpression) {
-            Expression<String> expression = inExpression;
-            for (int i = 0; i < characters.length(); i++) {
-                expression = criteriaBuilder.function("replace", String.class, expression,
-                        criteriaBuilder.literal(characters.charAt(i)), criteriaBuilder.literal(""));
-            }
-            return expression;
         }
 
     }
