@@ -21,6 +21,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.data.SamplePerson;
@@ -36,6 +37,7 @@ import java.util.List;
 @Route("proyectos")
 @Menu(order = 6, icon = "line-awesome/svg/archive-solid.svg")
 @Uses(Icon.class)
+@AnonymousAllowed
 public class ProyectosView extends Div {
 
     private final SamplePersonService samplePersonService;

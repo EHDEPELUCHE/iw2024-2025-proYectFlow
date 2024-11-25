@@ -19,6 +19,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import es.uca.iw.components.pricefield.PriceField;
+import jakarta.annotation.security.PermitAll;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.List;
 @PageTitle("Registro Proyecto")
 @Route("registro-proyecto")
 @Menu(order = 3, icon = "line-awesome/svg/egg-solid.svg")
+@PermitAll
 public class RegistroProyectoView extends Composite<VerticalLayout> {
 
     public RegistroProyectoView() {

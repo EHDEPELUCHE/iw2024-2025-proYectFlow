@@ -19,6 +19,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import es.uca.iw.components.pricefield.PriceField;
+import jakarta.annotation.security.RolesAllowed;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.List;
 @PageTitle("Registro Proyecto Alineamiento")
 @Route("registro-proyecto-alineamiento")
 @Menu(order = 4, icon = "line-awesome/svg/egg-solid.svg")
+@RolesAllowed("CIO")
 public class RegistroProyectoAlineamientoView extends Composite<VerticalLayout> {
 
     public RegistroProyectoAlineamientoView() {

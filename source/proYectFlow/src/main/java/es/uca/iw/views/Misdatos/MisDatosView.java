@@ -23,7 +23,7 @@ import jakarta.annotation.security.PermitAll;
 @Route("Ver-mis-datos")
 @Menu(order = 7, icon = "line-awesome/svg/user.svg")
 @PermitAll
-public class MisDatosView extends Composite<VerticalLayout> implements BeforeEnterObserver {
+public class MisDatosView extends Composite<VerticalLayout> /*implements BeforeEnterObserver*/ {
     private final AuthenticatedUser authenticatedUser;
     LoginOverlay loginOverlay = new LoginOverlay();
 
@@ -82,7 +82,7 @@ public class MisDatosView extends Composite<VerticalLayout> implements BeforeEnt
         layoutRow.add(buttonSecondary);
         //loginOverlay.setOpened(true);
     }
-
+/*
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         if (authenticatedUser.get().isPresent()) {
@@ -92,5 +92,5 @@ public class MisDatosView extends Composite<VerticalLayout> implements BeforeEnt
             getUI().ifPresent(ui -> ui.navigate("inicio-sesion"));
         }
         //loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
-    }
+    }*/
 }

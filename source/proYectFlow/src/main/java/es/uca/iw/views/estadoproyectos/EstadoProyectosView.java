@@ -27,11 +27,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
+import jakarta.annotation.security.PermitAll;
 import org.apache.commons.lang3.StringUtils;
 
 @PageTitle("Estado Proyectos")
 @Route("estado-proyectos")
 @Menu(order = 5, icon = "line-awesome/svg/th-solid.svg")
+@PermitAll
 public class EstadoProyectosView extends Div {
 
     private GridPro<Client> grid;
