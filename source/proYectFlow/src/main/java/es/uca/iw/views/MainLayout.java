@@ -21,6 +21,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.views.Misdatos.MisDatosView;
 
 import java.util.List;
@@ -33,9 +34,11 @@ import java.util.List;
 @StyleSheet("../frontend/styles/styles.css")
 public class MainLayout extends AppLayout {
 
+    AuthenticatedUser user;
     private H1 viewTitle;
 
-    public MainLayout() {
+    public MainLayout(AuthenticatedUser user) {
+        this.user = user;
         setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addHeaderContent();
@@ -79,8 +82,11 @@ public class MainLayout extends AppLayout {
         subMenu.addItem(new RouterLink("Profile", MisDatosView.class));
         subMenu.addItem("Settings");
         subMenu.addItem("Help");
-        subMenu.addItem("Sign out");
-
+        MenuItem logoutItem = subMenu.addItem("Cerrar sesión");
+        logoutItem.addClickListener(event -> {
+           
+            user.logout();
+        });
         menuItem.addClassName("fondo");
         horAuxFondo.add(menuBar);
         horAux.add(toggle, image, viewTitle, horAuxFondo);
