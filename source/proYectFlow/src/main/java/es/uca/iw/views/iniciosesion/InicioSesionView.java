@@ -2,7 +2,6 @@ package es.uca.iw.views.iniciosesion;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.dependency.StyleSheet;
-import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.notification.Notification;
@@ -33,6 +32,7 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         LoginI18n i18n = LoginI18n.createDefault();
 
         LoginI18n.Form i18nForm = i18n.getForm();
+        
         i18nForm.setTitle("Inicio Sesión");
         i18nForm.setUsername("Usuario");
         i18nForm.setPassword("Contraseña");
@@ -46,11 +46,11 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         i18nErrorMessage.setMessage("INICIO DE SESIÓN INCORRECTO.");
         i18n.setErrorMessage(i18nErrorMessage);
 
-        LoginForm loginForm = new LoginForm();
+        /*LoginForm loginForm = new LoginForm();
         loginForm.setI18n(i18n);
 
 
-      /*  loginForm.addLoginListener(event -> {
+        loginForm.addLoginListener(event -> {
             String username = event.getUsername();
             String password = event.getPassword();
             if (usuarioService.authenticate(username, password)) {
@@ -76,7 +76,7 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         layoutColumn2.setWidth("100%");
         layoutColumn2.setMaxWidth("800px");
         layoutColumn2.setHeight("min-content");
-        layoutColumn2.setAlignSelf(FlexComponent.Alignment.CENTER, loginForm);
+        layoutColumn2.setAlignSelf(FlexComponent.Alignment.CENTER, loginOverlay);
 
 
         getContent().add(layoutColumn2);
@@ -88,7 +88,7 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
             // Already logged in
             loginOverlay.setOpened(false);
             Notification.show("El usuario no está autenticado, redirigiendo a inicio de sesión.");
-            event.forwardTo("");
+            event.forwardTo("Ver-mis-datos");
         }
         loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
     }

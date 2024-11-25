@@ -21,10 +21,12 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.iw.data.Usuario;
 import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.views.Misdatos.MisDatosView;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -68,27 +70,50 @@ public class MainLayout extends AppLayout {
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, "fondo");
 
         Avatar avatarBasic = new Avatar();
-        avatarBasic.setName("Usuario");
-        avatarBasic.setWidth("40px");
-        avatarBasic.setHeight("40px");
-        avatarBasic.addClassNames(LumoUtility.AlignSelf.END, "fondoAvatar");
-        MenuBar menuBar = new MenuBar();
+        if (user.get().isPresent()) {
+            Optional<Usuario> usuario = user.get();
+            avatarBasic.setName(usuario.get().getNombre());
+            avatarBasic.setWidth("40px");
+            avatarBasic.setHeight("40px");
+            avatarBasic.addClassNames(LumoUtility.AlignSelf.END, "fondoAvatar");
+            MenuBar menuBar = new MenuBar();
 
-        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
+            menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
 
 
-        MenuItem menuItem = menuBar.addItem(avatarBasic);
-        SubMenu subMenu = menuItem.getSubMenu();
-        subMenu.addItem(new RouterLink("Profile", MisDatosView.class));
-        subMenu.addItem("Settings");
-        subMenu.addItem("Help");
-        MenuItem logoutItem = subMenu.addItem("Cerrar sesión");
-        logoutItem.addClickListener(event -> {
-           
-            user.logout();
-        });
-        menuItem.addClassName("fondo");
-        horAuxFondo.add(menuBar);
+            MenuItem menuItem = menuBar.addItem(avatarBasic);
+            SubMenu subMenu = menuItem.getSubMenu();
+            subMenu.addItem(new RouterLink("Mis datos", MisDatosView.class));
+            subMenu.addItem("Settings");
+            subMenu.addItem("Help");
+            MenuItem logoutItem = subMenu.addItem("Cerrar sesión");
+            logoutItem.addClickListener(event -> {
+
+                user.logout();
+            });
+            menuItem.addClassName("fondo");
+            horAuxFondo.add(menuBar);
+
+        } else {
+            avatarBasic.setName("Usuario");
+            avatarBasic.setWidth("40px");
+            avatarBasic.setHeight("40px");
+            avatarBasic.addClassNames(LumoUtility.AlignSelf.END, "fondoAvatar");
+            MenuBar menuBar = new MenuBar();
+
+            menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
+
+
+            MenuItem menuItem = menuBar.addItem(avatarBasic);
+            SubMenu subMenu = menuItem.getSubMenu();
+            subMenu.addItem(new RouterLink("Iniciar sesión", MisDatosView.class));
+
+            menuItem.addClassName("fondo");
+            horAuxFondo.add(menuBar);
+
+        }
+
+
         horAux.add(toggle, image, viewTitle, horAuxFondo);
 
         horAuxFondo.setAlignItems(FlexComponent.Alignment.END);
