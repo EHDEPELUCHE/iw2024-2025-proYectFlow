@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.login.LoginOverlay;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -19,6 +20,7 @@ import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.data.Usuario;
 import es.uca.iw.security.AuthenticatedUser;
+import es.uca.iw.services.UsuarioService;
 import jakarta.annotation.security.PermitAll;
 
 import java.util.Optional;
@@ -30,13 +32,15 @@ import java.util.Optional;
 public class MisDatosView extends Composite<VerticalLayout>  {
     private final BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
     private final AuthenticatedUser authenticatedUser;
+    UsuarioService uservice ;
     TextField username = new TextField();
     TextField nombre = new TextField();
     TextField apellido = new TextField();
     EmailField correo = new EmailField();
     PasswordField contrasenna = new PasswordField();
-    public MisDatosView(AuthenticatedUser authenticatedUser) {
+    public MisDatosView(AuthenticatedUser authenticatedUser, UsuarioService uservice) {
         this.authenticatedUser = authenticatedUser;
+        this.uservice = uservice;
         //binder = new BeanValidationBinder<>(Usuario.class);
         Optional<Usuario> user = authenticatedUser.get();
 
@@ -70,7 +74,19 @@ public class MisDatosView extends Composite<VerticalLayout>  {
         layoutRow.addClassName(LumoUtility.Gap.MEDIUM);
         layoutRow.setWidth("100%");
         layoutRow.getStyle().set("flex-grow", "1");
-        buttonPrimary.setText("Save");
+        buttonPrimary.setText("Guardar");
+        buttonPrimary.addClickListener(e -> {
+            if (binder.validate().isOk()) {
+                uservice.update(binder.getBean());
+
+                binder.setBean(new Usuario());
+                Notification.show("datos actualizados correctamente");
+
+
+            } else {
+                Notification.show("Por favor, verifique los datos de entrada");
+            }
+        });
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonSecondary.setText("Cancel");
