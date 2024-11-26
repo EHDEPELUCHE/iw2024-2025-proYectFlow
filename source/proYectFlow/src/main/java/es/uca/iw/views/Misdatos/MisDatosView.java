@@ -12,33 +12,40 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.router.internal.RouteUtil;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.iw.data.Usuario;
 import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.PermitAll;
+
+import java.util.Optional;
 
 @PageTitle("Mis datos")
 @Route("Ver-mis-datos")
 @Menu(order = 6, icon = "line-awesome/svg/user.svg")
 @PermitAll
-public class MisDatosView extends Composite<VerticalLayout> /*implements BeforeEnterObserver*/ {
+public class MisDatosView extends Composite<VerticalLayout>  {
+    private final BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
     private final AuthenticatedUser authenticatedUser;
-    LoginOverlay loginOverlay = new LoginOverlay();
-
+    TextField username = new TextField();
+    TextField nombre = new TextField();
+    TextField apellido = new TextField();
+    EmailField correo = new EmailField();
+    PasswordField contrasenna = new PasswordField();
     public MisDatosView(AuthenticatedUser authenticatedUser) {
         this.authenticatedUser = authenticatedUser;
-        loginOverlay.setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
+        //binder = new BeanValidationBinder<>(Usuario.class);
+        Optional<Usuario> user = authenticatedUser.get();
+
+
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
-        TextField textField = new TextField();
-        TextField textField2 = new TextField();
-        EmailField emailField = new EmailField();
-        TextField textField3 = new TextField();
-        PasswordField passwordField = new PasswordField();
-        PasswordField passwordField2 = new PasswordField();
+
+       // PasswordField passwordField2 = new PasswordField();
         HorizontalLayout layoutRow = new HorizontalLayout();
         Button buttonPrimary = new Button();
         Button buttonSecondary = new Button();
@@ -52,14 +59,14 @@ public class MisDatosView extends Composite<VerticalLayout> /*implements BeforeE
         h3.setText("Datos personales");
         h3.setWidth("100%");
         formLayout2Col.setWidth("100%");
-        textField.setLabel("Nombre");
-        textField2.setLabel("Apellidos");
-        emailField.setLabel("Email");
-        textField3.setLabel("Teléfono");
-        passwordField.setLabel("Contraseña");
-        passwordField.setWidth("min-content");
-        passwordField2.setLabel("Repetir contraseña");
-        passwordField2.setWidth("min-content");
+        nombre.setLabel("Nombre");
+        apellido.setLabel("Apellidos");
+        correo.setLabel("Email");
+        username.setLabel("Usuario");
+        contrasenna.setLabel("Contraseña");
+        contrasenna.setWidth("min-content");
+        //passwordField2.setLabel("Repetir contraseña");
+        //passwordField2.setWidth("min-content");
         layoutRow.addClassName(LumoUtility.Gap.MEDIUM);
         layoutRow.setWidth("100%");
         layoutRow.getStyle().set("flex-grow", "1");
@@ -71,26 +78,22 @@ public class MisDatosView extends Composite<VerticalLayout> /*implements BeforeE
         getContent().add(layoutColumn2);
         layoutColumn2.add(h3);
         layoutColumn2.add(formLayout2Col);
-        formLayout2Col.add(textField);
-        formLayout2Col.add(textField2);
-        formLayout2Col.add(emailField);
-        formLayout2Col.add(textField3);
-        formLayout2Col.add(passwordField);
-        formLayout2Col.add(passwordField2);
+        formLayout2Col.add(nombre);
+        formLayout2Col.add(apellido);
+        formLayout2Col.add(correo);
+        formLayout2Col.add(username);
+       // formLayout2Col.add(contrasenna);
+        //formLayout2Col.add(passwordField2);
+        RouterLink cambiocontrasenna = new RouterLink("Cambiar contraseña", CambioContrasenna.class);
+        layoutColumn2.add(cambiocontrasenna);
         layoutColumn2.add(layoutRow);
+
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
-        //loginOverlay.setOpened(true);
+
+        Usuario aux = user.get();
+        binder.bindInstanceFields(this);
+        binder.setBean(aux);
     }
-/*
-    @Override
-    public void beforeEnter(BeforeEnterEvent event) {
-        if (authenticatedUser.get().isPresent()) {
-            //loginOverlay.setOpened(false);
-            //event.forwardTo("");
-        } else {
-            getUI().ifPresent(ui -> ui.navigate("inicio-sesion"));
-        }
-        //loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
-    }*/
+
 }
