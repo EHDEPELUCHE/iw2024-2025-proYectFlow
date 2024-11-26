@@ -50,20 +50,18 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         i18n.setErrorMessage(i18nErrorMessage);
 
         loginOverlay.setI18n(i18n);
-        loginOverlay.setOpened(true); // Abre el login overlay
+        loginOverlay.setOpened(true);
         loginOverlay.setForgotPasswordButtonVisible(true); // Opcional
 
-        // Añadir el listener para la autenticación y redirección
+        // Autenticación y redirección
         loginOverlay.addLoginListener(event -> {
             String username = event.getUsername();
             String password = event.getPassword();
 
             if (usuarioService.authenticate(username, password)) {
-                // Autenticación exitosa: redirige a la ruta correspondiente
                 Notification.show("Autenticación exitosa", 3000, Notification.Position.MIDDLE);
-                getUI().ifPresent(ui -> ui.navigate("Ver-mis-datos")); // Asegúrate de que "ver-mis-datos" sea correcto
+                getUI().ifPresent(ui -> ui.navigate("Ver-mis-datos"));
             } else {
-                // Error de autenticación
                 Notification.show("Usuario o contraseña incorrectos", 3000, Notification.Position.MIDDLE);
                 loginOverlay.setError(true);
             }
@@ -85,7 +83,6 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         if (authenticatedUser.get().isPresent()) {
-            // Ya autenticado, redirige directamente
             loginOverlay.setOpened(false);
             Notification.show("Usuario autenticado, redirigiendo a 'Ver-mis-datos'.");
             event.forwardTo("Ver-mis-datos");
