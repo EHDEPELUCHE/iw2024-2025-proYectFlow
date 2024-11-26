@@ -26,7 +26,7 @@ import java.util.List;
 
 @PageTitle("Registro Proyecto")
 @Route("registro-proyecto")
-@Menu(order = 3, icon = "line-awesome/svg/egg-solid.svg")
+@Menu(order = 2, icon = "line-awesome/svg/egg-solid.svg")
 @PermitAll
 public class RegistroProyectoView extends Composite<VerticalLayout> {
 

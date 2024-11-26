@@ -13,7 +13,7 @@ import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Estado Proyectos")
 @Route("estado-proyectos")
-@Menu(order = 5, icon = "line-awesome/svg/th-solid.svg")
+@Menu(order = 4, icon = "line-awesome/svg/th-solid.svg")
 @PermitAll
 public class EstadoProyectosView extends Div {
 

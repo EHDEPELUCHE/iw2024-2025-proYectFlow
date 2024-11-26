@@ -35,7 +35,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 @PageTitle("Proyectos")
 @Route("proyectos")
-@Menu(order = 6, icon = "line-awesome/svg/archive-solid.svg")
+@Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg")
 @Uses(Icon.class)
 @AnonymousAllowed
 public class ProyectosView extends Div {

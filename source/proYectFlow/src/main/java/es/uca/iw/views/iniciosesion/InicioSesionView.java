@@ -2,6 +2,7 @@ package es.uca.iw.views.iniciosesion;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.notification.Notification;
@@ -17,27 +18,29 @@ import es.uca.iw.services.UsuarioService;
 @StyleSheet("../../frontend/styles/styles.css")
 @PageTitle("Inicio Sesión")
 @Route("inicio-sesion")
-@Menu(order = 2, icon = "line-awesome/svg/user.svg")
 @AnonymousAllowed
 public class InicioSesionView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
-    static LoginOverlay loginOverlay = new LoginOverlay();
+    private final LoginOverlay loginOverlay;
     private final AuthenticatedUser authenticatedUser;
-    LoginI18n i18n = LoginI18n.createDefault();
+    private final UsuarioService usuarioService;
 
     public InicioSesionView(AuthenticatedUser authenticatedUser, UsuarioService usuarioService) {
         this.authenticatedUser = authenticatedUser;
+        this.usuarioService = usuarioService;
+        this.loginOverlay = new LoginOverlay();
+
         VerticalLayout layoutColumn2 = new VerticalLayout();
+
+        // Configuración del LoginOverlay
         loginOverlay.setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
         LoginI18n i18n = LoginI18n.createDefault();
-
         LoginI18n.Form i18nForm = i18n.getForm();
-        
+
         i18nForm.setTitle("Inicio Sesión");
         i18nForm.setUsername("Usuario");
         i18nForm.setPassword("Contraseña");
         i18nForm.setSubmit("Aceptar");
-
         i18nForm.setForgotPassword("Quiero recuperar mi contraseña");
         i18n.setForm(i18nForm);
 
@@ -46,27 +49,25 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         i18nErrorMessage.setMessage("INICIO DE SESIÓN INCORRECTO.");
         i18n.setErrorMessage(i18nErrorMessage);
 
-        /*LoginForm loginForm = new LoginForm();
-        loginForm.setI18n(i18n);
-
-
-        loginForm.addLoginListener(event -> {
-            String username = event.getUsername();
-            String password = event.getPassword();
-            if (usuarioService.authenticate(username, password)) {
-                // Redirigir al usuario a la página de sus datos
-                Notification.show("USUARIO Y CONTRASEÑAS MATCH");
-                getUI().ifPresent(ui -> ui.navigate("Ver-mis-datos"));
-            } else {
-                Notification.show("Fallo en la autenticación.");
-                loginForm.setError(true);
-            }
-        });*/
-
-
         loginOverlay.setI18n(i18n);
         loginOverlay.setOpened(true); // Abre el login overlay
         loginOverlay.setForgotPasswordButtonVisible(true); // Opcional
+
+        // Añadir el listener para la autenticación y redirección
+        loginOverlay.addLoginListener(event -> {
+            String username = event.getUsername();
+            String password = event.getPassword();
+
+            if (usuarioService.authenticate(username, password)) {
+                // Autenticación exitosa: redirige a la ruta correspondiente
+                Notification.show("Autenticación exitosa", 3000, Notification.Position.MIDDLE);
+                getUI().ifPresent(ui -> ui.navigate("Ver-mis-datos")); // Asegúrate de que "ver-mis-datos" sea correcto
+            } else {
+                // Error de autenticación
+                Notification.show("Usuario o contraseña incorrectos", 3000, Notification.Position.MIDDLE);
+                loginOverlay.setError(true);
+            }
+        });
 
         layoutColumn2.add(loginOverlay);
         getContent().setWidth("100%");
@@ -78,16 +79,15 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         layoutColumn2.setHeight("min-content");
         layoutColumn2.setAlignSelf(FlexComponent.Alignment.CENTER, loginOverlay);
 
-
         getContent().add(layoutColumn2);
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         if (authenticatedUser.get().isPresent()) {
-            // Already logged in
+            // Ya autenticado, redirige directamente
             loginOverlay.setOpened(false);
-            Notification.show("El usuario no está autenticado, redirigiendo a inicio de sesión.");
+            Notification.show("Usuario autenticado, redirigiendo a 'Ver-mis-datos'.");
             event.forwardTo("Ver-mis-datos");
         }
         loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));

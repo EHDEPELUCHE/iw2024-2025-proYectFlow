@@ -21,7 +21,7 @@ import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Mis datos")
 @Route("Ver-mis-datos")
-@Menu(order = 7, icon = "line-awesome/svg/user.svg")
+@Menu(order = 6, icon = "line-awesome/svg/user.svg")
 @PermitAll
 public class MisDatosView extends Composite<VerticalLayout> /*implements BeforeEnterObserver*/ {
     private final AuthenticatedUser authenticatedUser;
@@ -49,7 +49,7 @@ public class MisDatosView extends Composite<VerticalLayout> /*implements BeforeE
         layoutColumn2.setWidth("100%");
         layoutColumn2.setMaxWidth("800px");
         layoutColumn2.setHeight("min-content");
-        h3.setText("Registro de usuario");
+        h3.setText("Datos personales");
         h3.setWidth("100%");
         formLayout2Col.setWidth("100%");
         textField.setLabel("Nombre");
