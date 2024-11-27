@@ -23,7 +23,9 @@ public class SecurityConfiguration extends VaadinWebSecurity {
     protected void configure(HttpSecurity http) throws Exception {
         //https.requiresChannel().anyRequest().requiresSecure();
         http.authorizeHttpRequests(
-                authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/images/*.png")).permitAll());
+                authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/img/*.png")).permitAll());
+        http.authorizeHttpRequests(
+                authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/img/*.jpg")).permitAll());
 
         // Icons from the line-awesome addon
         http.authorizeHttpRequests(authorize -> authorize

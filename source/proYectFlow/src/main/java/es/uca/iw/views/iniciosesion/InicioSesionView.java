@@ -52,6 +52,7 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         loginOverlay.setI18n(i18n);
         loginOverlay.setOpened(true);
         loginOverlay.setForgotPasswordButtonVisible(true); // Opcional
+        loginOverlay.setTitle("Inicio Sesion");
 
         // Autenticación y redirección
         loginOverlay.addLoginListener(event -> {
