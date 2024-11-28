@@ -44,7 +44,6 @@ public class MisDatosView extends Composite<VerticalLayout>  {
         //binder = new BeanValidationBinder<>(Usuario.class);
         Optional<Usuario> user = authenticatedUser.get();
 
-
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
@@ -80,8 +79,7 @@ public class MisDatosView extends Composite<VerticalLayout>  {
                 uservice.update(binder.getBean());
 
                 binder.setBean(new Usuario());
-                Notification.show("datos actualizados correctamente");
-
+                Notification.show("Datos actualizados correctamente");
 
             } else {
                 Notification.show("Por favor, verifique los datos de entrada");

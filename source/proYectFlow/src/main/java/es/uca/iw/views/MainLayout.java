@@ -33,7 +33,6 @@ import java.util.Optional;
  */
 @Layout
 @AnonymousAllowed
-@StyleSheet("../frontend/styles/styles.css")
 public class MainLayout extends AppLayout {
 
     AuthenticatedUser user;
@@ -45,7 +44,6 @@ public class MainLayout extends AppLayout {
         addDrawerContent();
         addHeaderContent();
     }
-
 
     private void addHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();

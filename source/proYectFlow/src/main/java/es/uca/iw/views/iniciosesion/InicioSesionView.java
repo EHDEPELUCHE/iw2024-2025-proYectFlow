@@ -15,9 +15,9 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.services.UsuarioService;
 
-@StyleSheet("../../frontend/styles/styles.css")
+
 @PageTitle("Inicio Sesión")
-@Route("inicio-sesion")
+@Route("login")
 @AnonymousAllowed
 public class InicioSesionView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
@@ -53,19 +53,12 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         loginOverlay.setOpened(true);
         loginOverlay.setForgotPasswordButtonVisible(true); // Opcional
         loginOverlay.setTitle("Inicio Sesion");
+        loginOverlay.setAction("login");
 
         // Autenticación y redirección
         loginOverlay.addLoginListener(event -> {
             String username = event.getUsername();
             String password = event.getPassword();
-
-            if (usuarioService.authenticate(username, password)) {
-                Notification.show("Autenticación exitosa", 3000, Notification.Position.MIDDLE);
-                getUI().ifPresent(ui -> ui.navigate("Ver-mis-datos"));
-            } else {
-                Notification.show("Usuario o contraseña incorrectos", 3000, Notification.Position.MIDDLE);
-                loginOverlay.setError(true);
-            }
         });
 
         layoutColumn2.add(loginOverlay);
@@ -83,11 +76,13 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        if (authenticatedUser.get().isPresent()) {
+      /*  if (authenticatedUser.get().isPresent()) {
             loginOverlay.setOpened(false);
             Notification.show("Usuario autenticado, redirigiendo a 'Ver-mis-datos'.");
             event.forwardTo("Ver-mis-datos");
         }
         loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
+
+       */
     }
 }
