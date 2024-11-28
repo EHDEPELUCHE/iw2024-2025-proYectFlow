@@ -1,6 +1,7 @@
 package es.uca.iw.views.registrodeusuario;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -72,6 +73,7 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         layoutRow.getStyle().set("flex-grow", "1");
         buttonPrimary.setText("Guardar");
         buttonPrimary.addClickListener(e -> onRegisterButtonClick(passwordField2));
+        buttonPrimary.addClickShortcut(Key.ENTER);
 
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
