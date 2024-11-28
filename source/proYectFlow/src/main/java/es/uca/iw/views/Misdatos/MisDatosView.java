@@ -1,6 +1,7 @@
 package es.uca.iw.views.Misdatos;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -41,7 +42,6 @@ public class MisDatosView extends Composite<VerticalLayout>  {
     public MisDatosView(AuthenticatedUser authenticatedUser, UsuarioService uservice) {
         this.authenticatedUser = authenticatedUser;
         this.uservice = uservice;
-        //binder = new BeanValidationBinder<>(Usuario.class);
         Optional<Usuario> user = authenticatedUser.get();
 
         VerticalLayout layoutColumn2 = new VerticalLayout();
@@ -68,25 +68,28 @@ public class MisDatosView extends Composite<VerticalLayout>  {
         username.setLabel("Usuario");
         contrasenna.setLabel("Contraseña");
         contrasenna.setWidth("min-content");
-        //passwordField2.setLabel("Repetir contraseña");
-        //passwordField2.setWidth("min-content");
+
         layoutRow.addClassName(LumoUtility.Gap.MEDIUM);
         layoutRow.setWidth("100%");
         layoutRow.getStyle().set("flex-grow", "1");
         buttonPrimary.setText("Guardar");
         buttonPrimary.addClickListener(e -> {
             if (binder.validate().isOk()) {
-                uservice.update(binder.getBean());
+                try{
+                    uservice.update(binder.getBean());
 
-                binder.setBean(new Usuario());
-                Notification.show("Datos actualizados correctamente");
-
+                    binder.setBean(new Usuario());
+                    Notification.show("datos actualizados correctamente");
+                } catch (Exception ex) {
+                    Notification.show("Usuario o correo repetido");
+                }
             } else {
                 Notification.show("Por favor, verifique los datos de entrada");
             }
         });
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonPrimary.addClickShortcut(Key.ENTER);
         buttonSecondary.setText("Cancel");
         buttonSecondary.setWidth("min-content");
         getContent().add(layoutColumn2);
@@ -96,8 +99,6 @@ public class MisDatosView extends Composite<VerticalLayout>  {
         formLayout2Col.add(apellido);
         formLayout2Col.add(correo);
         formLayout2Col.add(username);
-       // formLayout2Col.add(contrasenna);
-        //formLayout2Col.add(passwordField2);
         RouterLink cambiocontrasenna = new RouterLink("Cambiar contraseña", CambioContrasenna.class);
         layoutColumn2.add(cambiocontrasenna);
         layoutColumn2.add(layoutRow);
