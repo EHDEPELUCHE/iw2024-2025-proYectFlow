@@ -26,7 +26,7 @@ import java.util.Optional;
 @PageTitle("Cambio Contraseña")
 @Route("Cambiocontraseña")
 @PermitAll
-public class CambiodeContrasennaView extends Composite<VerticalLayout> {
+public class CambioContrasennaView extends Composite<VerticalLayout> {
 
     private final BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
     private final AuthenticatedUser authenticatedUser;
@@ -37,7 +37,7 @@ public class CambiodeContrasennaView extends Composite<VerticalLayout> {
     private PasswordField password1 = new PasswordField();
     private PasswordField password2 = new PasswordField();
 
-    public CambiodeContrasennaView(AuthenticatedUser authenticatedUser, UsuarioService uservice, PasswordEncoder passwordEncoder) {
+    public CambioContrasennaView(AuthenticatedUser authenticatedUser, UsuarioService uservice, PasswordEncoder passwordEncoder) {
         this.authenticatedUser = authenticatedUser;
         this.uservice = uservice;
         this.passwordEncoder = passwordEncoder;
