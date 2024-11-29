@@ -94,7 +94,7 @@ public class MisDatosView extends Composite<VerticalLayout>  {
         formLayout2Col.add(apellido);
         formLayout2Col.add(correo);
         formLayout2Col.add(username);
-        RouterLink cambiocontrasenna = new RouterLink("Cambiar contraseña", CambioContrasennaView.class);
+        RouterLink cambiocontrasenna = new RouterLink("Cambiar contraseña", CambiodeContrasennaView.class);
         layoutColumn2.add(cambiocontrasenna);
         layoutColumn2.add(layoutRow);
 
