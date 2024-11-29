@@ -18,6 +18,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.data.Usuario;
 import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.services.UsuarioService;
+import es.uca.iw.views.pantallainicio.PantallaInicioView;
 import jakarta.annotation.security.PermitAll;
 
 import java.util.Optional;
@@ -85,8 +86,9 @@ public class MisDatosView extends Composite<VerticalLayout>  {
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonPrimary.addClickShortcut(Key.ENTER);
-        buttonSecondary.setText("Cancel");
+        buttonSecondary.setText("Cancelar");
         buttonSecondary.setWidth("min-content");
+
         getContent().add(layoutColumn2);
         layoutColumn2.add(h3);
         layoutColumn2.add(formLayout2Col);
@@ -95,15 +97,13 @@ public class MisDatosView extends Composite<VerticalLayout>  {
         formLayout2Col.add(correo);
         formLayout2Col.add(username);
         RouterLink cambiocontrasenna = new RouterLink("Cambiar contraseña", CambioContrasennaView.class);
-        layoutColumn2.add(cambiocontrasenna);
-        layoutColumn2.add(layoutRow);
+        RouterLink cancelarcambio = new RouterLink("Volver", PantallaInicioView.class);
 
-        layoutRow.add(buttonPrimary);
-        layoutRow.add(buttonSecondary);
+        layoutColumn2.add(cambiocontrasenna, layoutRow);
+        layoutRow.add(buttonPrimary, buttonSecondary, cancelarcambio);
 
         Usuario aux = user.get();
         binder.bindInstanceFields(this);
         binder.setBean(aux);
     }
-
 }

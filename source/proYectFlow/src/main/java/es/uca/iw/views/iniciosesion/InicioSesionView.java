@@ -7,6 +7,7 @@ import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.router.internal.RouteUtil;
@@ -14,7 +15,7 @@ import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.services.UsuarioService;
-
+import es.uca.iw.views.registrodeusuario.RegistrodeusuarioView;
 
 @PageTitle("Inicio Sesión")
 @Route("login")
@@ -52,7 +53,7 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         loginOverlay.setI18n(i18n);
         loginOverlay.setOpened(true);
         loginOverlay.setForgotPasswordButtonVisible(true); // Opcional
-        loginOverlay.setTitle("Inicio Sesion");
+        loginOverlay.setTitle("Inicio Sesión");
         loginOverlay.setAction("login");
 
         // Autenticación y redirección
@@ -61,7 +62,12 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
             String password = event.getPassword();
         });
 
-        layoutColumn2.add(loginOverlay);
+        HorizontalLayout layoutRow = new HorizontalLayout();
+        RouterLink registrarUsuario = new RouterLink("¿No tienes cuenta? Regístrate", RegistrodeusuarioView.class);
+        registrarUsuario.getStyle().set("margin-top", "10px");
+        layoutRow.add(registrarUsuario);
+
+        layoutColumn2.add(loginOverlay, layoutRow);
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
         getContent().setJustifyContentMode(FlexComponent.JustifyContentMode.START);
@@ -76,12 +82,11 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-      /*  if (authenticatedUser.get().isPresent()) {
+        if (authenticatedUser.get().isPresent()) {
             loginOverlay.setOpened(false);
             Notification.show("Usuario autenticado, redirigiendo a 'Ver-mis-datos'.");
             event.forwardTo("Ver-mis-datos");
         }
         loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
-       */
     }
 }

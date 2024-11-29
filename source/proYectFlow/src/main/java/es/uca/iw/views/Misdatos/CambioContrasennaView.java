@@ -14,10 +14,12 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.data.Usuario;
 import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.services.UsuarioService;
+import es.uca.iw.views.pantallainicio.PantallaInicioView;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -80,11 +82,12 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonPrimary.addClickShortcut(Key.ENTER);
         buttonSecondary.setWidth("min-content");
+        RouterLink cancelarcambio = new RouterLink("Volver", MisDatosView.class);
 
         getContent().add(layoutColumn2);
         layoutColumn2.add(h1, formLayout2Col, layoutRow);
         formLayout2Col.add(contrasenna2, password1, password2);
-        layoutRow.add(buttonPrimary, buttonSecondary);
+        layoutRow.add(buttonPrimary, cancelarcambio);
 
         //binder.bindInstanceFields(this);
         //binder.setBean(usuario);
@@ -112,6 +115,7 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
                 contrasenna2.clear();
                 password1.clear();
                 password2.clear();
+                authenticatedUser.logout();
             } catch (Exception ex) {
                 Notification.show("Error al actualizar la contraseña: " + ex.getMessage());
             }
