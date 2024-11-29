@@ -6,18 +6,14 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.*;
-import com.vaadin.flow.router.internal.RouteUtil;
-import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.data.Usuario;
 import es.uca.iw.security.AuthenticatedUser;
@@ -34,11 +30,12 @@ public class MisDatosView extends Composite<VerticalLayout>  {
     private final BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
     private final AuthenticatedUser authenticatedUser;
     UsuarioService uservice ;
+
     TextField username = new TextField();
     TextField nombre = new TextField();
     TextField apellido = new TextField();
     EmailField correo = new EmailField();
-    PasswordField contrasenna = new PasswordField();
+
     public MisDatosView(AuthenticatedUser authenticatedUser, UsuarioService uservice) {
         this.authenticatedUser = authenticatedUser;
         this.uservice = uservice;
@@ -66,8 +63,6 @@ public class MisDatosView extends Composite<VerticalLayout>  {
         apellido.setLabel("Apellidos");
         correo.setLabel("Email");
         username.setLabel("Usuario");
-        contrasenna.setLabel("Contraseña");
-        contrasenna.setWidth("min-content");
 
         layoutRow.addClassName(LumoUtility.Gap.MEDIUM);
         layoutRow.setWidth("100%");
@@ -99,7 +94,7 @@ public class MisDatosView extends Composite<VerticalLayout>  {
         formLayout2Col.add(apellido);
         formLayout2Col.add(correo);
         formLayout2Col.add(username);
-        RouterLink cambiocontrasenna = new RouterLink("Cambiar contraseña", CambioContrasenna.class);
+        RouterLink cambiocontrasenna = new RouterLink("Cambiar contraseña", CambioContrasennaView.class);
         layoutColumn2.add(cambiocontrasenna);
         layoutColumn2.add(layoutRow);
 

@@ -82,7 +82,6 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
             event.forwardTo("Ver-mis-datos");
         }
         loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
-
        */
     }
 }

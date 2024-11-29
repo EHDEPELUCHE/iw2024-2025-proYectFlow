@@ -78,7 +78,6 @@ public class MainLayout extends AppLayout {
 
             menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
 
-
             MenuItem menuItem = menuBar.addItem(avatarBasic);
             SubMenu subMenu = menuItem.getSubMenu();
             subMenu.addItem(new RouterLink("Mis datos", MisDatosView.class));
@@ -101,16 +100,13 @@ public class MainLayout extends AppLayout {
 
             menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
 
-
             MenuItem menuItem = menuBar.addItem(avatarBasic);
             SubMenu subMenu = menuItem.getSubMenu();
             subMenu.addItem(new RouterLink("Iniciar sesión", MisDatosView.class));
 
             menuItem.addClassName("fondo");
             horAuxFondo.add(menuBar);
-
         }
-
 
         horAux.add(toggle, image, viewTitle, horAuxFondo);
 

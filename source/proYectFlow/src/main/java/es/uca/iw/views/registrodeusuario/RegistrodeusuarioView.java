@@ -45,7 +45,8 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         PasswordField passwordField2 = new PasswordField();
         HorizontalLayout layoutRow = new HorizontalLayout();
         Button buttonPrimary = new Button();
-        Button buttonSecondary = new Button();VerticalLayout layoutColumn2 = new VerticalLayout();
+        Button buttonSecondary = new Button();
+        VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
 
