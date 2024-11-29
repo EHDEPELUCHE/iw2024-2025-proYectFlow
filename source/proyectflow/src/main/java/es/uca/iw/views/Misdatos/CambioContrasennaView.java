@@ -85,8 +85,7 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
         layoutColumn2.add(h1, formLayout2Col, layoutRow);
         formLayout2Col.add(contrasenna2, password1, password2);
         layoutRow.add(buttonPrimary, buttonSecondary);
-
-
+        
         //binder.bindInstanceFields(this);
         //binder.setBean(usuario);
     }
