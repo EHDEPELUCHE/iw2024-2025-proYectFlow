@@ -75,4 +75,17 @@ public class UsuarioService {
             return false;
         }
     }
+
+    public boolean registerUserAdmin(Usuario user) {
+        user.setContrasenna(passwordEncoder.encode(user.getPassword()));
+        user.setTipo(user.getTipo());
+        try {
+            repository.save(user);
+            //Aun no tenemos emailService
+            //emailService.sendRegistrationEmail(user);
+            return true;
+        } catch (DataIntegrityViolationException e) {
+            return false;
+        }
+    }
 }

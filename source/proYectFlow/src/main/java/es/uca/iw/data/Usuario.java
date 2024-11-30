@@ -50,6 +50,15 @@ public class Usuario extends AbstractEntity implements UserDetails {
 
     public Usuario() {}
 
+    public Usuario(String nombre,String username, String apellido, String correo, String contrasenna, Roles tipo){
+        this.nombre = nombre;
+        this.username = username;
+        this.apellido = apellido;
+        this.correo = correo;
+        this.contrasenna = contrasenna;
+        this.tipo = tipo;
+    }
+
     public Roles getTipo() {
         return tipo;
     }
