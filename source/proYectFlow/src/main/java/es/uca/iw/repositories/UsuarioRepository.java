@@ -1,5 +1,6 @@
 package es.uca.iw.repositories;
 
+import es.uca.iw.data.Roles;
 import es.uca.iw.data.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,4 +14,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     Page<Usuario> findAll(Specification<Usuario> filter, Pageable pageable);
 
     Usuario findByUsername(String nombre);
+
+    Usuario findByTipo(Roles roles);
+
+    Usuario findByCorreo(String value);
 }

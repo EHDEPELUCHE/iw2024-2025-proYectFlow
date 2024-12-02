@@ -3,24 +3,27 @@ package es.uca.iw.components.pricefield;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.NumberField;
+
+import java.math.BigDecimal;
 
 public class PriceField extends CustomField<PriceField.Price> {
 
-    public record Price(Double amount, String currency) {
+    public record Price(BigDecimal amount, String currency) {
     };
 
     private String[] currencies = new String[]{"EUR", "USD", "PLN"};
 
     private Select<String> currency;
 
-    private NumberField amount;
+    private BigDecimalField amount;
 
     public PriceField() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setSpacing(true);
 
-        amount = new NumberField();
+        amount = new BigDecimalField();
         amount.setPlaceholder("Amount");
 
         currency = new Select<>();
@@ -31,6 +34,7 @@ public class PriceField extends CustomField<PriceField.Price> {
 
         add(horizontalLayout);
     }
+
 
     @Override
     protected Price generateModelValue() {

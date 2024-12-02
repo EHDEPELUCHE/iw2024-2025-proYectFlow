@@ -88,4 +88,12 @@ public class UsuarioService {
             return false;
         }
     }
+
+    public Usuario get(Roles roles) {
+        return repository.findByTipo(roles);
+    }
+
+    public Usuario get(String value) {
+        return repository.findByCorreo(value);
+    }
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 import java.math.BigDecimal;
+import java.sql.Blob;
 import java.util.Date;
 
 
@@ -15,9 +16,10 @@ public class Proyecto extends AbstractEntity {
     Date fecha, fechaSolicitud;
     BigDecimal coste, aportacionInicial;
     double puntuacionEstrategica, puntuacionTecnica, puntuacionAval;
+    Blob memoria;
     @ManyToOne
     @JoinColumn(name = "aval_id")
-    Usuario aval;
+    Usuario promotor;
 
     @ManyToOne
     @JoinColumn(name = "solicitante_id")
@@ -26,12 +28,12 @@ public class Proyecto extends AbstractEntity {
     //List<Integer> ObjEstrategicos;
 
     public Proyecto(String nombre, String descripcion, String interesados, String alcance, BigDecimal coste, BigDecimal aportacionInicial,
-                    double puntuacionAval, double puntuacionEstrategica, Usuario aval, Usuario solicitante/*List<int> ObjEstrategicos*/) {
+                    Usuario aval, Usuario solicitante/*List<int> ObjEstrategicos*/) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.interesados = interesados;
         this.alcance = alcance;
-        this.coste = BigDecimal.valueOf(0.0);
+        this.coste = coste;
         this.aportacionInicial = aportacionInicial;
         this.puntuacionEstrategica = -1;
         this.puntuacionTecnica = -1;
@@ -91,13 +93,13 @@ public class Proyecto extends AbstractEntity {
 
     //NO RECUERDO MÁS ATRIBUTOS
     public Usuario getAval() {
-        return aval;
+        return promotor;
     }
 
     //Este metodo tendria restricción
     public void setAval(Usuario aval) {
         if (aval.getTipo() == Roles.PROMOTOR)
-            this.aval = aval;
+            this.promotor = aval;
     }
 
     public String getNombre() {

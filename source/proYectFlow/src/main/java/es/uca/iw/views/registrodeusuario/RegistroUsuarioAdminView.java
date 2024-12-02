@@ -32,7 +32,7 @@ import jakarta.annotation.security.RolesAllowed;
 @Route("registro-usuario-admin")
 @Menu(order = 1, icon = "line-awesome/svg/user.svg")
 @RolesAllowed("ADMIN")
-//@AnonymousAllowed
+
 public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Usuario> binder;
     TextField username = new TextField();
@@ -106,7 +106,6 @@ public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
         binder = new BeanValidationBinder<>(Usuario.class);
         binder.bindInstanceFields(this);
 
-        // binder.setBean(new Usuario());
     }
 
     public void onRegisterButtonClick(PasswordField passwordField2) {

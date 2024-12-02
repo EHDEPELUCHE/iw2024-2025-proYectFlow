@@ -2,6 +2,7 @@ package es.uca.iw.services;
 
 import es.uca.iw.data.Proyecto;
 import es.uca.iw.repositories.ProyectoRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -40,5 +41,16 @@ public class ProyectoService {
 
     public int count() {
         return (int) repository.count();
+    }
+
+    public boolean registerProyecto(Proyecto proyecto) {
+
+        try {
+            repository.save(proyecto);
+
+            return true;
+        } catch (DataIntegrityViolationException e) {
+            return false;
+        }
     }
 }
