@@ -154,6 +154,17 @@ public class Proyecto extends AbstractEntity {
         this.puntuacionTecnica = puntuacionTecnica;
     }
 
+    public String getInteresados() {
+        return interesados;
+    }
+
+    public String getAlcance() {
+        return alcance;
+    }
+    public String getPromotor() {
+        return promotor.getNombre();
+    }
+    
     public enum Estado {pedido, avalado, evaluadotecnicamente, evaluadoestrategicamente, Enproceso, Denegado}
 
 }

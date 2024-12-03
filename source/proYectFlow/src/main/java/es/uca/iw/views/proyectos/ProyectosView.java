@@ -24,7 +24,9 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.iw.data.Proyecto;
 import es.uca.iw.data.Usuario;
+import es.uca.iw.services.ProyectoService;
 import es.uca.iw.services.UsuarioService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -40,20 +42,24 @@ import org.springframework.data.jpa.domain.Specification;
 @AnonymousAllowed
 public class ProyectosView extends Div {
 
-    private final UsuarioService usuarioService;
-    private Grid<Usuario> grid;
+    private final ProyectoService proyectoService;
+    private Grid<Proyecto> grid;
     private Filters filters;
 
-    public ProyectosView(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
+    public ProyectosView(ProyectoService proyectoService) {
+        
         setSizeFull();
         addClassNames("proyectos-view");
+        this.proyectoService = proyectoService;
 
+        
         filters = new Filters(() -> refreshGrid()) {
             @Override
-            public Predicate toPredicate(Root<Usuario> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                return null;
+            public Predicate toPredicate(Root<Proyecto> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.conjunction();
             }
+
+
         };
         VerticalLayout layout = new VerticalLayout(createMobileFilters(), filters, createGrid());
         layout.setSizeFull();
@@ -87,13 +93,20 @@ public class ProyectosView extends Div {
     }
 
     private Component createGrid() {
-        grid = new Grid<>(Usuario.class, false);
+        grid = new Grid<>(Proyecto.class, false);
         grid.addColumn("nombre").setAutoWidth(true);
-        grid.addColumn("apellido").setAutoWidth(true);
-        grid.addColumn("correo").setAutoWidth(true);
-        grid.addColumn("tipo").setAutoWidth(true);
+        grid.addColumn("descripcion").setAutoWidth(true);
+        grid.addColumn("interesados").setAutoWidth(true);
+        grid.addColumn("alcance").setAutoWidth(true);
+        grid.addColumn("fechaSolicitud").setAutoWidth(true);
+        grid.addColumn("coste").setAutoWidth(true);
+        grid.addColumn("aportacionInicial").setAutoWidth(true);
+        grid.addColumn("promotor").setAutoWidth(true);
+        grid.addColumn("estado").setAutoWidth(true);
+        
 
-        grid.setItems(query -> usuarioService.list(
+
+        grid.setItems(query -> proyectoService.list(
                 PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)),
                 filters).stream());
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
@@ -106,9 +119,9 @@ public class ProyectosView extends Div {
         grid.getDataProvider().refreshAll();
     }
 
-    public static abstract class Filters extends Div implements Specification<Usuario> {
+    public static abstract class Filters extends Div implements Specification<Proyecto> {
 
-        private final TextField name = new TextField("Name");
+        private final TextField nombre = new TextField("Name");
         private final TextField phone = new TextField("Phone");
         private final DatePicker startDate = new DatePicker("Date of Birth");
         private final DatePicker endDate = new DatePicker();
@@ -121,7 +134,7 @@ public class ProyectosView extends Div {
             addClassName("filter-layout");
             addClassNames(LumoUtility.Padding.Horizontal.LARGE, LumoUtility.Padding.Vertical.MEDIUM,
                     LumoUtility.BoxSizing.BORDER);
-            name.setPlaceholder("First or last name");
+            nombre.setPlaceholder("First or last name");
 
             occupations.setItems("Insurance Clerk", "Mortarman", "Beer Coil Cleaner", "Scale Attendant");
 
@@ -132,7 +145,7 @@ public class ProyectosView extends Div {
             Button resetBtn = new Button("Reset");
             resetBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             resetBtn.addClickListener(e -> {
-                name.clear();
+                nombre.clear();
                 phone.clear();
                 startDate.clear();
                 endDate.clear();
@@ -148,7 +161,7 @@ public class ProyectosView extends Div {
             actions.addClassName(LumoUtility.Gap.SMALL);
             actions.addClassName("actions");
 
-            add(name, phone, createDateRangeFilter(), occupations, roles, actions);
+            add(nombre, phone, createDateRangeFilter(), occupations, roles, actions);
         }
 
         private Component createDateRangeFilter() {
