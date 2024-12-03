@@ -34,6 +34,7 @@ import es.uca.iw.services.ProyectoService;
 import es.uca.iw.services.UsuarioService;
 import jakarta.annotation.security.PermitAll;
 
+
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -47,12 +48,12 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
     AuthenticatedUser authenticatedUser;
     ProyectoService proyectoService;
     EmailField emailField = new EmailField();
-    ComboBox<Usuario> promotor = new ComboBox<>();
+    ComboBox<String> promotor = new ComboBox<>();
     TextField nombre = new TextField();
     TextField descripcion = new TextField();
     TextField interesados = new TextField();
     TextField alcance = new TextField();
-    DatePicker fecha = new DatePicker("fecha límite");
+    DatePicker fechaLimite = new DatePicker("fecha límite");
 
     //NumberField numberField = new NumberField();
     BigDecimalField aportacionInicial = new BigDecimalField();
@@ -86,7 +87,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         emailField.setWidth("min-content");
         promotor.setLabel("Promotor");
         promotor.setWidth("min-content");
-        promotor.setItems(usuarioService.get(Roles.PROMOTOR));
+        promotor.setItems(usuarioService.get(Roles.PROMOTOR).getNombre());
         nombre.setLabel("Nombre del proyecto");
         nombre.setWidth("min-content");
         descripcion.setLabel("Descripción");
@@ -101,8 +102,8 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         aportacionInicial.setWidth("min-content");
         coste.setLabel("Coste Total en €");
         coste.setWidth("min-content");
-        fecha.setPlaceholder("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entar en vigor");
-        fecha.setAriaLabel("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entar en vigor");
+        fechaLimite.setPlaceholder("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entar en vigor");
+        fechaLimite.setAriaLabel("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entar en vigor");
 
         upload.setAcceptedFileTypes("application/pdf", ".pdf");
 
@@ -146,7 +147,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         //formLayout2Col.add(numberField);
         formLayout2Col.add(aportacionInicial);
         formLayout2Col.add(coste);
-        formLayout2Col.add(fecha);
+        formLayout2Col.add(fechaLimite);
         formLayout2Col.add(upload);
 
         layoutColumn2.add(layoutRow);
@@ -158,7 +159,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
 
     public void OnRegistroProyecto() {
         binder.setBean(new Proyecto(nombre.getValue(), descripcion.getValue(),interesados.getValue(),
-                alcance.getValue(),coste.getValue(), aportacionInicial.getValue(),usuarioService.get(emailField.getValue()), promotor.getValue()));
+                alcance.getValue(),coste.getValue(), aportacionInicial.getValue(),usuarioService.getCorreo(emailField.getValue()), usuarioService.getNombrePropio(promotor.getValue()),fechaLimite.getValue()));
 
         Notification.show(binder.getBean().toString());
 

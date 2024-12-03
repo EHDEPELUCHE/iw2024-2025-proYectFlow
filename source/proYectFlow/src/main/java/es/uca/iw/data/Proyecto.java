@@ -13,7 +13,7 @@ import java.util.Date;
 public class Proyecto extends AbstractEntity {
 
     String nombre, descripcion, interesados, alcance;
-    Date fecha, fechaSolicitud;
+    Date fechaLimite, fechaSolicitud;
     BigDecimal coste, aportacionInicial;
     double puntuacionEstrategica, puntuacionTecnica, puntuacionAval;
     Blob memoria;
@@ -28,7 +28,7 @@ public class Proyecto extends AbstractEntity {
     //List<Integer> ObjEstrategicos;
 
     public Proyecto(String nombre, String descripcion, String interesados, String alcance, BigDecimal coste, BigDecimal aportacionInicial,
-                    Usuario aval, Usuario solicitante/*List<int> ObjEstrategicos*/) {
+                    Usuario aval, Usuario solicitante, Date fechaLimite/*List<int> ObjEstrategicos*/) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.interesados = interesados;
@@ -38,10 +38,12 @@ public class Proyecto extends AbstractEntity {
         this.puntuacionEstrategica = -1;
         this.puntuacionTecnica = -1;
         this.puntuacionAval = -1;
-        setAval(aval);
+        this.promotor = aval;
         estado = Estado.pedido;
         this.solicitante = solicitante;
+        this.fechaLimite = fechaLimite;
         fechaSolicitud = new Date();
+
         //this.ObjEstrategicos = ObjEstrategicos;
     }
 
@@ -63,15 +65,15 @@ public class Proyecto extends AbstractEntity {
     }*/
 
     public Date getFecha() {
-        return fecha;
+        return fechaLimite;
     }
 
     public void setFecha(Date fecha) {
-        this.fecha = fecha;
+        this.fechaLimite = fecha;
     }
 
     public void setFecha() {
-        this.fecha = new Date();
+        this.fechaLimite = new Date();
     }
 
     public Usuario getSolicitante() {

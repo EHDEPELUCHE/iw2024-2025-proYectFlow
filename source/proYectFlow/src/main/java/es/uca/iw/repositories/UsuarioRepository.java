@@ -18,4 +18,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     Usuario findByTipo(Roles roles);
 
     Usuario findByCorreo(String value);
+
+    Usuario findByNombre(String nombre);
 }

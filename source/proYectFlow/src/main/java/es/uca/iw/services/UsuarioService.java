@@ -93,7 +93,8 @@ public class UsuarioService {
         return repository.findByTipo(roles);
     }
 
-    public Usuario get(String value) {
+    public Usuario getCorreo(String value) {
         return repository.findByCorreo(value);
     }
+    public Usuario getNombrePropio(String nombre){ return repository.findByNombre(nombre);}
 }
