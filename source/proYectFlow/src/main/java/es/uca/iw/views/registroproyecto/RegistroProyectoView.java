@@ -87,7 +87,10 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         emailField.setWidth("min-content");
         promotor.setLabel("Promotor");
         promotor.setWidth("min-content");
-        promotor.setItems(usuarioService.get(Roles.PROMOTOR).getNombre());
+        try{
+            promotor.setItems(usuarioService.get(Roles.PROMOTOR).getNombre());
+        }catch(Exception e){}
+
         nombre.setLabel("Nombre del proyecto");
         nombre.setWidth("min-content");
         descripcion.setLabel("Descripción");
@@ -159,15 +162,16 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
 
     public void OnRegistroProyecto() {
         binder.setBean(new Proyecto(nombre.getValue(), descripcion.getValue(),interesados.getValue(),
-                alcance.getValue(),coste.getValue(), aportacionInicial.getValue(),usuarioService.getCorreo(emailField.getValue()), usuarioService.getNombrePropio(promotor.getValue()),fechaLimite.getValue()));
+                alcance.getValue(),coste.getValue(), aportacionInicial.getValue(),usuarioService.getCorreo(emailField.getValue()),
+                 usuarioService.getNombrePropio(promotor.getValue()), 
+                 java.sql.Date.valueOf(fechaLimite.getValue())));
 
         Notification.show(binder.getBean().toString());
 
         if (binder.validate().isOk()) {
 
             if (proyectoService.registerProyecto(binder.getBean())) {
-                //status.setText("Excelente. ¡Por favor mira tu bandeja de entrada de correo!");
-                //status.setVisible(true);
+
                 binder.setBean(new Proyecto());
                 Notification.show("Proyecto registrado correctamente.");
 
