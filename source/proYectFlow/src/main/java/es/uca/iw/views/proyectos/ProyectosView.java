@@ -11,6 +11,7 @@ import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -47,7 +48,8 @@ public class ProyectosView extends Div {
     private Filters filters;
 
     public ProyectosView(ProyectoService proyectoService) {
-        
+        H1 titulopag = new H1("Mis Proyectos");
+
         setSizeFull();
         addClassNames("proyectos-view");
         this.proyectoService = proyectoService;
@@ -61,7 +63,7 @@ public class ProyectosView extends Div {
 
 
         };
-        VerticalLayout layout = new VerticalLayout(createMobileFilters(), filters, createGrid());
+        VerticalLayout layout = new VerticalLayout(titulopag, filters, createGrid());
         layout.setSizeFull();
         layout.setPadding(false);
         layout.setSpacing(false);
@@ -98,10 +100,10 @@ public class ProyectosView extends Div {
         grid.addColumn("descripcion").setAutoWidth(true);
         grid.addColumn("interesados").setAutoWidth(true);
         grid.addColumn("alcance").setAutoWidth(true);
-        grid.addColumn("fechaSolicitud").setAutoWidth(true);
+        grid.addColumn("promotor").setAutoWidth(true);
         grid.addColumn("coste").setAutoWidth(true);
         grid.addColumn("aportacionInicial").setAutoWidth(true);
-        grid.addColumn("promotor").setAutoWidth(true);
+        grid.addColumn("fechaSolicitud").setAutoWidth(true);
         grid.addColumn("estado").setAutoWidth(true);
         
 
@@ -121,12 +123,12 @@ public class ProyectosView extends Div {
 
     public static abstract class Filters extends Div implements Specification<Proyecto> {
 
-        private final TextField nombre = new TextField("Name");
-        private final TextField phone = new TextField("Phone");
-        private final DatePicker startDate = new DatePicker("Date of Birth");
+        private final TextField nombre = new TextField("Nombre");
+        private final TextField promotor = new TextField("Promotor");
+        private final DatePicker startDate = new DatePicker("Fecha solicitud");
         private final DatePicker endDate = new DatePicker();
-        private final MultiSelectComboBox<String> occupations = new MultiSelectComboBox<>("Occupation");
-        private final CheckboxGroup<String> roles = new CheckboxGroup<>("Role");
+        private final MultiSelectComboBox<String> estado = new MultiSelectComboBox<>("Estado del proyecto");
+        //private final CheckboxGroup<String> roles = new CheckboxGroup<>("Role");
 
         public Filters(Runnable onSearch) {
 
@@ -134,26 +136,26 @@ public class ProyectosView extends Div {
             addClassName("filter-layout");
             addClassNames(LumoUtility.Padding.Horizontal.LARGE, LumoUtility.Padding.Vertical.MEDIUM,
                     LumoUtility.BoxSizing.BORDER);
-            nombre.setPlaceholder("First or last name");
+            nombre.setPlaceholder("Nombre o apellido");
 
-            occupations.setItems("Insurance Clerk", "Mortarman", "Beer Coil Cleaner", "Scale Attendant");
+            estado.setItems("Solicitado", "Avalado", "Aceptado", "En desarollo", "Denegado");
 
-            roles.setItems("Worker", "Supervisor", "Manager", "External");
-            roles.addClassName("double-width");
+            //roles.setItems("Worker", "Supervisor", "Manager", "External");
+            //roles.addClassName("double-width");
 
             // Action buttons
-            Button resetBtn = new Button("Reset");
+            Button resetBtn = new Button("Borrar");
             resetBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             resetBtn.addClickListener(e -> {
                 nombre.clear();
-                phone.clear();
+                promotor.clear();
                 startDate.clear();
                 endDate.clear();
-                occupations.clear();
-                roles.clear();
+                estado.clear();
+                //roles.clear();
                 onSearch.run();
             });
-            Button searchBtn = new Button("Search");
+            Button searchBtn = new Button("Buscar");
             searchBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             searchBtn.addClickListener(e -> onSearch.run());
 
@@ -161,13 +163,13 @@ public class ProyectosView extends Div {
             actions.addClassName(LumoUtility.Gap.SMALL);
             actions.addClassName("actions");
 
-            add(nombre, phone, createDateRangeFilter(), occupations, roles, actions);
+            add(nombre, promotor, createDateRangeFilter(), estado, /*roles,*/ actions);
         }
 
         private Component createDateRangeFilter() {
-            startDate.setPlaceholder("From");
+            startDate.setPlaceholder("Desde");
 
-            endDate.setPlaceholder("To");
+            endDate.setPlaceholder("Hasta");
 
             // For screen readers
             startDate.setAriaLabel("From date");
