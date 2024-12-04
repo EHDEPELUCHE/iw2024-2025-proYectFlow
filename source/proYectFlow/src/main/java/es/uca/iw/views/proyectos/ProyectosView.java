@@ -48,22 +48,20 @@ public class ProyectosView extends Div {
     private Filters filters;
 
     public ProyectosView(ProyectoService proyectoService) {
-        H1 titulopag = new H1("Mis Proyectos");
+        H1 h1Titulo = new H1("Mis Proyectos");
 
         setSizeFull();
         addClassNames("proyectos-view");
         this.proyectoService = proyectoService;
 
-        
         filters = new Filters(() -> refreshGrid()) {
             @Override
             public Predicate toPredicate(Root<Proyecto> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 return criteriaBuilder.conjunction();
             }
-
-
         };
-        VerticalLayout layout = new VerticalLayout(titulopag, filters, createGrid());
+
+        VerticalLayout layout = new VerticalLayout(h1Titulo, filters, createGrid());
         layout.setSizeFull();
         layout.setPadding(false);
         layout.setSpacing(false);
@@ -105,8 +103,6 @@ public class ProyectosView extends Div {
         grid.addColumn("aportacionInicial").setAutoWidth(true);
         grid.addColumn("fechaSolicitud").setAutoWidth(true);
         grid.addColumn("estado").setAutoWidth(true);
-        
-
 
         grid.setItems(query -> proyectoService.list(
                 PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)),
@@ -155,6 +151,7 @@ public class ProyectosView extends Div {
                 //roles.clear();
                 onSearch.run();
             });
+
             Button searchBtn = new Button("Buscar");
             searchBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             searchBtn.addClickListener(e -> onSearch.run());
@@ -181,7 +178,5 @@ public class ProyectosView extends Div {
 
             return dateRangeComponent;
         }
-
     }
-
 }

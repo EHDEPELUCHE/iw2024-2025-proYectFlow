@@ -2,6 +2,7 @@ package es.uca.iw.views.Misdatos;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -96,11 +97,13 @@ public class MisDatosView extends Composite<VerticalLayout>  {
         formLayout2Col.add(apellido);
         formLayout2Col.add(correo);
         formLayout2Col.add(username);
-        RouterLink cambiocontrasenna = new RouterLink("Cambiar contraseña", CambioContrasennaView.class);
-        RouterLink cancelarcambio = new RouterLink("Volver", PantallaInicioView.class);
 
+        RouterLink cambiocontrasenna = new RouterLink("Cambiar contraseña", CambioContrasennaView.class);
+        Button btncancelar = new Button("Volver", event -> UI.getCurrent().navigate(PantallaInicioView.class));
+        btncancelar.addClassName("buttonSecondary");
+        
         layoutColumn2.add(cambiocontrasenna, layoutRow);
-        layoutRow.add(buttonPrimary, buttonSecondary, cancelarcambio);
+        layoutRow.add(buttonPrimary, btncancelar);
 
         Usuario aux = user.get();
         binder.bindInstanceFields(this);

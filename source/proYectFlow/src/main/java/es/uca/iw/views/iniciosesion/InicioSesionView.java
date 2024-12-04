@@ -84,7 +84,6 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
     public void beforeEnter(BeforeEnterEvent event) {
         if (authenticatedUser.get().isPresent()) {
             loginOverlay.setOpened(false);
-            Notification.show("Usuario autenticado, redirigiendo a 'Ver-mis-datos'.");
             event.forwardTo("Ver-mis-datos");
         }
         loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));

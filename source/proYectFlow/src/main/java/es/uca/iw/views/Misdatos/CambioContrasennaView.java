@@ -2,6 +2,7 @@ package es.uca.iw.views.Misdatos;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
@@ -77,12 +78,13 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
         layoutRow.getStyle().set("flex-grow", "1");
 
         buttonPrimary.addClickListener(e -> onSaveButtonClick(usuario));
+        Button cancelarcambio = new Button("Volver", event -> UI.getCurrent().navigate(MisDatosView.class));
+        cancelarcambio.addClassName("buttonSecondary");
 
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonPrimary.addClickShortcut(Key.ENTER);
         buttonSecondary.setWidth("min-content");
-        RouterLink cancelarcambio = new RouterLink("Volver", MisDatosView.class);
 
         getContent().add(layoutColumn2);
         layoutColumn2.add(h1, formLayout2Col, layoutRow);
