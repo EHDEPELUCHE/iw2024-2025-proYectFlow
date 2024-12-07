@@ -48,7 +48,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
     AuthenticatedUser authenticatedUser;
     ProyectoService proyectoService;
     EmailField emailField = new EmailField();
-    ComboBox<String> promotor = new ComboBox<>();
+    ComboBox<Usuario> promotor = new ComboBox<>();
     TextField nombre = new TextField();
     TextField descripcion = new TextField();
     TextField interesados = new TextField();
@@ -87,9 +87,14 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         emailField.setWidth("min-content");
         promotor.setLabel("Promotor");
         promotor.setWidth("min-content");
-        try{
-            promotor.setItems(usuarioService.get(Roles.PROMOTOR).getNombre());
-        }catch(Exception e){}
+
+
+        /*ComboBox.ItemFilter<Usuario> filter = (person,
+                                               filterString) -> (person.getNombre() + " "
+                + person.getApellido()).toLowerCase().contains(filterString.toLowerCase());
+        */
+        promotor.setItems(/*filter,*/usuarioService.get(Roles.PROMOTOR));
+        promotor.setItemLabelGenerator(Usuario::getNombre);
 
         nombre.setLabel("Nombre del proyecto");
         nombre.setWidth("min-content");
@@ -99,6 +104,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         interesados.setWidth("min-content");
         alcance.setLabel("Alcance");
         alcance.setWidth("min-content");
+
         //numberField.setLabel("Memoria del proyecto");
         //numberField.setWidth("min-content");
         aportacionInicial.setLabel("Financiación aportada en €");
@@ -158,29 +164,37 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         layoutRow.add(buttonSecondary);
         binder = new BeanValidationBinder<>(Proyecto.class);
         binder.bindInstanceFields(this);
+        binder.forField(promotor)
+              .bind(Proyecto::getPromotor, Proyecto::setPromotor);
     }
 
     public void OnRegistroProyecto() {
-        binder.setBean(new Proyecto(nombre.getValue(), descripcion.getValue(),interesados.getValue(),
-                alcance.getValue(),coste.getValue(), aportacionInicial.getValue(),usuarioService.getCorreo(emailField.getValue()),
-                 usuarioService.getNombrePropio(promotor.getValue()), 
-                 java.sql.Date.valueOf(fechaLimite.getValue())));
+        Optional<Usuario> este = Optional.of(usuarioService.getCorreo(emailField.getValue()));
+        if (este.isPresent()) {
+            binder.setBean(new Proyecto(nombre.getValue(), descripcion.getValue(),interesados.getValue(),
+                    alcance.getValue(),coste.getValue(), aportacionInicial.getValue(), usuarioService.getCorreo(emailField.getValue()),
+                    promotor.getValue(),//usuarioService.getNombrePropio(promotor.getValue()),
+                    java.sql.Date.valueOf(fechaLimite.getValue())));
 
-        Notification.show(binder.getBean().toString());
+            Notification.show(binder.getBean().toString());
 
-        if (binder.validate().isOk()) {
+            if (binder.validate().isOk()) {
 
-            if (proyectoService.registerProyecto(binder.getBean())) {
+                if (proyectoService.registerProyecto(binder.getBean())) {
 
-                binder.setBean(new Proyecto());
-                Notification.show("Proyecto registrado correctamente.");
+                    binder.setBean(new Proyecto());
+                    Notification.show("Proyecto registrado correctamente.");
 
+                } else {
+                    Notification.show("El proyecto tiene datos incorrectos");
+                }
             } else {
-                Notification.show("El proyecto tiene datos incorrectos");
+                Notification.show("Por favor, verifique los datos de entrada");
             }
-        } else {
-            Notification.show("Por favor, verifique los datos de entrada");
+        }else{
+            Notification.show("El usuario no existe");
         }
+
     }
 
 

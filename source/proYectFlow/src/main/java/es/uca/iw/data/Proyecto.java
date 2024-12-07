@@ -161,10 +161,14 @@ public class Proyecto extends AbstractEntity {
     public String getAlcance() {
         return alcance;
     }
-    public String getPromotor() {
+    public String getPromotorNombre() {
         return promotor.getNombre();
     }
-    
+    public Usuario getPromotor(){return promotor;}
+    public void setPromotor(Usuario usuario) {
+        this.promotor = usuario;
+    }
+
     public enum Estado {solicitado, avalado, evaluadoTecnicamente, evaluadoEstrategicamente, aceptado, enDesarollo, denegado}
 
 }

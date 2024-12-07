@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
@@ -15,7 +16,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
 
     Usuario findByUsername(String nombre);
 
-    Usuario findByTipo(Roles roles);
+    List<Usuario> findByTipo(Roles roles);
 
     Usuario findByCorreo(String value);
 
