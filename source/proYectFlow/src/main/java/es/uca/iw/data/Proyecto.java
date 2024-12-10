@@ -5,13 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotEmpty;
-
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.util.Date;
 import java.io.ByteArrayInputStream;
-
 
 @Entity
 public class Proyecto extends AbstractEntity {
@@ -23,13 +21,22 @@ public class Proyecto extends AbstractEntity {
     @Column(nullable = false)
     String descripcion, interesados, alcance;
 
-    Date fechaLimite, fechaSolicitud;
+    Date fechaLimite;
+
+    @NotEmpty
+    @Column(nullable = false)
+    Date fechaSolicitud;
+    
     @NotEmpty
     @Column(nullable = false)
     BigDecimal coste, aportacionInicial;
 
     double puntuacionEstrategica, puntuacionTecnica, puntuacionAval;
+    
+    @NotEmpty
+    @Column(nullable = false)
     Blob memoria;
+
     @ManyToOne
     @JoinColumn(name = "aval_id")
     Usuario promotor;
@@ -37,38 +44,38 @@ public class Proyecto extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "solicitante_id")
     Usuario solicitante;
+    
     Estado estado;
-    //List<Integer> ObjEstrategicos;
+    
+    //List<Integer> ObjEstrategicos; CAMBIAR
 
-    public Proyecto(String nombre, String descripcion, String interesados, String alcance, BigDecimal coste, BigDecimal aportacionInicial,
-                    Usuario aval, Usuario solicitante, Date fechaLimite, Blob memoria) {
+    public enum Estado {solicitado, avalado, evaluadoTecnicamente, evaluadoEstrategicamente, aceptado, enDesarollo, denegado}
+
+    public Proyecto(String nombre, String descripcion, String interesados, String alcance, BigDecimal coste, 
+                    BigDecimal aportacionInicial, Usuario aval, Usuario solicitante, Date fechaLimite, Blob memoria) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.interesados = interesados;
         this.alcance = alcance;
         this.coste = coste;
         this.aportacionInicial = aportacionInicial;
+        // Estos valores a -1 para indicar que no se han asignado aun
         this.puntuacionEstrategica = -1;
         this.puntuacionTecnica = -1;
         this.puntuacionAval = -1;
         this.promotor = aval;
-        estado = Estado.solicitado;
+        this.estado = Estado.solicitado;
         this.solicitante = solicitante;
         this.fechaLimite = fechaLimite;
-        fechaSolicitud = new Date();
+        this.fechaSolicitud = new Date();
         this.memoria = (Blob) memoria;
-        //this.ObjEstrategicos = ObjEstrategicos;
+        //this.ObjEstrategicos = ObjEstrategicos; CAMBIAR
     }
 
-    public Proyecto() {
+    // Constructor vacio, CAMBIAR
+    public Proyecto() {}
 
-    }
-
-    public Date getFechaSolicitud() {
-        return fechaSolicitud;
-    }
-
-    /*
+    /* CAMBIAR
     public List<int> getObjEstrategicos() {
         return ObjEstrategicos;
     }
@@ -77,141 +84,80 @@ public class Proyecto extends AbstractEntity {
         this.ObjEstrategicos = ObjEstrategicos;
     }*/
 
-    public Date getFecha() {
-        return fechaLimite;
-    }
+    public String getNombre() { return nombre; }
 
-    public void setFecha(Date fecha) {
-        this.fechaLimite = fecha;
-    }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public void setFecha() {
-        this.fechaLimite = new Date();
-    }
+    public String getDescripcion() { return descripcion; }
 
-    public Usuario getSolicitante() {
-        return solicitante;
-    }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public void setSolicitante(Usuario solicitante) {
-        this.solicitante = solicitante;
-    }
+    public String getInteresados() { return interesados; }
+    
+    public void setInteresados (String interesados) { this.interesados = interesados; }
+    
+    public String getAlcance() { return alcance; }
 
-    public Estado getEstado() {
-        return estado;
-    }
+    public void setAlcance (String alcance) { this.alcance = alcance; }
 
-    //El solicitante no lo puede usar
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
+    public Date getFechaLimite() { return fechaLimite; }
 
-    //NO RECUERDO MÁS ATRIBUTOS
-    public Usuario getAval() {
-        return promotor;
-    }
+    public void setFechaLimite(Date fecha) { this.fechaLimite = fecha; }
 
-    //Este metodo tendria restricción
-    public void setAval(Usuario aval) {
-        if (aval.getTipo() == Roles.PROMOTOR)
-            this.promotor = aval;
-    }
+    public Date getFechaSolicitud() { return fechaSolicitud; }
+    
+    public void setFechaSolicitud() { this.fechaSolicitud = new Date(); }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public BigDecimal getCoste() { return coste; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public void setCoste(BigDecimal coste) { this.coste = coste; }
 
-    public void setInteresados (String interesados) {
-        this.interesados = interesados;
-    }
+    public BigDecimal getAportacionInicial() { return aportacionInicial; }
 
-    public void setAlcance (String alcance) {
-        this.alcance = alcance;
-    }
+    public void setAportacionInicial(BigDecimal aportacionInicial) { this.aportacionInicial = aportacionInicial; }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
+    public double getPuntuacionEstrategica() { return puntuacionEstrategica; }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+    public void setPuntuacionEstrategica(double puntuacionEstrategica) { this.puntuacionEstrategica = puntuacionEstrategica; }
 
-    public BigDecimal getCoste() {
-        return coste;
-    }
+    public double getPuntuacionTecnica() { return puntuacionTecnica; }
 
-    public void setCoste(BigDecimal coste) {
-        this.coste = coste;
-    }
+    public void setPuntuacionTecnica(double puntuacionTecnica) { this.puntuacionTecnica = puntuacionTecnica; }
 
-    public BigDecimal getAportacionInicial() {
-        return aportacionInicial;
-    }
+    public double getPuntuacionAval() { return puntuacionAval; }
 
-    public void setAportacionInicial(BigDecimal aportacionInicial) {
-        this.aportacionInicial = aportacionInicial;
-    }
+    public void setPuntuacionAval(double puntuacionAval) { this.puntuacionAval = puntuacionAval; }
 
-    public double getPuntuacionEstrategica() {
-        return puntuacionEstrategica;
-    }
-
-    //ESTE METODO TENDRIA EL @ROLE O COMO SE HAGA DEL CIO
-    public void setPuntuacionEstrategica(double puntuacionEstrategica) {
-        this.puntuacionEstrategica = puntuacionEstrategica;
-    }
-
-    public double getPuntuacionTecnica() {
-        return puntuacionTecnica;
-    }
-
-    ////ESTE METODO TENDRIA EL @ROLE O COMO SE HAGA DEL OTP
-    public void setPuntuacionTecnica(double puntuacionTecnica) {
-        this.puntuacionTecnica = puntuacionTecnica;
-    }
-
-    public String getInteresados() {
-        return interesados;
-    }
-
-    public String getAlcance() {
-        return alcance;
-    }
-    public String getPromotorNombre() {
-        return promotor.getNombre();
-    }
-    public Usuario getPromotor(){return promotor;}
-    public void setPromotor(Usuario usuario) {
-        this.promotor = usuario;
-    }
     public Blob getMemoria() { return memoria; }
+
+    public void setMemoria(Blob memoria) { this.memoria = memoria; }
+
+    public Usuario getPromotor(){ return promotor; }
+    
+    public void setPromotor(Usuario usuario) { this.promotor = usuario; }
+
+    public Usuario getSolicitante() { return solicitante; }
+
+    public void setSolicitante(Usuario solicitante) { this.solicitante = solicitante; }
+
+    public Estado getEstado() { return estado; }
+
+    public void setEstado(Estado estado) { this.estado = estado; }
    
     public InputStream getPdf() {
         try {
-            if (memoria != null) {
-                return memoria.getBinaryStream();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            if (memoria != null) return memoria.getBinaryStream();
+        } catch (Exception e) { e.printStackTrace(); }
         return null;
     }
+
     public String getPdfNombre() {
         try {
             if (memoria != null) {
                 String[] parts = memoria.getBinaryStream().toString().split("/");
                 return parts[parts.length - 1];
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
         return null;
     }
-    public enum Estado {solicitado, avalado, evaluadoTecnicamente, evaluadoEstrategicamente, aceptado, enDesarollo, denegado}
-
 }
