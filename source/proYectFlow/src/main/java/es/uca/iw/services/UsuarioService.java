@@ -7,20 +7,23 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UsuarioService {
     private final UsuarioRepository repository;
-    private final PasswordEncoder passwordEncoder;
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository repository) {
         this.repository = repository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public Optional<Usuario> get(UUID id) {
@@ -89,7 +92,7 @@ public class UsuarioService {
         }
     }
 
-    public Usuario get(Roles roles) {
+    public List<Usuario> get(Roles roles) {
         return repository.findByTipo(roles);
     }
 
