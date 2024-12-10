@@ -4,9 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.util.Date;
+import java.io.ByteArrayInputStream;
 
 
 @Entity
@@ -28,7 +30,7 @@ public class Proyecto extends AbstractEntity {
     //List<Integer> ObjEstrategicos;
 
     public Proyecto(String nombre, String descripcion, String interesados, String alcance, BigDecimal coste, BigDecimal aportacionInicial,
-                    Usuario aval, Usuario solicitante, Date fechaLimite/*List<int> ObjEstrategicos*/) {
+                    Usuario aval, Usuario solicitante, Date fechaLimite, Blob memoria) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.interesados = interesados;
@@ -43,7 +45,7 @@ public class Proyecto extends AbstractEntity {
         this.solicitante = solicitante;
         this.fechaLimite = fechaLimite;
         fechaSolicitud = new Date();
-
+        this.memoria = (Blob) memoria;
         //this.ObjEstrategicos = ObjEstrategicos;
     }
 
@@ -112,6 +114,14 @@ public class Proyecto extends AbstractEntity {
         this.nombre = nombre;
     }
 
+    public void setInteresados (String interesados) {
+        this.interesados = interesados;
+    }
+
+    public void setAlcance (String alcance) {
+        this.alcance = alcance;
+    }
+
     public String getDescripcion() {
         return descripcion;
     }
@@ -168,7 +178,29 @@ public class Proyecto extends AbstractEntity {
     public void setPromotor(Usuario usuario) {
         this.promotor = usuario;
     }
-
+    public Blob getMemoria() { return memoria; }
+   
+    public InputStream getPdf() {
+        try {
+            if (memoria != null) {
+                return memoria.getBinaryStream();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public String getPdfNombre() {
+        try {
+            if (memoria != null) {
+                String[] parts = memoria.getBinaryStream().toString().split("/");
+                return parts[parts.length - 1];
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public enum Estado {solicitado, avalado, evaluadoTecnicamente, evaluadoEstrategicamente, aceptado, enDesarollo, denegado}
 
 }

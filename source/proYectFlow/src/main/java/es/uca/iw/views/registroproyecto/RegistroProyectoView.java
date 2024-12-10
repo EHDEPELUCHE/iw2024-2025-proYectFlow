@@ -16,7 +16,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
@@ -36,8 +35,8 @@ import jakarta.annotation.security.PermitAll;
 
 
 import java.math.BigDecimal;
+import java.sql.Blob;
 import java.util.*;
-
 @PageTitle("Registro Proyecto")
 @Route("registro-proyecto")
 @Menu(order = 2, icon = "line-awesome/svg/egg-solid.svg")
@@ -51,10 +50,10 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
     ComboBox<Usuario> promotor = new ComboBox<>();
     TextField nombre = new TextField();
     TextField descripcion = new TextField();
-    TextField interesados = new TextField();
+
     TextField alcance = new TextField();
     DatePicker fechaLimite = new DatePicker("fecha límite");
-
+    TextField interesados = new TextField("Interesados");
     //NumberField numberField = new NumberField();
     BigDecimalField aportacionInicial = new BigDecimalField();
     BigDecimalField coste = new BigDecimalField();
@@ -89,26 +88,26 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         promotor.setWidth("min-content");
 
 
-        /*ComboBox.ItemFilter<Usuario> filter = (person,
-                                               filterString) -> (person.getNombre() + " "
-                + person.getApellido()).toLowerCase().contains(filterString.toLowerCase());
-        */
-        promotor.setItems(/*filter,*/usuarioService.get(Roles.PROMOTOR));
+        promotor.setItems(usuarioService.get(Roles.PROMOTOR));
         promotor.setItemLabelGenerator(Usuario::getNombre);
 
         nombre.setLabel("Nombre del proyecto");
         nombre.setWidth("min-content");
-        descripcion.setLabel("Descripción");
-        descripcion.setWidth("min-content");
-        interesados.setLabel("Interesados");
-        interesados.setWidth("min-content");
+
         alcance.setLabel("Alcance");
         alcance.setWidth("min-content");
 
-        //numberField.setLabel("Memoria del proyecto");
-        //numberField.setWidth("min-content");
+        descripcion.setLabel("Descripción");
+        descripcion.setWidth("min-content");
+
+        interesados.setLabel("Interesados");
+        interesados.setWidth("min-content");
+        interesados.setAriaLabel("Añadir interesados");
+
+
         aportacionInicial.setLabel("Financiación aportada en €");
         aportacionInicial.setWidth("min-content");
+
         coste.setLabel("Coste Total en €");
         coste.setWidth("min-content");
         fechaLimite.setPlaceholder("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entar en vigor");
@@ -171,10 +170,17 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
     public void OnRegistroProyecto() {
         Optional<Usuario> este = Optional.of(usuarioService.getCorreo(emailField.getValue()));
         if (este.isPresent()) {
+            Blob pdfBlob = null;
+            try {
+                pdfBlob = new javax.sql.rowset.serial.SerialBlob(buffer.getInputStream().readAllBytes());
+            } catch (Exception ex) {
+                Notification.show("Error al procesar el archivo PDF");
+            }
+
             binder.setBean(new Proyecto(nombre.getValue(), descripcion.getValue(),interesados.getValue(),
                     alcance.getValue(),coste.getValue(), aportacionInicial.getValue(), usuarioService.getCorreo(emailField.getValue()),
                     promotor.getValue(),//usuarioService.getNombrePropio(promotor.getValue()),
-                    java.sql.Date.valueOf(fechaLimite.getValue())));
+                    java.sql.Date.valueOf(fechaLimite.getValue()), pdfBlob));
 
             Notification.show(binder.getBean().toString());
 

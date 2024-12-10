@@ -10,6 +10,7 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
@@ -22,6 +23,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
@@ -35,6 +37,9 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 @PageTitle("Proyectos")
 @Route("proyectos")
@@ -103,6 +108,39 @@ public class ProyectosView extends Div {
         grid.addColumn("aportacionInicial").setAutoWidth(true);
         grid.addColumn("fechaSolicitud").setAutoWidth(true);
         grid.addColumn("estado").setAutoWidth(true);
+        grid.addColumn(Proyecto::getPdfNombre).setAutoWidth(true);
+        grid.addComponentColumn(proyecto -> {
+            Button downloadButton = new Button(proyecto.getPdfNombre());
+            downloadButton.addClickListener(e -> {
+            // Logic to download the PDF
+                byte[] pdfContent = null;
+                try {
+                    pdfContent = proyectoService.getPdf(proyecto.getId());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                if (pdfContent != null) {
+                    byte[] finalPdfContent = pdfContent;
+                    getUI().ifPresent(ui -> {
+                StreamResource resource = new StreamResource(proyecto.getPdfNombre(), () -> new ByteArrayInputStream(finalPdfContent));
+                Anchor downloadLink = new Anchor(resource, "Download");
+                downloadLink.getElement().setAttribute("download", true);
+                ui.add(downloadLink);
+                ui.getPage().executeJs("document.querySelector('a[download]').click();");
+                ui.remove(downloadLink);
+                });
+            }
+            });
+            return downloadButton;
+        }).setHeader("PDF").setAutoWidth(true);
+
+        grid.addComponentColumn(proyecto -> {
+            Button evaluarButton = new Button("Evaluar");
+            evaluarButton.addClickListener(e -> {
+                getUI().ifPresent(ui -> ui.navigate("registro-proyecto-alineamiento-estrategico/" + proyecto.getId()));
+            });
+            return evaluarButton;
+        }).setHeader("Acciones").setAutoWidth(true);
 
         grid.setItems(query -> proyectoService.list(
                 PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)),
@@ -180,3 +218,4 @@ public class ProyectosView extends Div {
         }
     }
 }
+

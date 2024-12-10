@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
@@ -74,5 +75,10 @@ public class ProyectoService {
             }
         }
 
+    }
+
+    public byte[] getPdf(UUID id) throws IOException {
+        Proyecto proyecto = repository.findById(id).get();
+        return proyecto.getPdf().readAllBytes();
     }
 }
