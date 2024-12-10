@@ -4,7 +4,6 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.Uses;
@@ -28,9 +27,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.data.Proyecto;
-import es.uca.iw.data.Usuario;
 import es.uca.iw.services.ProyectoService;
-import es.uca.iw.services.UsuarioService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -136,7 +133,7 @@ public class ProyectosView extends Div {
         grid.addComponentColumn(proyecto -> {
             Button evaluarButton = new Button("Evaluar");
             evaluarButton.addClickListener(e -> {
-                getUI().ifPresent(ui -> ui.navigate("registro-proyecto-alineamiento-estrategico/" + proyecto));
+                getUI().ifPresent(ui -> ui.navigate("ValoracionTecnica/" + (proyecto.getId()).toString()));
             });
             return evaluarButton;
         }).setHeader("Acciones").setAutoWidth(true);

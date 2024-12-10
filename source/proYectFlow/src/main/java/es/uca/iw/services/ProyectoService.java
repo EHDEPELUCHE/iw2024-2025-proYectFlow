@@ -1,6 +1,5 @@
 package es.uca.iw.services;
 
-import es.uca.iw.data.GLOBALES;
 import es.uca.iw.data.Proyecto;
 import es.uca.iw.repositories.ProyectoRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -58,17 +57,25 @@ public class ProyectoService {
 
     public void setValoracionTecnica(BigDecimal precio, BigDecimal horas, BigDecimal idoneidad, Proyecto proyecto) {
         if(proyecto.getEstado() != Proyecto.Estado.denegado){
-
-            //30% idoneidad técnica + 30% costes económicos + 40% recursos humanos.
-            Double aux = 0.3 * idoneidad.doubleValue() + 0.3 * precio.doubleValue() + 0.4 * horas.doubleValue();
-            proyecto.setPuntuacionTecnica(aux);
-            proyecto.setEstado(Proyecto.Estado.evaluadoTecnicamente);
-            if (proyecto.getPuntuacionTecnica() >= 5){
-                repository.save(proyecto);
-            }else{
+            if(idoneidad.doubleValue() == 0){
                 proyecto.setEstado(Proyecto.Estado.denegado);
-
+                proyecto.setPuntuacionTecnica(0);
+                repository.save(proyecto);
+                
+            }else{
+                //30% idoneidad técnica + 30% costes económicos + 40% recursos humanos.
+                Double aux = 0.3 * idoneidad.doubleValue() + 0.3 * precio.doubleValue() + 0.4 * horas.doubleValue();
+                proyecto.setPuntuacionTecnica(aux);
+                proyecto.setEstado(Proyecto.Estado.evaluadoTecnicamente);
+                if (proyecto.getPuntuacionTecnica() >= 5){
+                    repository.save(proyecto);
+                }else{
+                    proyecto.setEstado(Proyecto.Estado.denegado);
+                    repository.save(proyecto);
+                }
             }
+            
+            
         }
 
     }

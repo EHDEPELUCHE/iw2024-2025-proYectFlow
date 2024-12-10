@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -36,8 +35,6 @@ public class Usuario extends AbstractEntity implements UserDetails {
     @Enumerated(EnumType.STRING) // Para almacenar el enum como texto
     @Column(nullable = false)
     private Roles tipo;
-    /*private String username, nombre, apellido, correo, contrasenna;
-    Roles tipo;*/
 
     public Usuario(String nombre, String username, String apellido, String correo, String contrasenna) {
         this.nombre = nombre;
@@ -45,9 +42,10 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.apellido = apellido;
         this.correo = correo;
         this.contrasenna = contrasenna;
-        tipo = Roles.SOLICITANTE;
+        this.tipo = Roles.SOLICITANTE;
     }
 
+    // Constructor vacio CAMBIAR
     public Usuario() {}
 
     public Usuario(String nombre,String username, String apellido, String correo, String contrasenna, Roles tipo){
@@ -59,55 +57,31 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.tipo = tipo;
     }
 
-    public Roles getTipo() {
-        return tipo;
-    }
+    public String getUsername() { return username; }
 
-    //PROTEGER PARA ADMIN
-    public void setTipo(Roles tipo) {
-        this.tipo = tipo;
-    }
+    public void setUsername(String user) { this.username = user; }
 
-    public String getContrasenna() {
-        return contrasenna;
-    }
+    public String getNombre() { return nombre; }
 
-    public void setContrasenna(String contrasena) {
-        this.contrasenna = contrasena;
-    }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    
+    public String getApellido() { return apellido; }
 
-    public String getUsername() {
-        return username;
-    }
+    public void setApellido(String apellido) { this.apellido = apellido; }
 
-    public void setUsername(String user) {
-        this.username = user;
-    }
+    public String getCorreo() { return correo; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public void setCorreo(String correo) { this.correo = correo; }
+    
+    public String getContrasenna() { return contrasenna; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public void setContrasenna(String contrasena) { this.contrasenna = contrasena; }
 
-    public String getApellido() {
-        return apellido;
-    }
+    public Roles getTipo() { return tipo; }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
+    public void setTipo(Roles tipo) { this.tipo = tipo; }
 
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
+    // A partir de aqui funciones propias del modulo de seguridad
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(tipo.name()));
     }
