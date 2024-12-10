@@ -1,8 +1,10 @@
 package es.uca.iw.data;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -13,10 +15,19 @@ import java.io.ByteArrayInputStream;
 
 @Entity
 public class Proyecto extends AbstractEntity {
+    @NotEmpty
+    @Column(unique = true, nullable = false)
+    String nombre;
 
-    String nombre, descripcion, interesados, alcance;
+    @NotEmpty
+    @Column(nullable = false)
+    String descripcion, interesados, alcance;
+
     Date fechaLimite, fechaSolicitud;
+    @NotEmpty
+    @Column(nullable = false)
     BigDecimal coste, aportacionInicial;
+
     double puntuacionEstrategica, puntuacionTecnica, puntuacionAval;
     Blob memoria;
     @ManyToOne
