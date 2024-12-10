@@ -108,11 +108,11 @@ public class ProyectosView extends Div {
         grid.addColumn("aportacionInicial").setAutoWidth(true);
         grid.addColumn("fechaSolicitud").setAutoWidth(true);
         grid.addColumn("estado").setAutoWidth(true);
-        grid.addColumn(Proyecto::getPdfNombre).setAutoWidth(true);
+        //grid.addColumn(Proyecto::getPdfNombre).setAutoWidth(true);
         grid.addComponentColumn(proyecto -> {
-            Button downloadButton = new Button(proyecto.getPdfNombre());
+            Button downloadButton = new Button("Memoria");
             downloadButton.addClickListener(e -> {
-            // Logic to download the PDF
+                // Logic to download the PDF
                 byte[] pdfContent = null;
                 try {
                     pdfContent = proyectoService.getPdf(proyecto.getId());
@@ -121,15 +121,14 @@ public class ProyectosView extends Div {
                 }
                 if (pdfContent != null) {
                     byte[] finalPdfContent = pdfContent;
-                    getUI().ifPresent(ui -> {
-                StreamResource resource = new StreamResource(proyecto.getPdfNombre(), () -> new ByteArrayInputStream(finalPdfContent));
-                Anchor downloadLink = new Anchor(resource, "Download");
-                downloadLink.getElement().setAttribute("download", true);
-                ui.add(downloadLink);
-                ui.getPage().executeJs("document.querySelector('a[download]').click();");
-                ui.remove(downloadLink);
-                });
-            }
+                    StreamResource resource = new StreamResource(proyecto.getPdfNombre(), () -> new ByteArrayInputStream(finalPdfContent));
+                    Anchor downloadLink = new Anchor(resource, "Download");
+                    downloadLink.getElement().setAttribute("download", true);
+                    downloadLink.getElement().setAttribute("style", "display: none;");
+                    add(downloadLink);
+                    downloadLink.getElement().callJsFunction("click");
+                    downloadLink.remove();
+                }
             });
             return downloadButton;
         }).setHeader("PDF").setAutoWidth(true);
@@ -137,7 +136,7 @@ public class ProyectosView extends Div {
         grid.addComponentColumn(proyecto -> {
             Button evaluarButton = new Button("Evaluar");
             evaluarButton.addClickListener(e -> {
-                getUI().ifPresent(ui -> ui.navigate("registro-proyecto-alineamiento-estrategico/" + proyecto.getId()));
+                getUI().ifPresent(ui -> ui.navigate("registro-proyecto-alineamiento-estrategico/" + proyecto));
             });
             return evaluarButton;
         }).setHeader("Acciones").setAutoWidth(true);
