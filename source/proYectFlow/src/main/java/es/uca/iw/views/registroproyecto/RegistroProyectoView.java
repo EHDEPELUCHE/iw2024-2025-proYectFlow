@@ -2,6 +2,7 @@ package es.uca.iw.views.registroproyecto;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -31,6 +32,7 @@ import es.uca.iw.data.Usuario;
 import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.services.ProyectoService;
 import es.uca.iw.services.UsuarioService;
+import es.uca.iw.views.pantallainicio.PantallaInicioView;
 import jakarta.annotation.security.PermitAll;
 
 
@@ -129,6 +131,8 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
                     uploadButton.setEnabled(!maxFilesReached);
                 }).addEventData("event.detail.value");
 
+        Button btncancelar = new Button("Volver", event -> UI.getCurrent().navigate(PantallaInicioView.class));
+        btncancelar.addClassName("buttonSecondary");
 
         layoutRow.addClassName(Gap.MEDIUM);
         layoutRow.setWidth("100%");
@@ -141,7 +145,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonSecondary.setText("Cancelar");
-        layoutRow.setAlignSelf(FlexComponent.Alignment.START, buttonSecondary);
+        layoutRow.setAlignSelf(FlexComponent.Alignment.START, btncancelar);
         buttonSecondary.setWidth("min-content");
         getContent().add(layoutColumn2);
         layoutColumn2.add(h3);
@@ -160,7 +164,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
 
         layoutColumn2.add(layoutRow);
         layoutRow.add(buttonPrimary);
-        layoutRow.add(buttonSecondary);
+        layoutRow.add(btncancelar);
         binder = new BeanValidationBinder<>(Proyecto.class);
         binder.bindInstanceFields(this);
         binder.forField(promotor)
