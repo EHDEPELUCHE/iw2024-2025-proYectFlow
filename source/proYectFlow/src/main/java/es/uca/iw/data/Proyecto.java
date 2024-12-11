@@ -21,6 +21,7 @@ public class Proyecto extends AbstractEntity {
     @Column(nullable = false)
     String descripcion, interesados, alcance;
 
+    @Column(nullable = true)
     Date fechaLimite;
 
     @NotEmpty

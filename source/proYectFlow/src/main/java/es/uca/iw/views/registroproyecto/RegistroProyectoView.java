@@ -110,8 +110,8 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
 
         coste.setLabel("Coste Total en €");
         coste.setWidth("min-content");
-        fechaLimite.setPlaceholder("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entar en vigor");
-        fechaLimite.setAriaLabel("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entar en vigor");
+        fechaLimite.setPlaceholder("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entrar en vigor");
+        fechaLimite.setAriaLabel("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entrar en vigor");
 
         upload.setAcceptedFileTypes("application/pdf", ".pdf");
 
@@ -177,10 +177,14 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
                 Notification.show("Error al procesar el archivo PDF");
             }
 
+            java.sql.Date fechaSql = null;
+            if (fechaLimite.getValue() != null) {
+                fechaSql = java.sql.Date.valueOf(fechaLimite.getValue());
+            }
+
             binder.setBean(new Proyecto(nombre.getValue(), descripcion.getValue(),interesados.getValue(),
                     alcance.getValue(),coste.getValue(), aportacionInicial.getValue(), usuarioService.getCorreo(emailField.getValue()),
-                    promotor.getValue(),//usuarioService.getNombrePropio(promotor.getValue()),
-                    java.sql.Date.valueOf(fechaLimite.getValue()), pdfBlob));
+                    promotor.getValue(),/*usuarioService.getNombrePropio(promotor.getValue()),*/ fechaSql, pdfBlob));
 
             Notification.show(binder.getBean().toString());
 
