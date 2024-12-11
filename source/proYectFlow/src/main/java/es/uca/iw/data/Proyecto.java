@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Blob;
@@ -13,11 +15,11 @@ import java.io.ByteArrayInputStream;
 
 @Entity
 public class Proyecto extends AbstractEntity {
-    @NotEmpty
+    @NotEmpty(message = "Por favor, introduzca un nombre para el proyecto")
     @Column(unique = true, nullable = false)
     String nombre;
 
-    @NotEmpty
+    @NotEmpty(message = "Por favor, rellene el campo requerido")
     @Column(nullable = false)
     String descripcion, interesados, alcance;
 
@@ -28,9 +30,9 @@ public class Proyecto extends AbstractEntity {
     @Column(nullable = false)
     Date fechaSolicitud;
     
-    @NotEmpty
+    @NotNull(message = "Por favor, rellene el campo requerido")
     @Column(nullable = false)
-    BigDecimal coste, aportacionInicial;
+    BigDecimal aportacionInicial, coste;
 
     double puntuacionEstrategica, puntuacionTecnica, puntuacionAval;
     
