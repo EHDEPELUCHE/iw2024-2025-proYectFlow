@@ -28,7 +28,6 @@ import es.uca.iw.services.UsuarioService;
 @Route("registro-usuario")
 @Menu(order = 1, icon = "line-awesome/svg/user.svg")
 @AnonymousAllowed
-//@RolesAllowed("ADMIN")
 public class RegistrodeusuarioView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Usuario> binder;
     TextField username = new TextField();
@@ -38,7 +37,6 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
     PasswordField contrasenna = new PasswordField();
 
     UsuarioService servicio;
-
 
     public RegistrodeusuarioView(UsuarioService usuarioService) {
 
@@ -93,10 +91,18 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         layoutColumn2.add(layoutRow);
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
+
         binder = new BeanValidationBinder<>(Usuario.class);
         binder.bindInstanceFields(this);
 
-        // binder.setBean(new Usuario());
+        //CAMBIAR PRUEBAS CONTRASEÑA
+        binder.forField(contrasenna)
+                .asRequired("La contraseña es obligatoria")
+                .withValidator(password -> password != null && password.length() >= 8,
+                        "La contraseña debe tener al menos 8 caracteres")
+                .withValidator(password -> password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*]).{8,}$"),
+                        "La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial")
+                .bind(Usuario::getPassword, Usuario::setContrasenna);
     }
 
     public void onRegisterButtonClick(PasswordField passwordField2) {
