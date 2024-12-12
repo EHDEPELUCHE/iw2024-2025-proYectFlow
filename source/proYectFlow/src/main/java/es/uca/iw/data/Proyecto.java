@@ -26,8 +26,8 @@ public class Proyecto extends AbstractEntity {
     @Column(nullable = true)
     Date fechaLimite;
 
-    @NotEmpty
-    @Column(nullable = false)
+   /* @NotEmpty
+    @Column(nullable = false)*/
     Date fechaSolicitud;
     
     @NotNull(message = "Por favor, rellene el campo requerido")
@@ -36,8 +36,8 @@ public class Proyecto extends AbstractEntity {
 
     double puntuacionEstrategica, puntuacionTecnica, puntuacionAval;
     
-    @NotEmpty
-    @Column(nullable = false)
+   /* @NotEmpty
+    @Column(nullable = false)*/
     Blob memoria;
 
     @ManyToOne
