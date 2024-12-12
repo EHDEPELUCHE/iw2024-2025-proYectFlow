@@ -188,12 +188,12 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
 
             binder.setBean(new Proyecto(nombre.getValue(), descripcion.getValue(),interesados.getValue(),
                     alcance.getValue(),coste.getValue(), aportacionInicial.getValue(), usuarioService.getCorreo(emailField.getValue()),
-                    promotor.getValue(),/*usuarioService.getNombrePropio(promotor.getValue()),*/ fechaSql, pdfBlob));
+                    promotor.getValue(), fechaSql, pdfBlob));
 
             Notification.show(binder.getBean().toString());
 
             if (binder.validate().isOk()) {
-
+                Notification.show("En el validator");
                 if (proyectoService.registerProyecto(binder.getBean())) {
 
                     binder.setBean(new Proyecto());

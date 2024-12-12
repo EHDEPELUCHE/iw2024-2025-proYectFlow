@@ -6,13 +6,12 @@ import es.uca.iw.repositories.UsuarioRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
 
 @Component
 public class AuthenticatedUser {
-
     private final UsuarioRepository userRepository;
+    
     private final AuthenticationContext authenticationContext;
 
     public AuthenticatedUser(AuthenticationContext authenticationContext, UsuarioRepository userRepository) {
@@ -29,5 +28,4 @@ public class AuthenticatedUser {
     public void logout() {
         authenticationContext.logout();
     }
-
 }
