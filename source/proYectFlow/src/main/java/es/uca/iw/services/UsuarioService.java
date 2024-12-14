@@ -2,6 +2,7 @@ package es.uca.iw.services;
 
 import es.uca.iw.data.Roles;
 import es.uca.iw.data.Usuario;
+import es.uca.iw.data.rest.promotores;
 import es.uca.iw.repositories.UsuarioRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -10,8 +11,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -99,4 +98,12 @@ public class UsuarioService {
         return repository.findByCorreo(value);
     }
     public Usuario getNombrePropio(String nombre){ return repository.findByNombre(nombre);}
+
+    public void createPromotor(promotores promotor) {
+        Usuario u = new Usuario(promotor.getNombre(),
+                promotor.getNombre(), promotor.getApellido(),
+                promotor.getCorreo(), "CAMBIARPORFAVOR", Roles.PROMOTOR);
+        registerUserAdmin(u);
+
+    }
 }

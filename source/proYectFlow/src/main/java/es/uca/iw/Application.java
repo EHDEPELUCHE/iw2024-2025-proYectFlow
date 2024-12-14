@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.sql.init.SqlDataSourceScriptDataba
 import org.springframework.boot.autoconfigure.sql.init.SqlInitializationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
 
@@ -41,5 +42,6 @@ public class Application implements AppShellConfigurator {
                 return false;
             }
         };
+
     }
 }

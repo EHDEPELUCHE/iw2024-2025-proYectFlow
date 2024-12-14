@@ -1,11 +1,8 @@
 package es.uca.iw.views.iniciosesion;
 
 import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.dependency.StyleSheet;
-import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
