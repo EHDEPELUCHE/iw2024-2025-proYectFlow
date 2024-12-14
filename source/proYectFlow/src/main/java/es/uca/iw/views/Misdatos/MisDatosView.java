@@ -101,10 +101,17 @@ public class MisDatosView extends Composite<VerticalLayout>  {
         RouterLink cambiocontrasenna = new RouterLink("Cambiar contraseña", CambioContrasennaView.class);
         Button btncancelar = new Button("Volver", event -> UI.getCurrent().navigate(PantallaInicioView.class));
         btncancelar.addClassName("buttonSecondary");
-        
+
+        Button Borrar = new Button("Borrar Mis datos", event -> {
+            uservice.delete(user.get().getId());
+            authenticatedUser.logout();
+            UI.getCurrent().navigate(PantallaInicioView.class);
+        });
+        Borrar.addClassName("button-danger");
+        Borrar.addThemeVariants(ButtonVariant.LUMO_ERROR);
         layoutColumn2.add(cambiocontrasenna, layoutRow);
         layoutRow.add(buttonPrimary, btncancelar);
-
+        getContent().add(Borrar);
         Usuario aux = user.get();
         binder.bindInstanceFields(this);
         binder.setBean(aux);
