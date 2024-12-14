@@ -55,6 +55,7 @@ public class ProyectoService {
         }
     }
 
+
     public void setValoracionTecnica(BigDecimal precio, BigDecimal horas, BigDecimal idoneidad, Proyecto proyecto) {
         if(proyecto.getEstado() != Proyecto.Estado.denegado){
             if(idoneidad.doubleValue() == 0){
@@ -83,5 +84,17 @@ public class ProyectoService {
     public byte[] getPdf(UUID id) throws IOException {
         Proyecto proyecto = repository.findById(id).get();
         return proyecto.getPdf().readAllBytes();
+    }
+
+
+    public void setValoracionPromotor(BigDecimal prioridad, Boolean avalado, Proyecto proyectoAux) {
+        if(avalado){
+            proyectoAux.setEstado(Proyecto.Estado.avalado);
+            proyectoAux.setPuntuacionAval(prioridad.doubleValue());
+            repository.save(proyectoAux);
+        }else{
+            proyectoAux.setEstado(Proyecto.Estado.denegado);
+            repository.save(proyectoAux);
+        }
     }
 }

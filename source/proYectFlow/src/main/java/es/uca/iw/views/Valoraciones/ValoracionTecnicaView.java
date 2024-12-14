@@ -1,4 +1,4 @@
-package es.uca.iw.views.Valoraciontecnica;
+package es.uca.iw.views.Valoraciones;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -11,7 +11,6 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
-import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamResource;
 import es.uca.iw.data.Proyecto;
@@ -22,7 +21,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -84,7 +82,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
                 }
             }); return downloadButton;
             }).setHeader("PDF").setAutoWidth(true);
-            grid.setHeight("150px"); // Set the grid height to fit the number of rows
+            grid.setAllRowsVisible(true); // Set the grid height to fit the number of rows
             //grid.getElement().getStyle().set("--lumo-size-m", "30px"); // Set the row height
             getContent().add(grid);
 
