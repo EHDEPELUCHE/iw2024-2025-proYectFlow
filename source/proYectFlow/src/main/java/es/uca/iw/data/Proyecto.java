@@ -41,7 +41,7 @@ public class Proyecto extends AbstractEntity {
     Blob memoria;
 
     @ManyToOne
-    @JoinColumn(name = "aval_id")
+    @JoinColumn(name = "aval_id",  nullable = true)
     Usuario promotor;
 
     @ManyToOne

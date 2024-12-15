@@ -4,6 +4,8 @@ import es.uca.iw.data.Roles;
 import es.uca.iw.data.Usuario;
 import es.uca.iw.data.rest.promotores;
 import es.uca.iw.repositories.UsuarioRepository;
+import jakarta.transaction.Transactional;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +40,10 @@ public class UsuarioService {
 
     public void delete(UUID id) {
         repository.deleteById(id);
+    }
+    @Transactional
+    public void delete(Roles role) {
+        repository.deleteByTipo(role);
     }
 
     public Page<Usuario> list(Pageable pageable) {
@@ -99,11 +105,36 @@ public class UsuarioService {
     }
     public Usuario getNombrePropio(String nombre){ return repository.findByNombre(nombre);}
 
+    @Transactional
     public void createPromotor(promotores promotor) {
-        Usuario u = new Usuario(promotor.getNombre(),
-                promotor.getNombre(), promotor.getApellido(),
-                promotor.getCorreo(), "CAMBIARPORFAVOR", Roles.PROMOTOR);
-        registerUserAdmin(u);
+        try {
+            Usuario existingUser = repository.findByCorreo(promotor.getCorreo());
+            if (existingUser != null) {
+                Usuario u = existingUser;
+                u.setTipo(Roles.PROMOTOR);
+                repository.save(u);
+            } else {
+                Usuario u = new Usuario(promotor.getNombre(),
+                        promotor.getNombre(), promotor.getApellido(),
+                        promotor.getCorreo(), "CAMBIARPORFAVOR", Roles.PROMOTOR);
+                try {
+                    registerUserAdmin(u);
+                } catch (Exception e) {
+                   // logger.severe("Error registering user admin: " + e.getMessage());
+                    repository.save(u);
+                }
+            }
+        } catch (Exception e) {
+           // logger.severe("Error creating promotor: " + e.getMessage());
+            throw new RuntimeException("Error creating promotor", e);
+        }
+    }
 
+    public void destituyePromotores() {
+        List<Usuario> usuarios = repository.findByTipo(Roles.PROMOTOR);
+        for (Usuario u : usuarios) {
+            u.setTipo(Roles.SOLICITANTE);
+            repository.save(u);
+        }
     }
 }

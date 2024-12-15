@@ -1,6 +1,7 @@
 package es.uca.iw.services;
 
 import es.uca.iw.data.Proyecto;
+import es.uca.iw.data.Usuario;
 import es.uca.iw.repositories.ProyectoRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -97,4 +99,5 @@ public class ProyectoService {
             repository.save(proyectoAux);
         }
     }
+
 }

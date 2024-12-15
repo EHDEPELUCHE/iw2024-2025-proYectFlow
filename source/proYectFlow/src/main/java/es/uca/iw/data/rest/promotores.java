@@ -20,11 +20,11 @@ public class promotores {
     }
 
     public String getNombre() {
-        return nombre;
+        return (nombre.substring(0, nombre.lastIndexOf(" ")));
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre.substring(0, nombre.indexOf(" "));
+        this.nombre = nombre;
     }
 
     public String getCargo() {
@@ -36,10 +36,10 @@ public class promotores {
     }
 
     public String getApellido() {
-        return nombre.substring( nombre.indexOf(" ")+1);
+        return nombre.substring(nombre.lastIndexOf(" ")+1);
     }
 
     public String getCorreo() {
-        return nombre.substring(0, nombre.indexOf(" "))+"."+nombre.substring(nombre.indexOf(" ")+1)+"@gmail.com".toLowerCase();
+        return ((nombre.substring(0, nombre.lastIndexOf(" ")) + "." +nombre.substring(nombre.lastIndexOf(" ")+1) + "@gmail.com").toLowerCase()).replace(" ","" );
     }
 }

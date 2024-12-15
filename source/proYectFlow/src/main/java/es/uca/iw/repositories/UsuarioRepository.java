@@ -20,4 +20,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     Usuario findByCorreo(String value);
 
     Usuario findByNombre(String nombre);
+
+    void deleteByTipo(Roles role);
 }
