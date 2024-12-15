@@ -106,7 +106,6 @@ public class ProyectosPromotorView extends Div {
         grid.addColumn("fechaSolicitud").setAutoWidth(true);
         grid.addColumn("fechaLimite").setAutoWidth(true);
         grid.addColumn("estado").setAutoWidth(true);
-        //grid.addColumn(Proyecto::getPdfNombre).setAutoWidth(true);
         grid.addComponentColumn(proyecto -> {
             Button downloadButton = new Button("Memoria");
             downloadButton.addClickListener(e -> {
@@ -119,7 +118,7 @@ public class ProyectosPromotorView extends Div {
                 }
                 if (pdfContent != null) {
                     byte[] finalPdfContent = pdfContent;
-                    StreamResource resource = new StreamResource(proyecto.getPdfNombre(), () -> new ByteArrayInputStream(finalPdfContent));
+                    StreamResource resource = new StreamResource("Memoria.pdf", () -> new ByteArrayInputStream(finalPdfContent));
                     Anchor downloadLink = new Anchor(resource, "Download");
                     downloadLink.getElement().setAttribute("download", true);
                     downloadLink.getElement().setAttribute("style", "display: none;");

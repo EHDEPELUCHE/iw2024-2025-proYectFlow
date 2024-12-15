@@ -78,7 +78,7 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
                     }
                     if (pdfContent != null) {
                         byte[] finalPdfContent = pdfContent;
-                        StreamResource resource = new StreamResource(proyecto.getPdfNombre(), () -> new ByteArrayInputStream(finalPdfContent));
+                        StreamResource resource = new StreamResource("Memoria.pdf", () -> new ByteArrayInputStream(finalPdfContent));
                         Anchor downloadLink = new Anchor(resource, "Download");
                         downloadLink.getElement().setAttribute("download", true);
                         downloadLink.getElement().setAttribute("style", "display: none;");
@@ -86,7 +86,8 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
                         downloadLink.getElement().callJsFunction("click");
                         downloadLink.remove();
                     }
-                }); return downloadButton;
+                });
+                return downloadButton;
             }).setHeader("PDF").setAutoWidth(true);
             grid.setAllRowsVisible(true);
             getContent().add(grid);

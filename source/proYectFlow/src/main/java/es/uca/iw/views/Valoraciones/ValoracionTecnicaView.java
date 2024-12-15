@@ -61,29 +61,29 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             grid.setItems(List.of(proyectoAux));
             grid.setColumns("nombre", "descripcion", "fechaSolicitud", "coste", "aportacionInicial");
             grid.addComponentColumn(proyecto -> {
-            Button downloadButton = new Button("Memoria");
-            downloadButton.addClickListener(e -> {
-                // Logic to download the PDF
-                byte[] pdfContent = null;
-                try {
-                pdfContent = proyectoService.getPdf(proyecto.getId());
-                } catch (IOException ex) {
-                throw new RuntimeException(ex);
-                }
-                if (pdfContent != null) {
-                byte[] finalPdfContent = pdfContent;
-                StreamResource resource = new StreamResource(proyecto.getPdfNombre(), () -> new ByteArrayInputStream(finalPdfContent));
-                Anchor downloadLink = new Anchor(resource, "Download");
-                downloadLink.getElement().setAttribute("download", true);
-                downloadLink.getElement().setAttribute("style", "display: none;");
-                getContent().add(downloadLink);
-                downloadLink.getElement().callJsFunction("click");
-                downloadLink.remove();
-                }
-            }); return downloadButton;
+                Button downloadButton = new Button("Memoria");
+                downloadButton.addClickListener(e -> {
+                    // Logic to download the PDF
+                    byte[] pdfContent = null;
+                    try {
+                        pdfContent = proyectoService.getPdf(proyecto.getId());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    if (pdfContent != null) {
+                        byte[] finalPdfContent = pdfContent;
+                        StreamResource resource = new StreamResource("Memoria.pdf", () -> new ByteArrayInputStream(finalPdfContent));
+                        Anchor downloadLink = new Anchor(resource, "Download");
+                        downloadLink.getElement().setAttribute("download", true);
+                        downloadLink.getElement().setAttribute("style", "display: none;");
+                        getContent().add(downloadLink);
+                        downloadLink.getElement().callJsFunction("click");
+                        downloadLink.remove();
+                    }
+                });
+                return downloadButton;
             }).setHeader("PDF").setAutoWidth(true);
-            grid.setAllRowsVisible(true); // Set the grid height to fit the number of rows
-            //grid.getElement().getStyle().set("--lumo-size-m", "30px"); // Set the row height
+            grid.setAllRowsVisible(true); 
             getContent().add(grid);
 
             getContent().add(new H1("Añade una valoración de 1 a 10 en los siguientes campos: "));
