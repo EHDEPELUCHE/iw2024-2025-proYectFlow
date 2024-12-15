@@ -1,11 +1,8 @@
 package es.uca.iw.views.menuusuario;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.ListItem;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Background;
 import com.vaadin.flow.theme.lumo.LumoUtility.BorderRadius;
@@ -19,47 +16,66 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Overflow;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
+import java.util.List;
 
 public class MenuUsuarioViewCard extends ListItem {
 
-    public MenuUsuarioViewCard(String text, String url) {
+
+    public MenuUsuarioViewCard(String title, String descriptionText, String imageUrl, String label, String buttonText, String navigationTarget, List<String> allowedRoles) {
         addClassNames(Background.CONTRAST_5, Display.FLEX, FlexDirection.COLUMN, AlignItems.START, Padding.MEDIUM,
                 BorderRadius.LARGE);
 
-        Div div = new Div();
-        div.addClassNames(Background.CONTRAST, Display.FLEX, AlignItems.CENTER, JustifyContent.CENTER,
+        // IMAGEN
+        Div imageContainer = new Div();
+        imageContainer.addClassNames(Background.CONTRAST, Display.FLEX, AlignItems.CENTER, JustifyContent.CENTER,
                 Margin.Bottom.MEDIUM, Overflow.HIDDEN, BorderRadius.MEDIUM, Width.FULL);
-        div.setHeight("160px");
+        imageContainer.setHeight("160px");
 
-        Image image = new Image();
-        image.setWidth("100%");
-        image.setSrc(url);
-        image.setAlt(text);
+        if (imageUrl != null) {
+            Image image = new Image();
+            image.setWidth("100%");
+            image.setSrc(imageUrl);
+            image.setAlt(title != null ? title : "Image");
+            imageContainer.add(image);
+            add(imageContainer);
+        }
 
-        div.add(image);
+        //TITULO
+        if (title != null) {
+            Span titleSpan = new Span();
+            titleSpan.addClassNames(FontSize.XLARGE, FontWeight.SEMIBOLD);
+            titleSpan.setText(title);
+            add(titleSpan);
+        }
 
-        Span header = new Span();
-        header.addClassNames(FontSize.XLARGE, FontWeight.SEMIBOLD);
-        header.setText("Title");
+        //DESCRIPCION
+        if (title != null) {
+            Paragraph description = new Paragraph(descriptionText != null ? descriptionText :
+                    "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.");
+            description.addClassName(Margin.Vertical.MEDIUM);
+            add(description);
+        }
 
-        Span subtitle = new Span();
-        subtitle.addClassNames(FontSize.SMALL, TextColor.SECONDARY);
-        subtitle.setText("Card subtitle");
+        //ETIQUETA
+        if (label != null) {
+            Span badge = new Span();
+            badge.addClassNames(FontSize.SMALL, TextColor.SECONDARY, Margin.Vertical.SMALL);
+            badge.getElement().setAttribute("theme", "badge");
+            badge.setText(label);
+            add(badge);
+        }
 
-        Paragraph description = new Paragraph(
-                "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.");
-        description.addClassName(Margin.Vertical.MEDIUM);
+        //BOTON DE REDIRECCION
+        String finalButtonText = (buttonText != null) ? buttonText : "Administrar"; // Valor por defecto
+        Button buttonLink = new Button(finalButtonText);
+        buttonLink.addClickListener(e -> {
+            UI.getCurrent().navigate(navigationTarget);
+        });
+        add(buttonLink);
 
-        Span badge = new Span();
-        badge.getElement().setAttribute("theme", "badge");
-        badge.setText("Label");
-
-        Button actionButton = new Button("Administrar");
-        actionButton.addClassNames(FontWeight.BOLD, Padding.Vertical.SMALL, Width.FULL);
-        actionButton.addClickListener(event -> actionButton.getUI().ifPresent(ui -> ui.navigate("ruta-destino")));
-
-
-        add(div, header, subtitle, description, badge, actionButton);
-
+        // Lógica para roles (solo para referencia, no afecta diseño)
+        if (allowedRoles != null) {
+            getElement().setProperty("allowedRoles", String.join(",", allowedRoles));
+        }
     }
 }
