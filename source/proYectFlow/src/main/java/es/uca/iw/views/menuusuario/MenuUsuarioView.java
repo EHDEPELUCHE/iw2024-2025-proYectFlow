@@ -76,6 +76,12 @@ public class MenuUsuarioView extends Main implements HasComponents, HasStyle {
                 "Consultar", "estadomisproyectos",
                 List.of("ROLE_PROMOTOR"));
 
+        addCardIfRoleMatches("Evaluación de Proyectos",
+                "Aquí puedes evaluar los proyectos pendientes",
+                "https://images.unsplash.com/photo-1452457750107-cd084dce177d?q=80&w=2001&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "Evaluar", "proyectosOTP",
+                List.of("ROLE_OTP"));
+
         addCardIfRoleMatches("Datos Personales",
                 "Aquí puedes gestionar tus datos personales",
                 "https://images.unsplash.com/photo-1668338857295-7b10bcea47b1?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
