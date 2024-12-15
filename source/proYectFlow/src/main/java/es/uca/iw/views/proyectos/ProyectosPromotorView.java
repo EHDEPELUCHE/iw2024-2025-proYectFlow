@@ -34,7 +34,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Optional;
 
-@PageTitle("Proyectos Promotor")
+@PageTitle("Avala un proyecto")
 @Route("proyectosPromotor")
 @Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg")
 @Uses(Icon.class)
@@ -48,7 +48,9 @@ public class ProyectosPromotorView extends Div {
 
     public ProyectosPromotorView(ProyectoService proyectoService, AuthenticatedUser user) {
         this.user = user;
-        H1 h1Titulo = new H1("Proyectos por avalar");
+        H1 h1Titulo = new H1("Proyectos pendientes de ser avalados");
+        h1Titulo.addClassNames(LumoUtility.Margin.Bottom.LARGE, LumoUtility.Margin.Top.XLARGE,
+                LumoUtility.FontSize.XXXLARGE, LumoUtility.Margin.Left.LARGE);
 
         setSizeFull();
         addClassNames("proyectos-view");
@@ -147,14 +149,11 @@ public class ProyectosPromotorView extends Div {
         return grid;
     }
 
-
-
     public static abstract class Filters extends Div implements Specification<Proyecto> {
 
         private final Optional<Usuario> promotor = user.get();
        
         private final Proyecto.Estado estado = Proyecto.Estado.solicitado;
         //private final CheckboxGroup<String> roles = new CheckboxGroup<>("Role");
-        
     }
 }

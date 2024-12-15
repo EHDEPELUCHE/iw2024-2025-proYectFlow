@@ -14,6 +14,7 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.data.Proyecto;
 import es.uca.iw.data.Usuario;
 import es.uca.iw.security.AuthenticatedUser;
@@ -48,6 +49,8 @@ public class EstadoProyectosView extends Div {
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get(); // Usuario autenticado
             H1 h1Titulo = new H1("Mis proyectos");
+            h1Titulo.addClassNames(LumoUtility.Margin.Bottom.NONE, LumoUtility.Margin.Top.XLARGE,
+                    LumoUtility.FontSize.XXXLARGE, LumoUtility.Margin.Left.LARGE);
 
             // Crear filtro para proyectos
             Specification<Proyecto> filters = (root, query, criteriaBuilder) ->

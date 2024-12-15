@@ -51,6 +51,8 @@ public class ProyectosOTPView extends Div {
     public ProyectosOTPView(ProyectoService proyectoService, AuthenticatedUser user) {
         this.user = user;
         H1 h1Titulo = new H1("Proyectos por evaluar");
+        h1Titulo.addClassNames(LumoUtility.Margin.Bottom.NONE, LumoUtility.Margin.Top.XLARGE,
+                LumoUtility.FontSize.XXXLARGE, LumoUtility.Margin.Left.LARGE);
 
         setSizeFull();
         addClassNames("proyectos-view");

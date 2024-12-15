@@ -25,7 +25,6 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
-import es.uca.iw.components.pricefield.PriceField;
 import es.uca.iw.data.Proyecto;
 import es.uca.iw.data.Roles;
 import es.uca.iw.data.Usuario;
@@ -33,16 +32,15 @@ import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.services.ProyectoService;
 import es.uca.iw.services.UsuarioService;
 import es.uca.iw.views.pantallainicio.PantallaInicioView;
-import jakarta.annotation.security.PermitAll;
-
-
-import java.math.BigDecimal;
+import jakarta.annotation.security.RolesAllowed;
 import java.sql.Blob;
 import java.util.*;
+
 @PageTitle("Registro Proyecto")
 @Route("registro-proyecto")
 @Menu(order = 2, icon = "line-awesome/svg/egg-solid.svg")
-@PermitAll
+@RolesAllowed("ROLE_SOLICITANTE")
+
 public class RegistroProyectoView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Proyecto> binder;
     UsuarioService usuarioService;
@@ -61,6 +59,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
     BigDecimalField coste = new BigDecimalField();
     MemoryBuffer buffer = new MemoryBuffer();
     Upload upload = new Upload(buffer);
+
     public RegistroProyectoView(UsuarioService usuarioService, AuthenticatedUser authenticatedUser, ProyectoService proyectoService) {
         this.usuarioService = usuarioService;
         this.authenticatedUser = authenticatedUser;
@@ -198,7 +197,6 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
 
                     binder.setBean(new Proyecto());
                     Notification.show("Proyecto registrado correctamente.");
-
                 } else {
                     Notification.show("El proyecto tiene datos incorrectos");
                 }
@@ -208,8 +206,5 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         }else{
             Notification.show("El usuario no existe");
         }
-
     }
-
-
 }

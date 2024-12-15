@@ -51,6 +51,8 @@ public class ProyectosView extends Div {
 
     public ProyectosView(ProyectoService proyectoService) {
         H1 h1Titulo = new H1("Proyectos");
+        h1Titulo.addClassNames(LumoUtility.Margin.Bottom.NONE, LumoUtility.Margin.Top.XLARGE,
+                LumoUtility.FontSize.XXXLARGE, LumoUtility.Margin.Left.LARGE);
 
         setSizeFull();
         addClassNames("proyectos-view");
