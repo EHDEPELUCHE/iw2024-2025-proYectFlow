@@ -2,7 +2,6 @@ package es.uca.iw.views.menuusuario;
 
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -60,14 +59,11 @@ public class MenuUsuarioView extends Main implements HasComponents, HasStyle {
         addClassNames("menu-usuario-view-view");
         addClassNames(MaxWidth.SCREEN_LARGE, Margin.Horizontal.AUTO, Padding.Bottom.LARGE, Padding.Horizontal.LARGE);
 
-        HorizontalLayout container = new HorizontalLayout();
-        container.addClassNames(AlignItems.CENTER, JustifyContent.BETWEEN);
-
         VerticalLayout headerContainer = new VerticalLayout();
         H2 header = new H2("Mi Menú");
-        header.addClassNames(Margin.Bottom.NONE, Margin.Top.XLARGE, FontSize.XXXLARGE);
+        header.addClassNames(Margin.Bottom.NONE, Margin.Top.SMALL, FontSize.XXXLARGE);
         Paragraph description = new Paragraph("Desde aquí puedes gestionar todos tus proyectos y datos personales");
-        description.addClassNames(Margin.Bottom.XLARGE, Margin.Top.NONE, TextColor.SECONDARY);
+        description.addClassNames(Margin.Bottom.SMALL, Margin.Top.NONE, TextColor.SECONDARY);
         headerContainer.add(header, description);
 
         imageContainer = new OrderedList();
@@ -76,7 +72,6 @@ public class MenuUsuarioView extends Main implements HasComponents, HasStyle {
         imageContainer.getStyle().set("grid-template-columns", "repeat(auto-fit, minmax(300px, 1fr))");
         imageContainer.getStyle().set("gap", "1rem");
 
-        container.add(headerContainer);
-        add(container, imageContainer);
+        add(headerContainer, imageContainer);
     }
 }
