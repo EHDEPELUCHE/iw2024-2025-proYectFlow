@@ -78,6 +78,6 @@ public class MeterPromotoresView extends Composite<VerticalLayout> {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        
+
     }
 }
