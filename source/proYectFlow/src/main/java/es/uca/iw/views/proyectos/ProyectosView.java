@@ -104,8 +104,13 @@ public class ProyectosView extends Div {
         grid.addColumn("descripcion").setAutoWidth(true);
         grid.addColumn("interesados").setAutoWidth(true);
         grid.addColumn("alcance").setAutoWidth(true);
-        grid.addColumn(proyecto -> proyecto.getPromotor().getNombre() + " " + proyecto.getPromotor().getApellido())
-                .setHeader("Promotor").setAutoWidth(true);
+        grid.addColumn(proyecto -> {
+            if (proyecto.getPromotor() != null) {
+            return proyecto.getPromotor().getNombre() + " " + proyecto.getPromotor().getApellido();
+            } else {
+            return "Sin promotor";
+            }
+        }).setHeader("Promotor").setAutoWidth(true);
 
         grid.addColumn("coste").setAutoWidth(true);
         grid.addColumn("aportacionInicial").setAutoWidth(true);

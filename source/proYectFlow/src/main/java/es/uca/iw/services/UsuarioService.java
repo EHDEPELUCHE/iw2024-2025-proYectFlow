@@ -2,7 +2,7 @@ package es.uca.iw.services;
 
 import es.uca.iw.data.Roles;
 import es.uca.iw.data.Usuario;
-import es.uca.iw.data.rest.promotores;
+import es.uca.iw.data.rest.Promotor;
 import es.uca.iw.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
 
@@ -106,7 +106,7 @@ public class UsuarioService {
     public Usuario getNombrePropio(String nombre){ return repository.findByNombre(nombre);}
 
     @Transactional
-    public void createPromotor(promotores promotor) {
+    public void createPromotor(Promotor promotor) {
         try {
             Usuario existingUser = repository.findByCorreo(promotor.getCorreo());
             if (existingUser != null) {

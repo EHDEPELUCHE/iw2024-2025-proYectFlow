@@ -18,9 +18,8 @@ import org.springframework.security.core.GrantedAuthority;
 
 @PageTitle("Menu de usuario")
 @Route("menuUsuarioView")
-@Menu(order = 7, icon = "line-awesome/svg/border-all-solid.svg")
+@Menu(order = 8, icon = "line-awesome/svg/border-all-solid.svg")
 @PermitAll
-
 public class MenuUsuarioView extends Main implements HasComponents, HasStyle {
 
     private OrderedList imageContainer;

@@ -8,6 +8,7 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
@@ -15,6 +16,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+
+import es.uca.iw.data.GLOBALES;
 import es.uca.iw.data.Proyecto;
 import es.uca.iw.data.Usuario;
 import es.uca.iw.security.AuthenticatedUser;
@@ -25,6 +28,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Optional;
 
 @PageTitle("Estado de mis Proyectos")
@@ -75,8 +79,13 @@ public class EstadoProyectosView extends Div {
         grid.addColumn("interesados").setHeader("Interesados").setAutoWidth(true);
         grid.addColumn("alcance").setHeader("Alcance").setAutoWidth(true);
 
-        grid.addColumn(proyecto -> proyecto.getPromotor().getNombre() + " " + proyecto.getPromotor().getApellido())
-                .setHeader("Promotor").setAutoWidth(true);
+        grid.addColumn(proyecto -> {
+            if (proyecto.getPromotor() != null) {
+            return proyecto.getPromotor().getNombre() + " " + proyecto.getPromotor().getApellido();
+            } else {
+            return "Sin promotor";
+            }
+        }).setHeader("Promotor").setAutoWidth(true);
 
         grid.addColumn("coste").setHeader("Coste").setAutoWidth(true);
         grid.addColumn("aportacionInicial").setHeader("Aportación Inicial").setAutoWidth(true);
@@ -106,6 +115,25 @@ public class EstadoProyectosView extends Div {
             });
             return downloadButton;
         }).setHeader("PDF").setAutoWidth(true);
+        grid.addComponentColumn(proyecto -> {
+            if (proyecto.getPromotor() == null) {
+                Button assignPromotorButton = new Button("Asignar Promotor");
+                Date hoy = new Date();
+                if (GLOBALES.FECHA_LIMITE.compareTo(hoy) < 0){
+                    
+                    assignPromotorButton.addClickListener(e -> {
+                    // Lógica para asignar promotor
+                    
+                    });
+                    return assignPromotorButton;
+                }else{
+                    return new Div(new H5("Ya ha pasado el plazo, lo sentimos"));
+                }
+           
+            } else {
+            return new Div();
+            }
+        }).setHeader("Acciones").setAutoWidth(true);
 
         // Configurar los datos del grid
         grid.setItems(query -> proyectoService.list(

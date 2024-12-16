@@ -3,19 +3,19 @@ package es.uca.iw.data.rest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class promotores {
-    private Long id;
+public class Promotor {
+    private String id;
     private String nombre;
     private String cargo;
 
-    public promotores() {
+    public Promotor() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -49,6 +49,7 @@ public class ProyectoService {
     public boolean registerProyecto(Proyecto proyecto) {
 
         try {
+            //MANDAR CORREO
             repository.save(proyecto);
 
             return true;
@@ -93,9 +94,12 @@ public class ProyectoService {
         if(avalado){
             proyectoAux.setEstado(Proyecto.Estado.avalado);
             proyectoAux.setPuntuacionAval(prioridad.doubleValue());
+            //MANDAR CORREO
             repository.save(proyectoAux);
         }else{
             proyectoAux.setEstado(Proyecto.Estado.denegado);
+            proyectoAux.setPromotor(null);
+            //MANDAR CORREO
             repository.save(proyectoAux);
         }
     }
