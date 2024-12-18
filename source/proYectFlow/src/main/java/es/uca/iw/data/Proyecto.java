@@ -45,7 +45,7 @@ public class Proyecto extends AbstractEntity {
     Usuario promotor;
 
     @ManyToOne
-    @JoinColumn(name = "solicitante_id")
+    @JoinColumn(name = "solicitante_id",   nullable = true)
     Usuario solicitante;
     
     Estado estado;

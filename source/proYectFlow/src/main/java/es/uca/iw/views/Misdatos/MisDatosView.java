@@ -18,6 +18,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.data.Usuario;
 import es.uca.iw.security.AuthenticatedUser;
+import es.uca.iw.services.ProyectoService;
 import es.uca.iw.services.UsuarioService;
 import es.uca.iw.views.pantallainicio.PantallaInicioView;
 import jakarta.annotation.security.PermitAll;
@@ -32,15 +33,17 @@ public class MisDatosView extends Composite<VerticalLayout>  {
     private final BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
     private final AuthenticatedUser authenticatedUser;
     UsuarioService uservice ;
+    ProyectoService proyectoservice ;
 
     TextField username = new TextField();
     TextField nombre = new TextField();
     TextField apellido = new TextField();
     EmailField correo = new EmailField();
 
-    public MisDatosView(AuthenticatedUser authenticatedUser, UsuarioService uservice) {
+    public MisDatosView(AuthenticatedUser authenticatedUser, UsuarioService uservice, ProyectoService proyectoservice) {
         this.authenticatedUser = authenticatedUser;
         this.uservice = uservice;
+        this.proyectoservice = proyectoservice;
         Optional<Usuario> user = authenticatedUser.get();
 
         VerticalLayout layoutColumn2 = new VerticalLayout();
@@ -103,6 +106,7 @@ public class MisDatosView extends Composite<VerticalLayout>  {
         btncancelar.addClassName("buttonSecondary");
 
         Button Borrar = new Button("Borrar Mis datos", event -> {
+            proyectoservice.desligarUsuario(user.get());
             uservice.delete(user.get().getId());
             authenticatedUser.logout();
             UI.getCurrent().navigate(PantallaInicioView.class);

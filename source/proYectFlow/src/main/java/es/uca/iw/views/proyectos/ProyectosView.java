@@ -98,8 +98,13 @@ public class ProyectosView extends Div {
 
     private Component createGrid() {
         grid = new Grid<>(Proyecto.class, false);
-        grid.addColumn(proyecto -> proyecto.getSolicitante().getNombre() + " " + proyecto.getSolicitante().getApellido())
-                .setHeader("Solicitante").setAutoWidth(true);
+        grid.addColumn(proyecto -> {
+            if (proyecto.getSolicitante() != null) {
+                return proyecto.getSolicitante().getNombre() + " " + proyecto.getSolicitante().getApellido();
+            } else {
+                return "Usuario no disponible";
+            }
+        }).setHeader("Solicitante").setAutoWidth(true);
         grid.addColumn("nombre").setAutoWidth(true);
         grid.addColumn("descripcion").setAutoWidth(true);
         grid.addColumn("interesados").setAutoWidth(true);

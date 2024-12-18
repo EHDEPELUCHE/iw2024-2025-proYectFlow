@@ -104,4 +104,11 @@ public class ProyectoService {
         }
     }
 
+    public void desligarUsuario(Usuario usuario) {
+        List<Proyecto> proyectos = repository.findBySolicitante(usuario);
+        for (Proyecto proyecto : proyectos) {
+            proyecto.setSolicitante(null);
+            repository.save(proyecto);
+        }
+    }
 }

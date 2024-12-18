@@ -16,4 +16,5 @@ public interface ProyectoRepository extends JpaRepository<Proyecto, UUID> {
     Page<Proyecto> findAll(Specification<Proyecto> filter, Pageable pageable);
 
 
+    List<Proyecto> findBySolicitante(Usuario usuario);
 }
