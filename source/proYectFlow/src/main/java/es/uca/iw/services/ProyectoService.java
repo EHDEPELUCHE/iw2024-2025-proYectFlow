@@ -1,5 +1,6 @@
 package es.uca.iw.services;
 
+import es.uca.iw.data.EmailSender;
 import es.uca.iw.data.Proyecto;
 import es.uca.iw.data.Usuario;
 import es.uca.iw.repositories.ProyectoRepository;
@@ -17,9 +18,11 @@ import java.util.UUID;
 @Service
 public class ProyectoService {
     private final ProyectoRepository repository;
+    private final EmailSender mailSender;
 
-    public ProyectoService(ProyectoRepository repository) {
+    public ProyectoService(ProyectoRepository repository, EmailSender mailSender) {
         this.repository = repository;
+        this.mailSender = mailSender;
     }
 
     public Optional<Proyecto> get(UUID id) {
@@ -50,6 +53,10 @@ public class ProyectoService {
 
         try {
             //MANDAR CORREO
+            if(proyecto.getPromotor() != null){
+                mailSender.sendEmail(proyecto.getPromotor().getCorreo(), "Petición de avalar",
+                        "Ha sido ligado al proyecto:\"" + proyecto.getNombre() +"\". Por favor, acceda a la web para ver toda la información y decidir si avala la propuesta.");
+            }
             repository.save(proyecto);
 
             return true;
@@ -64,6 +71,14 @@ public class ProyectoService {
             if(idoneidad.doubleValue() == 0){
                 proyecto.setEstado(Proyecto.Estado.denegado);
                 proyecto.setPuntuacionTecnica(0);
+                if(proyecto.getSolicitante() != null){
+                    mailSender.sendEmail(proyecto.getSolicitante().getCorreo(), "Su proyecto NO ha pasado la valoración técnica",
+                            "Lo lamentamos, su propuesta:\"" + proyecto.getNombre() +"\" no cumple el mínimo requerido en aspectos técnicos.");
+                }
+                if(proyecto.getPromotor() != null){
+                    mailSender.sendEmail(proyecto.getPromotor().getCorreo(), "Su proyecto NO ha pasado la valoración técnica",
+                            "Lo lamentamos, su propuesta avalada:\"" + proyecto.getNombre() +"\" no cumple el mínimo requerido en aspectos técnicos.");
+                }
                 repository.save(proyecto);
                 
             }else{
@@ -74,6 +89,14 @@ public class ProyectoService {
                 if (proyecto.getPuntuacionTecnica() >= 5){
                     repository.save(proyecto);
                 }else{
+                    if(proyecto.getSolicitante() != null){
+                        mailSender.sendEmail(proyecto.getSolicitante().getCorreo(), "Su proyecto NO ha pasado la valoración técnica",
+                                "Lo lamentamos, su propuesta:\"" + proyecto.getNombre() +"\" no cumple el mínimo requerido en aspectos técnicos.");
+                    }
+                    if(proyecto.getPromotor() != null){
+                        mailSender.sendEmail(proyecto.getPromotor().getCorreo(), "Su proyecto NO ha pasado la valoración técnica",
+                                "Lo lamentamos, su propuesta avalada:\"" + proyecto.getNombre() +"\" no cumple el mínimo requerido en aspectos técnicos.");
+                    }
                     proyecto.setEstado(Proyecto.Estado.denegado);
                     repository.save(proyecto);
                 }
@@ -95,11 +118,21 @@ public class ProyectoService {
             proyectoAux.setEstado(Proyecto.Estado.avalado);
             proyectoAux.setPuntuacionAval(prioridad.doubleValue());
             //MANDAR CORREO
+            if(proyectoAux.getSolicitante() != null){
+                mailSender.sendEmail(proyectoAux.getSolicitante().getCorreo(), "Su proyecto ha sido avalado",
+                        "¡Felicidades! " + proyectoAux.getPromotor().getNombre() + " ha aceptado ser su aval.");
+            }
             repository.save(proyectoAux);
         }else{
             proyectoAux.setEstado(Proyecto.Estado.denegado);
-            proyectoAux.setPromotor(null);
+
             //MANDAR CORREO
+            if(proyectoAux.getSolicitante() != null){
+                mailSender.sendEmail(proyectoAux.getSolicitante().getCorreo(), "Su proyecto NO ha sido avalado",
+                        "Lo lamentamos, " + proyectoAux.getPromotor().getNombre() + " ha rechazado avalar su propuesta." +
+                                " Acceda a nuestra web si aún está en plazo y solicite otro aval.");
+            }
+            proyectoAux.setPromotor(null);
             repository.save(proyectoAux);
         }
     }

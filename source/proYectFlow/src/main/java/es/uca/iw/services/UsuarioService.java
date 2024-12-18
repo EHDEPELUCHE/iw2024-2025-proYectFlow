@@ -1,5 +1,6 @@
 package es.uca.iw.services;
 
+import es.uca.iw.data.EmailSender;
 import es.uca.iw.data.Roles;
 import es.uca.iw.data.Usuario;
 import es.uca.iw.data.rest.Promotor;
@@ -21,9 +22,10 @@ import java.util.UUID;
 public class UsuarioService {
     private final UsuarioRepository repository;
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-    public UsuarioService(UsuarioRepository repository) {
+    private final EmailService emailService;
+    public UsuarioService(UsuarioRepository repository, EmailService emailService) {
         this.repository = repository;
+        this.emailService = emailService;
     }
 
     public Optional<Usuario> get(UUID id) {
@@ -37,7 +39,7 @@ public class UsuarioService {
     public Usuario update(Usuario entity) {
         return repository.save(entity);
     }
-
+    @Transactional
     public void delete(UUID id) {
         repository.deleteById(id);
     }
@@ -76,6 +78,7 @@ public class UsuarioService {
         try {
             repository.save(user);
             //Aun no tenemos emailService
+            emailService.sendEmail(user.getCorreo(), "Registro exitoso", "Bienvenido a proYectFlow. Inicie sesión en nuestra web y propón sus proyectos para mejorar nuestra universidad.");
             //emailService.sendRegistrationEmail(user);
             return true;
         } catch (DataIntegrityViolationException e) {
@@ -89,6 +92,7 @@ public class UsuarioService {
         try {
             repository.save(user);
             //Aun no tenemos emailService
+            emailService.sendEmail(user.getCorreo(), "Registro exitoso", "Bienvenido a proYectFlow. Inicie sesión en nuestra web y propón sus proyectos para mejorar nuestra universidad.");
             //emailService.sendRegistrationEmail(user);
             return true;
         } catch (DataIntegrityViolationException e) {

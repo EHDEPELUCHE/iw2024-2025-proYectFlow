@@ -33,6 +33,7 @@ import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.services.ProyectoService;
 import es.uca.iw.services.UsuarioService;
 import es.uca.iw.views.pantallainicio.PantallaInicioView;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import java.sql.Blob;
 import java.util.*;
@@ -40,7 +41,7 @@ import java.util.*;
 @PageTitle("Registro Proyecto")
 @Route("registro-proyecto")
 @Menu(order = 2, icon = "line-awesome/svg/egg-solid.svg")
-@RolesAllowed("ROLE_SOLICITANTE")
+@PermitAll
 
 public class RegistroProyectoView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Proyecto> binder;
