@@ -38,7 +38,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-@PageTitle("Todos los Proyectos")
+@PageTitle("Proyectos")
 @Route("proyectos")
 @Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg")
 @Uses(Icon.class)
@@ -145,13 +145,13 @@ public class ProyectosView extends Div {
             return downloadButton;
         }).setHeader("PDF").setAutoWidth(true);
 
-        grid.addComponentColumn(proyecto -> {
+        /*grid.addComponentColumn(proyecto -> {
             Button evaluarButton = new Button("Evaluar");
             evaluarButton.addClickListener(e -> {
                 getUI().ifPresent(ui -> ui.navigate("ValoracionTecnica/" + (proyecto.getId()).toString()));
             });
             return evaluarButton;
-        }).setHeader("Acciones").setAutoWidth(true);
+        }).setHeader("Acciones").setAutoWidth(true);*/
 
         grid.setItems(query -> proyectoService.list(
                 PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)),

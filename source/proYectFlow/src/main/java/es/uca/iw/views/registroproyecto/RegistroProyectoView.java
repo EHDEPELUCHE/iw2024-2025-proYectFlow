@@ -24,6 +24,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import es.uca.iw.data.Proyecto;
 import es.uca.iw.data.Roles;
@@ -88,7 +89,6 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         promotor.setLabel("Promotor");
         promotor.setWidth("min-content");
 
-
         promotor.setItems(usuarioService.get(Roles.PROMOTOR));
         promotor.setItemLabelGenerator(Usuario::getNombre);
 
@@ -104,7 +104,6 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         interesados.setLabel("Interesados");
         interesados.setWidth("min-content");
         interesados.setAriaLabel("Añadir interesados");
-
 
         aportacionInicial.setLabel("Financiación aportada en €");
         aportacionInicial.setWidth("min-content");

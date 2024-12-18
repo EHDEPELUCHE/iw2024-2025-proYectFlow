@@ -133,7 +133,7 @@ public class ProyectosPromotorView extends Div {
         }).setHeader("PDF").setAutoWidth(true);
 
         grid.addComponentColumn(proyecto -> {
-            Button evaluarButton = new Button("Evaluar");
+            Button evaluarButton = new Button("Avalar");
             evaluarButton.addClickListener(e -> {
                 getUI().ifPresent(ui -> ui.navigate("ValoracionPromotor/" + (proyecto.getId()).toString()));
             });

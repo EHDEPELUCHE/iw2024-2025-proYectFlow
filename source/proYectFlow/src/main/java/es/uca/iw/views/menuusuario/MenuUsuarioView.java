@@ -54,7 +54,7 @@ public class MenuUsuarioView extends Main implements HasComponents, HasStyle {
         addCardIfRoleMatches("Gestión de Proyectos",
                 "Aquí puedes gestionar tus solicitudes de proyectos",
                 "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop",
-                "Administrar", "proyectos",
+                "Administrar", "estadomisproyectos",
                 List.of("ROLE_SOLICITANTE"));
 
         addCardIfRoleMatches("Nueva solicitud de Proyecto",
@@ -81,6 +81,12 @@ public class MenuUsuarioView extends Main implements HasComponents, HasStyle {
                 "Evaluar", "proyectosOTP",
                 List.of("ROLE_OTP"));
 
+        addCardIfRoleMatches("Proyectos en desarrollo",
+                "Aquí puedes ver todos los proyectos en desarrollo",
+                "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop",
+                "Consultar", "proyectos",
+                null);
+
         addCardIfRoleMatches("Datos Personales",
                 "Aquí puedes gestionar tus datos personales",
                 "https://images.unsplash.com/photo-1668338857295-7b10bcea47b1?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -92,14 +98,21 @@ public class MenuUsuarioView extends Main implements HasComponents, HasStyle {
     private void addCardIfRoleMatches(String title, String description, String imageUrl,
                                       String buttonText, String navigationTarget, List<String> allowedRoles) {
 
-        List<String> userRoles = getCurrentUserRoles();
-
-        boolean hasPermission = allowedRoles.stream()
-                .anyMatch(role -> userRoles.contains(role));
-
-        if (hasPermission) {
+        if (allowedRoles == null || allowedRoles.isEmpty()) {
             imageContainer.add(new MenuUsuarioViewCard(title, description, imageUrl, null, buttonText,
                     navigationTarget, allowedRoles));
+            return;
+        } else {
+
+            List<String> userRoles = getCurrentUserRoles();
+
+            boolean hasPermission = allowedRoles.stream()
+                    .anyMatch(role -> userRoles.contains(role));
+
+            if (hasPermission) {
+                imageContainer.add(new MenuUsuarioViewCard(title, description, imageUrl, null, buttonText,
+                        navigationTarget, allowedRoles));
+            }
         }
     }
 
