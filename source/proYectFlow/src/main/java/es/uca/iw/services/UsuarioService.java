@@ -166,4 +166,6 @@ public class UsuarioService {
     public String encriptar(String textoplano) {
         return passwordEncoder.encode(textoplano);
     }
+
+    
 }

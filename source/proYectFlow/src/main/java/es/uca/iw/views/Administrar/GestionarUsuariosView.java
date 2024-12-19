@@ -7,6 +7,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.notification.Notification;
@@ -37,6 +38,8 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @PageTitle("Administración de usuarios")
 @Route("AdministrarUsuarios")
@@ -48,6 +51,7 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
     UsuarioService usuarioService;
     ProyectoService proyectoService;
     AuthenticatedUser authenticatedUser;
+    Grid<Usuario> grid;
     private final BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
     private static final Logger logger = Logger.getLogger(GestionarUsuariosView.class.getName());
 
@@ -67,6 +71,31 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
         Button Buscar = new Button("Buscar");
         Buscar.addClickListener(e -> GestionarUsu(correo.getValue()));
         getContent().add(titulousuario, correo, Buscar);
+
+        // Crear tabla de usuarios
+        grid = new Grid<>(Usuario.class, false);
+        grid.addColumn(Usuario::getNombre).setHeader("Nombre");
+        grid.addColumn(Usuario::getApellido).setHeader("Apellido");
+        grid.addColumn(Usuario::getCorreo).setHeader("Correo");
+        grid.addColumn(Usuario::getTipo).setHeader("Rol");
+        grid.addColumn(Usuario::getActivo).setHeader("Activo");
+
+        // Añadir columna de modificar
+        grid.addComponentColumn(usuario -> {
+            Button modificarButton = new Button("Modificar");
+            modificarButton.addClickListener(e -> GestionarUsu(usuario.getCorreo()));
+            return modificarButton;
+        }).setHeader("Modificar");
+
+        // Añadir datos a la tabla
+        
+        // Añadir datos a la tabla con paginación
+        Pageable pageable = Pageable.unpaged(); // Puedes ajustar la paginación según tus necesidades
+        Page<Usuario> usuariosPage = usuarioService.list(pageable);
+        grid.setItems(usuariosPage.getContent());
+
+        // Añadir la tabla al layout
+        getContent().add(grid);
 
     }
 
@@ -103,6 +132,7 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
 
             Button Borrar = new Button("Borrar datos del usuario", event -> {
                 proyectoService.desligarUsuario(user);
+                grid.getDataProvider().refreshItem(user);
                 usuarioService.delete(user.getId());
                 dialog.close();
             });
@@ -134,6 +164,7 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
                         user.setActivo(activo.getValue());
                         usuarioService.update(user);
                         Notification.show("Usuario guardado correctamente");
+                        grid.getDataProvider().refreshItem(user);
                         dialog.close();
                     }else{
                         Notification.show("Revise los datos de entrada");
