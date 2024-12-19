@@ -1,9 +1,6 @@
 package es.uca.iw.data;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -12,6 +9,7 @@ import java.math.BigDecimal;
 import java.sql.Blob;
 import java.util.Date;
 import java.io.ByteArrayInputStream;
+import java.util.List;
 
 @Entity
 public class Proyecto extends AbstractEntity {
@@ -49,8 +47,9 @@ public class Proyecto extends AbstractEntity {
     Usuario solicitante;
     
     Estado estado;
-    
-    //List<Integer> ObjEstrategicos; CAMBIAR
+
+    @ManyToMany
+    List<ObjetivoEstrategico> ObjEstrategicos;
 
     public enum Estado {solicitado, avalado, evaluadoTecnicamente, evaluadoEstrategicamente, aceptado, enDesarollo, denegado}
 

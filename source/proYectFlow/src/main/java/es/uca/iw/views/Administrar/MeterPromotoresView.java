@@ -23,15 +23,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 @PageTitle("Administración de usuarios")
 @Route("AdministrarUsuarios")
 @Menu(order = 1, icon = "line-awesome/svg/user.svg")
-@RolesAllowed("ADMIN")
+@RolesAllowed("ROLE_ADMIN")
 public class MeterPromotoresView extends Composite<VerticalLayout> {
+
     RestTemplate restTemplate;
     UsuarioService usuarioService;
     private static final Logger logger = Logger.getLogger(MeterPromotoresView.class.getName());
 
     @Autowired
-    public MeterPromotoresView(RestTemplate restTemplate, UsuarioService usuarioService) throws Exception {
-        this.restTemplate = restTemplate;
+    public MeterPromotoresView(UsuarioService usuarioService) throws Exception {
+        this.restTemplate = new RestTemplate();
         this.usuarioService = usuarioService;
         Button METER_PROMOTORES = new Button("Meter Promotores");
         METER_PROMOTORES.addClickListener(e -> GuardarPromotores());

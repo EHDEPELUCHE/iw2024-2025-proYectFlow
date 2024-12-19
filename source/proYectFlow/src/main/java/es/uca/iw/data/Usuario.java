@@ -93,10 +93,10 @@ public class Usuario extends AbstractEntity implements UserDetails {
 
     // A partir de aqui funciones propias del modulo de seguridad
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(tipo.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_"+tipo.name()));
     }
     @Override
-    public boolean isEnabled(){return this.activo;}
+    public boolean isEnabled(){return true/*this.activo*/;}
 
     @Override
     public String getPassword() {

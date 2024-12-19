@@ -31,7 +31,7 @@ import jakarta.annotation.security.RolesAllowed;
 @PageTitle("Registro de usuario admin")
 @Route("registro-usuario-admin")
 @Menu(order = 2, icon = "line-awesome/svg/user.svg")
-@RolesAllowed("ADMIN")
+@RolesAllowed("ROLE_ADMIN")
 //@AnonymousAllowed
 public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Usuario> binder;
