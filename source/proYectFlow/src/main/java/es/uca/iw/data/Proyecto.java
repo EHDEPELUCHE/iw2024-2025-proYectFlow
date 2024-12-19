@@ -46,12 +46,13 @@ public class Proyecto extends AbstractEntity {
     @JoinColumn(name = "solicitante_id",   nullable = true)
     Usuario solicitante;
     
+    @Enumerated(EnumType.ORDINAL)
     Estado estado;
 
     @ManyToMany
     List<ObjetivoEstrategico> ObjEstrategicos;
 
-    public enum Estado {solicitado, avalado, evaluadoTecnicamente, evaluadoEstrategicamente, aceptado, enDesarollo, denegado}
+    public enum Estado {solicitado, avalado, evaluadoTecnicamente, evaluadoEstrategicamente, aceptado, enDesarrollo, denegado}
 
     public Proyecto(String nombre, String descripcion, String interesados, String alcance, BigDecimal coste, 
                     BigDecimal aportacionInicial, Usuario aval, Usuario solicitante, Date fechaLimite, Blob memoria) {
