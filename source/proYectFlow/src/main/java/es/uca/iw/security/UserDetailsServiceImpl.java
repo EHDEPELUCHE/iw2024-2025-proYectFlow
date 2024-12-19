@@ -1,7 +1,7 @@
 package es.uca.iw.security;
 
-import es.uca.iw.data.Usuario;
-import es.uca.iw.repositories.UsuarioRepository;
+import es.uca.iw.Usuario.Usuario;
+import es.uca.iw.Usuario.UsuarioRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,11 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-
     private final UsuarioRepository userRepository;
 
     public UserDetailsServiceImpl(UsuarioRepository userRepository) {
@@ -35,5 +32,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return user;
         }
     }
-
 }
