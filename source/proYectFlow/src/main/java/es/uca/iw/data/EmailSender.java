@@ -13,6 +13,7 @@ public class EmailSender implements EmailService {
     @Autowired
     private JavaMailSender emailSender;
     private int serverPort = 8080;
+    @Override
     public String getServerUrl() {
         // Generate the server URL
         String serverUrl = "http://";

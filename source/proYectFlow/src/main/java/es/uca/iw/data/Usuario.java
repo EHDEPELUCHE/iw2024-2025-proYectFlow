@@ -36,7 +36,7 @@ public class Usuario extends AbstractEntity implements UserDetails {
     @Column(nullable = false)
     private Roles tipo;
 
-    private boolean activo;
+    private boolean activo = false;
     private String codigo;
 
     public Usuario(String nombre, String username, String apellido, String correo, String contrasenna) {
@@ -46,7 +46,7 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.correo = correo;
         this.contrasenna = contrasenna;
         this.tipo = Roles.SOLICITANTE;
-        activo = false;
+        this.activo = false;
     }
 
     // Constructor vacio CAMBIAR
@@ -59,7 +59,7 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.correo = correo;
         this.contrasenna = contrasenna;
         this.tipo = tipo;
-        activo = false;
+        this.activo = false;
     }
 
     public String getUsername() { return username; }
@@ -95,6 +95,8 @@ public class Usuario extends AbstractEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(tipo.name()));
     }
+    @Override
+    public boolean isEnabled(){return this.activo;}
 
     @Override
     public String getPassword() {
