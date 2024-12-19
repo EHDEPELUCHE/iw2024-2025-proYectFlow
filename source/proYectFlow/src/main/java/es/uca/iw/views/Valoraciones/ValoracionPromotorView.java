@@ -1,22 +1,17 @@
 package es.uca.iw.views.Valoraciones;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.BigDecimalField;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamResource;
-import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
 import es.uca.iw.data.Proyecto;
 import es.uca.iw.services.ProyectoService;
@@ -25,8 +20,9 @@ import jakarta.annotation.security.RolesAllowed;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -63,16 +59,35 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
             Proyecto proyectoAux = proyecto.get();
 
             getContent().add(new H1("Detalles del Proyecto"));
-            Grid<Proyecto> grid = new Grid<>(Proyecto.class);
-            grid.setItems(List.of(proyectoAux));
-            grid.setColumns("nombre", "descripcion", "fechaSolicitud", "coste", "aportacionInicial");
-            grid.addComponentColumn(proyecto -> {
+
+            FormLayout formLayout = new FormLayout();
+            formLayout.setWidth("100%");
+
+            formLayout.addFormItem(new Span(proyectoAux.getSolicitante().getNombre()), "Solicitante");
+
+            LocalDate localDate = proyectoAux.getFechaSolicitud().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+            FormLayout.FormItem formItem = formLayout.addFormItem(new Span(localDate.format(formatterDate)), "Fecha de Solicitud");
+            formItem.getElement().getStyle().set("white-space", "nowrap");
+
+            formLayout.addFormItem(new Span(proyectoAux.getNombre()), "Nombre");
+            formLayout.addFormItem(new Span(proyectoAux.getDescripcion()), "Descripción");
+            formLayout.addFormItem(new Span(proyectoAux.getAlcance()), "Alcance");
+            formLayout.addFormItem(new Span(proyectoAux.getInteresados()), "Interesados");
+
+            formLayout.addFormItem(new Span(proyectoAux.getCoste()+"€"), "Coste");
+            formLayout.addFormItem(new Span(proyectoAux.getAportacionInicial()+"€"), "Aportación Inicial");
+
+            LocalDate localDateL = proyectoAux.getFechaLimite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            DateTimeFormatter formatterDateL = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+            formLayout.addFormItem(new Span(localDateL.format(formatterDateL)), "Fecha Límite de puesta en marcha");
+
                 Button downloadButton = new Button("Memoria");
                 downloadButton.addClickListener(e -> {
                     // Logic to download the PDF
                     byte[] pdfContent = null;
                     try {
-                        pdfContent = proyectoService.getPdf(proyecto.getId());
+                        pdfContent = proyectoService.getPdf(proyectoAux.getId());
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -87,42 +102,43 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
                         downloadLink.remove();
                     }
                 });
-                return downloadButton;
-            }).setHeader("PDF").setAutoWidth(true);
-            grid.setAllRowsVisible(true);
-            getContent().add(grid);
 
-            getContent().add(new H1("Añade una valoración de 1 a 10 en los siguientes campos: "));
-            HorizontalLayout horlayout = new HorizontalLayout();
-            FormLayout formLayout = new FormLayout();
-            
-            formLayout.setWidth("100%");
+            getContent().add(formLayout, downloadButton);
 
-            horlayout.addClassName(Gap.MEDIUM);
-            horlayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-            horlayout.setWidthFull();
-            horlayout.add(formLayout);
-            //Mostramos el precio total menos la valoración inicial
-            Checkbox avalar = new Checkbox();
-            avalar.setLabel("Sí, avalo este proyecto");
-            formLayout.add(avalar);
-            BigDecimalField prioridad = new BigDecimalField();
-            prioridad.setLabel("Prioridad");
-            formLayout.add(prioridad);
-            getContent().add(horlayout);
-            
-            Button Guardar = new Button("Guardar");
-            Guardar.addClickListener(e -> {
-                if(prioridad.getValue().compareTo(BigDecimal.valueOf(10)) == 1 || prioridad.getValue().compareTo(BigDecimal.ZERO) == -1
-                        )
-                {
-                    Notification.show("Las notas tienen que estar entre 0 y 10");
+            //AVALAR?
+            getContent().add(new H2("¿Quiere avalar esta propuesta?"));
+
+            Checkbox avalarS = new Checkbox("Sí, avalo este proyecto");
+            Checkbox avalarN = new Checkbox("No, rechazo avalar este proyecto");
+
+            getContent().add(avalarS, avalarN);
+
+            //Valoracion
+            getContent().add(new H3("Añade una valoración al proyecto según su importancia:"));
+            HorizontalLayout valoracionLayout = new HorizontalLayout();
+            valoracionLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+
+            RadioButtonGroup<Integer> valoracionGroup = new RadioButtonGroup<>();
+            valoracionGroup.setLabel("Selecciona tu valoración:");
+            valoracionGroup.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+            valoracionGroup.setValue(0); // Valor por defecto
+
+            valoracionLayout.add(valoracionGroup);
+            getContent().add(valoracionLayout);
+
+            // Botón guardar
+            Button guardar = new Button("Guardar");
+            guardar.addClickListener(e -> {
+                Integer valorSeleccionado = valoracionGroup.getValue();
+                if (valorSeleccionado == null || valorSeleccionado < 0 || valorSeleccionado > 10) {
+                    Notification.show("Por favor, selecciona una valoración válida entre 0 y 10.");
                 } else {
-                    proyectoService.setValoracionPromotor(prioridad.getValue(), avalar.getValue(), proyectoAux);
+                    proyectoService.setValoracionPromotor(BigDecimal.valueOf(valorSeleccionado), avalarS.getValue(), proyectoAux);
+                    Notification.show("Valoración guardada con éxito.");
                 }
             });
 
-            HorizontalLayout buttonLayout = new HorizontalLayout(Guardar);
+            HorizontalLayout buttonLayout = new HorizontalLayout(guardar);
             buttonLayout.setWidthFull();
             buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
             getContent().add(buttonLayout);
