@@ -6,11 +6,21 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.net.InetAddress;
+
 @Service
 public class EmailSender implements EmailService {
     @Autowired
     private JavaMailSender emailSender;
+    private int serverPort = 8080;
+    public String getServerUrl() {
+        // Generate the server URL
+        String serverUrl = "http://";
+        serverUrl += InetAddress.getLoopbackAddress().getHostAddress();
+        serverUrl += ":" + serverPort + "/";
+        return serverUrl;
 
+    }
     @Override
     public void sendEmail(String to, String subject, String body) {
         try{

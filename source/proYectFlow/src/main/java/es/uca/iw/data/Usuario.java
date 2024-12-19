@@ -36,6 +36,9 @@ public class Usuario extends AbstractEntity implements UserDetails {
     @Column(nullable = false)
     private Roles tipo;
 
+    private boolean activo;
+    private String codigo;
+
     public Usuario(String nombre, String username, String apellido, String correo, String contrasenna) {
         this.nombre = nombre;
         this.username = username;
@@ -43,6 +46,7 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.correo = correo;
         this.contrasenna = contrasenna;
         this.tipo = Roles.SOLICITANTE;
+        activo = false;
     }
 
     // Constructor vacio CAMBIAR
@@ -55,6 +59,7 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.correo = correo;
         this.contrasenna = contrasenna;
         this.tipo = tipo;
+        activo = false;
     }
 
     public String getUsername() { return username; }
@@ -80,6 +85,11 @@ public class Usuario extends AbstractEntity implements UserDetails {
     public Roles getTipo() { return tipo; }
 
     public void setTipo(Roles tipo) { this.tipo = tipo; }
+
+    public boolean getActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
+    public String getCodigo() { return codigo; }
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 
     // A partir de aqui funciones propias del modulo de seguridad
     public Collection<? extends GrantedAuthority> getAuthorities() {

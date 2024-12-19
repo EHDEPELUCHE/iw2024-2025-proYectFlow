@@ -75,10 +75,12 @@ public class UsuarioService {
     public boolean registerUser(Usuario user) {
         user.setContrasenna(passwordEncoder.encode(user.getPassword()));
         user.setTipo(Roles.SOLICITANTE);
+        user.setCodigo(UUID.randomUUID().toString().substring(0, 5));
         try {
             repository.save(user);
             //Aun no tenemos emailService
-            emailService.sendEmail(user.getCorreo(), "Registro exitoso", "Bienvenido a proYectFlow. Inicie sesión en nuestra web y propón sus proyectos para mejorar nuestra universidad.");
+            emailService.sendEmail(user.getCorreo(), "Registro exitoso", "Bienvenido a proYectFlow. Inicie sesión en nuestra web y propón sus proyectos para mejorar nuestra universidad." +
+                    "\n Antes de empezar active su cuenta en la siguiente url: " + emailService.getServerUrl() + "ActivarUsuario e introduzca el siguiente código de activación para poder empezar: " + user.getCodigo() );
             //emailService.sendRegistrationEmail(user);
             return true;
         } catch (DataIntegrityViolationException e) {
@@ -89,10 +91,12 @@ public class UsuarioService {
     public boolean registerUserAdmin(Usuario user) {
         user.setContrasenna(passwordEncoder.encode(user.getPassword()));
         user.setTipo(user.getTipo());
+        user.setCodigo(UUID.randomUUID().toString().substring(0, 5));
         try {
             repository.save(user);
             //Aun no tenemos emailService
-            emailService.sendEmail(user.getCorreo(), "Registro exitoso", "Bienvenido a proYectFlow. Inicie sesión en nuestra web y propón sus proyectos para mejorar nuestra universidad.");
+            emailService.sendEmail(user.getCorreo(), "Registro exitoso", "Bienvenido a proYectFlow. Inicie sesión en nuestra web y propón sus proyectos para mejorar nuestra universidad." +
+                    "\n Antes de empezar active su cuenta en la siguiente url: " + emailService.getServerUrl() + "ActivarUsuario e introduzca el siguiente código de activación para poder empezar: " + user.getCodigo() );
             //emailService.sendRegistrationEmail(user);
             return true;
         } catch (DataIntegrityViolationException e) {
@@ -116,6 +120,7 @@ public class UsuarioService {
             if (existingUser != null) {
                 Usuario u = existingUser;
                 u.setTipo(Roles.PROMOTOR);
+
                 repository.save(u);
             } else {
                 Usuario u = new Usuario(promotor.getNombre(),
@@ -140,5 +145,21 @@ public class UsuarioService {
             u.setTipo(Roles.SOLICITANTE);
             repository.save(u);
         }
+    }
+
+
+    public boolean activateUser(String email, String registerCode) {
+
+        Usuario user = repository.findByCorreo(email);
+
+        if (user != null && user.getCodigo().equals(registerCode)) {
+            user.setActivo(true);
+            repository.save(user);
+            return true;
+
+        } else {
+            return false;
+        }
+
     }
 }
