@@ -3,6 +3,7 @@ package es.uca.iw.Valoracion.views;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
@@ -12,6 +13,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamResource;
+
+import es.uca.iw.Proyecto.AlineamientoEstrategico;
+import es.uca.iw.Proyecto.AlineamientoEstrategicoService;
 import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
 import jakarta.annotation.security.RolesAllowed;
@@ -22,20 +26,26 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.aspectj.weaver.ast.Not;
 
 @PageTitle("Valoración CIO")
 @Route("ValoracionEstrategica")
 @Menu(order = 1, icon = "line-awesome/svg/user.svg")
-@RolesAllowed("CIO")
+@RolesAllowed("ROLE_CIO")
 public class ValoracionEstrategicaView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
     Optional<Proyecto> proyecto;
     ProyectoService proyectoService;
+    AlineamientoEstrategicoService alineamientoEstrategicoService;
     UUID uuid;
 
-    public ValoracionEstrategicaView(ProyectoService proyectoService) {
+    public ValoracionEstrategicaView(ProyectoService proyectoService, AlineamientoEstrategicoService alineamientoEstrategicoService) {
         this.proyectoService = proyectoService;
+        this.alineamientoEstrategicoService = alineamientoEstrategicoService;
     }
 
     @Override
@@ -105,16 +115,19 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
 
             getContent().add(formLayout, downloadButton);
 
-            //AVALAR?
-            getContent().add(new H2("¿Quiere avalar esta propuesta?"));
+            //CheckBox
+            getContent().add(new H2("Alineamientos estratégicos a contemplar"));
+            CheckboxGroup<AlineamientoEstrategico> Objetivos = new CheckboxGroup<>();
+            Objetivos.setLabel("Alineamientos estratégicos");
 
-            Checkbox avalarS = new Checkbox("Sí, avalo este proyecto");
-            Checkbox avalarN = new Checkbox("No, rechazo avalar este proyecto");
+            Objetivos.setItems(alineamientoEstrategicoService.findAll());
+            Objetivos.setItemLabelGenerator(AlineamientoEstrategico::getObjetivo);
 
-            getContent().add(avalarS, avalarN);
+
+            getContent().add(Objetivos);
 
             //Valoracion
-            getContent().add(new H3("Añade una valoración al proyecto según su importancia:"));
+            getContent().add(new H3("Añade una valoración estratégica al proyecto según su criterio:"));
             HorizontalLayout valoracionLayout = new HorizontalLayout();
             valoracionLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
@@ -133,8 +146,18 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
                 if (valorSeleccionado == null || valorSeleccionado < 0 || valorSeleccionado > 10) {
                     Notification.show("Por favor, selecciona una valoración válida entre 0 y 10.");
                 } else {
-                    proyectoService.setValoracionPromotor(BigDecimal.valueOf(valorSeleccionado), avalarS.getValue(), proyectoAux);
-                    Notification.show("Valoración guardada con éxito.");
+                    Notification.show("Valoración seleccionada: " + valorSeleccionado);
+                    List<AlineamientoEstrategico> alineamientos = new ArrayList<>(Objetivos.getValue());
+                    
+                    // Ensure all AlineamientoEstrategico objects have valid IDs
+                    boolean allValid = alineamientos.stream().allMatch(ae -> ae.getId() != null && alineamientoEstrategicoService.findById(ae.getId())!=null);
+                    if (allValid) {
+                       // proyectoAux.setObjEstrategicos(alineamientos);
+                        proyectoService.setValoracionEstrategica(BigDecimal.valueOf(valorSeleccionado), proyectoAux);
+                        Notification.show("Valoración guardada con éxito.");
+                    } else {
+                        Notification.show("Error: Algunos alineamientos estratégicos no son válidos.");
+                    }
                 }
             });
 

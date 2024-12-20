@@ -135,4 +135,42 @@ public class ProyectoService {
             repository.save(proyecto);
         }
     }
+
+    public void setValoracionEstrategica(BigDecimal valoracionE, Proyecto proyectoAux) {
+        //En puntuacionEstrategica guardaremos la valoración final
+        if (proyectoAux.getEstado() != Proyecto.Estado.denegado) {
+            if (valoracionE.doubleValue() == 0) {
+                proyectoAux.setEstado(Proyecto.Estado.denegado);
+                proyectoAux.setPuntuacionEstrategica(0);
+                if (proyectoAux.getSolicitante() != null) {
+                    mailSender.sendEmail(proyectoAux.getSolicitante().getCorreo(), "Su proyecto NO ha pasado la valoración estratégica",
+                            "Lo lamentamos, su propuesta:\"" + proyectoAux.getNombre() + "\" no cumple los objetivos que buscamos.");
+                }
+                if (proyectoAux.getPromotor() != null) {
+                    mailSender.sendEmail(proyectoAux.getPromotor().getCorreo(), "Su proyecto NO ha pasado la valoración estratégica",
+                            "Lo lamentamos, su propuesta avalada:\"" + proyectoAux.getNombre() + "\" no cumple los objetivos que buscamos.");
+                }
+                repository.save(proyectoAux);
+            } else {
+                //70% valoración OTP + 30% valoración CIO.
+                Double aux = 0.7 * proyectoAux.getPuntuacionTecnica() + 0.3 * valoracionE.doubleValue();
+                proyectoAux.setPuntuacionEstrategica(aux);
+                proyectoAux.setEstado(Proyecto.Estado.evaluadoEstrategicamente);
+                if (proyectoAux.getPuntuacionEstrategica() >= 5) {
+                    repository.save(proyectoAux);
+                } else {
+                    if (proyectoAux.getSolicitante() != null) {
+                        mailSender.sendEmail(proyectoAux.getSolicitante().getCorreo(), "Su proyecto NO ha pasado la valoración estratégica",
+                                "Lo lamentamos, su propuesta:\"" + proyectoAux.getNombre() + "\" no cumple los objetivos que buscamos.");
+                    }
+                    if (proyectoAux.getPromotor() != null) {
+                        mailSender.sendEmail(proyectoAux.getPromotor().getCorreo(), "Su proyecto NO ha pasado la valoración estratégica",
+                                "Lo lamentamos, su propuesta avalada:\"" + proyectoAux.getNombre() + "\" no cumple los objetivos que buscamos.");
+                    }
+                    proyectoAux.setEstado(Proyecto.Estado.denegado);
+                    repository.save(proyectoAux);
+                }
+            }
+        }
+    }
 }

@@ -82,14 +82,14 @@ public class Proyecto extends AbstractEntity {
         return nombre;
     }
 
-    /* CAMBIAR
-    public List<int> getObjEstrategicos() {
+    //CAMBIAR
+    public List<AlineamientoEstrategico> getObjEstrategicos() {
         return ObjEstrategicos;
     }
 
-    public void setObjEstrategicos(Collection<Integer> ObjEstrategicos) {
+    public void setObjEstrategicos(List<AlineamientoEstrategico> ObjEstrategicos) {
         this.ObjEstrategicos = ObjEstrategicos;
-    }*/
+    }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
