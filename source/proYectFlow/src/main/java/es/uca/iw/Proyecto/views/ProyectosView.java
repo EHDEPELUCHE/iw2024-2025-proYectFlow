@@ -15,6 +15,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
@@ -108,6 +109,7 @@ public class ProyectosView extends Div {
                 filters).stream());
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.addClassNames(LumoUtility.Border.TOP, LumoUtility.BorderColor.CONTRAST_10);
+       grid.setAllRowsVisible(true);
         return grid;
     }
 
@@ -156,7 +158,9 @@ public class ProyectosView extends Div {
 
     private Button createEditButton(Proyecto proyecto) {
         Button evaluarButton = new Button("Editar");
-        evaluarButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("EditarProyecto/" + proyecto.getId())));
+        evaluarButton.addClickListener(e -> {
+            getUI().ifPresent(ui -> ui.navigate("EditarProyecto/" + (proyecto.getId()).toString()));
+        });
         return evaluarButton;
     }
 
@@ -189,8 +193,12 @@ public class ProyectosView extends Div {
             Div actions = new Div(resetBtn, searchBtn);
             actions.addClassName(LumoUtility.Gap.SMALL);
             actions.addClassName("actions");
-
-            add(nombre, promotor, createDateRangeFilter(), estado, actions);
+            HorizontalLayout horizontalLayout = new HorizontalLayout();
+            horizontalLayout.setSpacing(true);
+            horizontalLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
+            horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+            horizontalLayout.add(nombre, promotor, createDateRangeFilter(), estado, actions);
+            add(horizontalLayout);
         }
 
         private Button createResetButton(Runnable onSearch) {
