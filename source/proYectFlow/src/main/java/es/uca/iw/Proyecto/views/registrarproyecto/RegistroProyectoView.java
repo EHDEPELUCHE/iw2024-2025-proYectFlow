@@ -188,7 +188,6 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             Notification.show(binder.getBean().toString());
 
             if (binder.validate().isOk()) {
-                Notification.show("En el validator");
                 if (proyectoService.registerProyecto(binder.getBean())) {
                     binder.setBean(new Proyecto());
                     Notification.show("Proyecto registrado correctamente.");

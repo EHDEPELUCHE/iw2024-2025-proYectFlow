@@ -1,15 +1,17 @@
 package es.uca.iw.Valoracion.views;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamResource;
 import es.uca.iw.Proyecto.Proyecto;
@@ -78,9 +80,11 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
             formLayout.addFormItem(new Span(proyectoAux.getCoste() + "€"), "Coste");
             formLayout.addFormItem(new Span(proyectoAux.getAportacionInicial() + "€"), "Aportación Inicial");
 
-            LocalDate localDateL = proyectoAux.getFechaLimite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            DateTimeFormatter formatterDateL = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-            formLayout.addFormItem(new Span(localDateL.format(formatterDateL)), "Fecha Límite de puesta en marcha");
+            if (proyectoAux.getFechaLimite() != null) {
+                LocalDate localDateL = proyectoAux.getFechaLimite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                DateTimeFormatter formatterDateL = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+                formLayout.addFormItem(new Span(localDateL.format(formatterDateL)), "Fecha Límite de puesta en marcha");
+            }
 
             Button downloadButton = new Button("Memoria");
             downloadButton.addClickListener(e -> {
@@ -108,10 +112,11 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
             //AVALAR?
             getContent().add(new H2("¿Quiere avalar esta propuesta?"));
 
-            Checkbox avalarS = new Checkbox("Sí, avalo este proyecto");
-            Checkbox avalarN = new Checkbox("No, rechazo avalar este proyecto");
-
-            getContent().add(avalarS, avalarN);
+            RadioButtonGroup<String> eleccionValorarGroup = new RadioButtonGroup<>();
+            eleccionValorarGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+            //eleccionValorarGroup.setLabel("Eleccion Valorar");
+            eleccionValorarGroup.setItems("Sí, avalo este proyecto", "No, rechazo avalar este proyecto");
+            getContent().add(eleccionValorarGroup);
 
             //Valoracion
             getContent().add(new H3("Añade una valoración al proyecto según su importancia:"));
@@ -122,19 +127,44 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
             valoracionGroup.setLabel("Selecciona tu valoración:");
             valoracionGroup.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
             valoracionGroup.setValue(0); // Valor por defecto
+            valoracionGroup.setEnabled(false);
 
             valoracionLayout.add(valoracionGroup);
             getContent().add(valoracionLayout);
+
+            eleccionValorarGroup.addValueChangeListener(eventval -> {
+                if ("Sí, avalo este proyecto".equals(eventval.getValue())) {
+                    valoracionGroup.setEnabled(true);
+                } else {
+                    valoracionGroup.setEnabled(false);
+                    valoracionGroup.setValue(0);
+                }
+            });
 
             // Botón guardar
             Button guardar = new Button("Guardar");
             guardar.addClickListener(e -> {
                 Integer valorSeleccionado = valoracionGroup.getValue();
-                if (valorSeleccionado == null || valorSeleccionado < 0 || valorSeleccionado > 10) {
-                    Notification.show("Por favor, selecciona una valoración válida entre 0 y 10.");
+                String valorarOk = eleccionValorarGroup.getValue();
+                if (valorSeleccionado == null) {
+                    Notification.show("Por favor, seleccione una valoración válida.");
                 } else {
-                    proyectoService.setValoracionPromotor(BigDecimal.valueOf(valorSeleccionado), avalarS.getValue(), proyectoAux);
-                    Notification.show("Valoración guardada con éxito.");
+                    Notification notification;
+
+                    if ("Sí, avalo este proyecto".equals(valorarOk)) {
+                        proyectoService.setValoracionPromotor(BigDecimal.valueOf(valorSeleccionado), true, proyectoAux);
+                        notification = Notification.show("Valoración guardada con éxito.");
+                        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+
+                    } else {
+                        proyectoService.setValoracionPromotor(BigDecimal.valueOf(valorSeleccionado), false, proyectoAux);
+                        notification = Notification.show("Propuesta de valoración rechazada con éxito.");
+                    }
+                    //Redireccion
+                    notification.setDuration(2000);
+                    notification.addDetachListener(detachEvent -> {
+                        UI.getCurrent().navigate("proyectosPromotor");
+                    });
                 }
             });
 
