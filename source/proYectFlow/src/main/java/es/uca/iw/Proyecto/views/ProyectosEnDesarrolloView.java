@@ -15,7 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 @AnonymousAllowed
 public class ProyectosEnDesarrolloView extends VisualizarProyectos {
     public ProyectosEnDesarrolloView(ProyectoService proyectoService) {
-        super(proyectoService);
+        super(proyectoService,false);
 
         Specification<Proyecto> filters = (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.enDesarrollo);

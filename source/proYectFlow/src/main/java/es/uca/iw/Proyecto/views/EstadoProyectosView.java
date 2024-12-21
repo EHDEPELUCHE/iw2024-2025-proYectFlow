@@ -20,7 +20,7 @@ import java.util.Optional;
 @PermitAll
 public class EstadoProyectosView extends VisualizarProyectos {
     public EstadoProyectosView(ProyectoService proyectoService, AuthenticatedUser userAuthenticated) {
-        super(proyectoService);
+        super(proyectoService, true);
 
         Optional<Usuario> usuarioOptional = userAuthenticated.get();
         if (usuarioOptional.isPresent()) {

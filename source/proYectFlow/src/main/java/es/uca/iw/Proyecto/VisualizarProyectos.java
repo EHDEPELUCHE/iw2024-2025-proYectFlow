@@ -19,9 +19,11 @@ import java.io.IOException;
 public abstract class VisualizarProyectos extends Div {
     protected Grid<Proyecto> grid;
     protected ProyectoService proyectoService;
+    private boolean mostrarColumnaAcciones;
 
-    public VisualizarProyectos(ProyectoService proyectoService) {
+    public VisualizarProyectos(ProyectoService proyectoService, boolean mostrarColumnaAcciones) {
         this.proyectoService = proyectoService;
+        this.mostrarColumnaAcciones = mostrarColumnaAcciones;
         setSizeFull();
         addClassNames("proyectos-view");
     }
@@ -58,8 +60,11 @@ public abstract class VisualizarProyectos extends Div {
         grid.addColumn("fechaLimite").setHeader("Fecha Límite").setAutoWidth(true);
         grid.addColumn("estado").setHeader("Estado").setAutoWidth(true);
 
-        grid.addComponentColumn(proyecto -> crearBotonDescargaMemoria(proyecto)).setHeader("PDF").setAutoWidth(true);
+        grid.addComponentColumn(this::crearBotonDescargaMemoria).setHeader("PDF").setAutoWidth(true);
 
+        if (mostrarColumnaAcciones) {
+            grid.addComponentColumn(this::crearBotonesAcciones).setHeader("Acciones").setAutoWidth(true);
+        }
         grid.setItems(query -> proyectoService.list(
                 PageRequest.of(query.getPage(), query.getPageSize()),
                 filters).stream());
@@ -89,5 +94,14 @@ public abstract class VisualizarProyectos extends Div {
             }
         });
         return downloadButton;
+    }
+
+    //CAMBIAR A EDITAR PROYECTO
+    protected Component crearBotonesAcciones(Proyecto proyecto) {
+        Button cambiarButton = new Button("CAMBIAR");
+        cambiarButton.addClickListener(e -> {
+            getUI().ifPresent(ui -> ui.navigate("menuUsuarioView/"));
+        });
+        return cambiarButton;
     }
 }
