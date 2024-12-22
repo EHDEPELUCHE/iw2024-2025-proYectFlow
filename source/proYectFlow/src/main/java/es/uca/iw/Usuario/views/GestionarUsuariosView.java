@@ -1,7 +1,9 @@
 package es.uca.iw.Usuario.views;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -65,7 +67,9 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
         H1 titulousuario = new H1("Gestionar Usuarios");
         EmailField correo = new EmailField("Correo del usuario a buscar");
         Button Buscar = new Button("Buscar");
+        Buscar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Buscar.addClickListener(e -> GestionarUsu(correo.getValue()));
+        Buscar.addClickShortcut(Key.ENTER);
         getContent().add(titulousuario, correo, Buscar);
 
         // Crear tabla de usuarios
@@ -130,6 +134,7 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
                 dialog.close();
             });
             Borrar.addClassName("button-danger");
+            Borrar.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
             dialogLayout.add(formLayout2Col);
             formLayout2Col.add(nombre);
@@ -170,6 +175,8 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
                 }
             });
             saveButton.addClassName("buttonPrimary");
+            saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            saveButton.addClickShortcut(Key.ENTER);
             Button cancelButton = new Button("Cancel", e -> dialog.close());
             cancelButton.addClassName("buttonSecondary");
             dialog.getFooter().add(cancelButton);

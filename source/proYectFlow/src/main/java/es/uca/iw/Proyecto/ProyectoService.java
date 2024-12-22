@@ -174,4 +174,29 @@ public class ProyectoService {
             }
         }
     }
+
+    public void desarrollar(Proyecto proyecto, Boolean sedesarrolla) {
+        if(sedesarrolla){
+            proyecto.setEstado(Proyecto.Estado.enDesarrollo);
+            repository.save(proyecto);
+            if (proyecto.getSolicitante() != null) {
+                mailSender.sendEmail(proyecto.getSolicitante().getCorreo(), "Su proyecto se va a realizar",
+                        "Felicidades, su propuesta:\"" + proyecto.getNombre() + "\" va a realizarse.");
+            }
+            if (proyecto.getPromotor() != null) {
+                mailSender.sendEmail(proyecto.getPromotor().getCorreo(), "Su proyecto avalado se va a realizar",
+                        "Felicidades, su propuesta avalada:\"" + proyecto.getNombre() + "\" será realizada.");
+            }
+        }else{
+            if (proyecto.getSolicitante() != null) {
+                mailSender.sendEmail(proyecto.getSolicitante().getCorreo(), "Su proyecto NO se va a realizar",
+                        "Lo lamentamos, su propuesta:\"" + proyecto.getNombre() + "\" no va a realizarse por falta de presupuesto." +
+                                " Inténtelo el próximo año y apreciamos mucho sus propuestras");
+            }
+            if (proyecto.getPromotor() != null) {
+                mailSender.sendEmail(proyecto.getPromotor().getCorreo(), "Su proyecto avalado NO se va a realizar",
+                        "Lo lamentamos, su propuesta avalada:\"" + proyecto.getNombre() + "\" no será realizada por falta de presupuesto.");
+            }
+        }
+    }
 }

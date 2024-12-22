@@ -72,8 +72,10 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
 
             FormLayout formLayout = new FormLayout();
             formLayout.setWidth("100%");
+            if(proyectoAux.getSolicitante()!=null) {
+                formLayout.addFormItem(new Span(proyectoAux.getSolicitante().getNombre()), "Solicitante");
+            }
 
-            formLayout.addFormItem(new Span(proyectoAux.getSolicitante().getNombre()), "Solicitante");
 
             LocalDate localDate = proyectoAux.getFechaSolicitud().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd MMMM yyyy");

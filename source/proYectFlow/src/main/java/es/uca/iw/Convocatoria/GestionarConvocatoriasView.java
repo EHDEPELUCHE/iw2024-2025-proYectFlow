@@ -1,7 +1,9 @@
 package es.uca.iw.Convocatoria;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -71,6 +73,8 @@ public class GestionarConvocatoriasView extends Composite<VerticalLayout> {
 
 
         Button Guardar = new Button("Hacerla vigente");
+        Guardar.addClickShortcut(Key.ENTER);
+        Guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Guardar.addClickListener(e -> {
             Convocatoria convocatoriaActual;
             if (convocatoria != null) {
@@ -86,7 +90,7 @@ public class GestionarConvocatoriasView extends Composite<VerticalLayout> {
 
 
             }
-            convocatoriaservice.hacerVigente(convocatoriaActual, convocatoria);
+            convocatoriaservice.hacerVigente(convocatoriaActual, convocatoriaservice.ConvocatoriaActual());
             Notification.show("Datos actualizados correctamente");
 
 
