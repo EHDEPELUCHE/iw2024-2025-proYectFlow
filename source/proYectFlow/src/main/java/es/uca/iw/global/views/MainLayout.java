@@ -56,7 +56,7 @@ public class MainLayout extends AppLayout {
         horAux.setPadding(true);
         horAux.setAlignItems(FlexComponent.Alignment.CENTER);
 
-        Image image = new Image("favicon.ico", "My Streamed Image");
+        Image image = new Image("favicon.ico", "Logo");
         image.setHeight("50px");
         image.setWidth("50px");
 
@@ -66,6 +66,15 @@ public class MainLayout extends AppLayout {
 
         viewTitle = new H1();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, "fondo");
+
+        Image ayuda = new Image("img/ayuda.png", "Ayuda");
+        ayuda.setHeight("50px");
+        ayuda.setWidth("50px");
+        horAuxFondo.add(ayuda);
+        ayuda.addClickListener(ayudaClickEvent -> {
+            RouterLink pagayuda = new RouterLink("Ayuda", AyudaView.class);
+            ayuda.getUI().ifPresent(ui -> ui.navigate("Ayuda"));
+        });
 
         Avatar avatarBasic = new Avatar();
         if (user.get().isPresent()) {
@@ -106,9 +115,11 @@ public class MainLayout extends AppLayout {
             horAuxFondo.add(menuBar);
         }
 
+
+
         horAux.add(toggle, image, viewTitle, horAuxFondo);
 
-        horAuxFondo.setAlignItems(FlexComponent.Alignment.END);
+        horAuxFondo.setAlignItems(FlexComponent.Alignment.CENTER);
         horAux.setSizeFull();
         horAux.setSpacing(true);
         horAuxFondo.setSpacing(true);
