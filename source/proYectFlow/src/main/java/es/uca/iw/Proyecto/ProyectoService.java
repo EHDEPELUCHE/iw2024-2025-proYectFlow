@@ -115,8 +115,7 @@ public class ProyectoService {
             }
             repository.save(proyectoAux);
         } else {
-            proyectoAux.setEstado(Proyecto.Estado.denegado);
-
+            //proyectoAux.setEstado(Proyecto.Estado.denegado);
             //MANDAR CORREO
             if (proyectoAux.getSolicitante() != null) {
                 mailSender.sendEmail(proyectoAux.getSolicitante().getCorreo(), "Su proyecto NO ha sido avalado",

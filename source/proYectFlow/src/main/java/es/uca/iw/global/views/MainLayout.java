@@ -21,6 +21,7 @@ import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.Usuario.Usuario;
+import es.uca.iw.Usuario.views.MenuUsuarioView;
 import es.uca.iw.Usuario.views.MisDatosView;
 import es.uca.iw.security.AuthenticatedUser;
 
@@ -80,8 +81,7 @@ public class MainLayout extends AppLayout {
             MenuItem menuItem = menuBar.addItem(avatarBasic);
             SubMenu subMenu = menuItem.getSubMenu();
             subMenu.addItem(new RouterLink("Mis datos", MisDatosView.class));
-            subMenu.addItem("Settings");
-            subMenu.addItem("Help");
+
             MenuItem logoutItem = subMenu.addItem("Cerrar sesión");
             logoutItem.addClickListener(event -> {
                 user.logout();
@@ -100,7 +100,7 @@ public class MainLayout extends AppLayout {
 
             MenuItem menuItem = menuBar.addItem(avatarBasic);
             SubMenu subMenu = menuItem.getSubMenu();
-            subMenu.addItem(new RouterLink("Iniciar sesión", MisDatosView.class));
+            subMenu.addItem(new RouterLink("Iniciar sesión", MenuUsuarioView.class));
 
             menuItem.addClassName("fondo");
             horAuxFondo.add(menuBar);
