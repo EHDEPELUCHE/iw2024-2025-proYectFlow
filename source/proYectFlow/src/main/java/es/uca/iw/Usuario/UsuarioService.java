@@ -4,6 +4,7 @@ import es.uca.iw.email.EmailService;
 import es.uca.iw.global.Roles;
 import es.uca.iw.rest.Promotor;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,10 +28,12 @@ public class UsuarioService {
         this.emailService = emailService;
     }
 
+    @Cacheable("Usuario")
     public Optional<Usuario> get(UUID id) {
         return repository.findById(id);
     }
 
+    @Cacheable("Usuario")
     public Optional<Usuario> getnombre(String nombre) {
         return Optional.of(repository.findByUsername(nombre));
     }
@@ -104,17 +107,17 @@ public class UsuarioService {
         }
     }
 
+    @Cacheable("Usuarios")
     public List<Usuario> get(Roles roles) {
         return repository.findByTipo(roles);
     }
 
+    @Cacheable("Usuario")
     public Usuario getCorreo(String value) {
         return repository.findByCorreo(value);
     }
 
-    public Usuario getNombrePropio(String nombre) {
-        return repository.findByNombre(nombre);
-    }
+
 
     @Transactional
     public void createPromotor(Promotor promotor) {

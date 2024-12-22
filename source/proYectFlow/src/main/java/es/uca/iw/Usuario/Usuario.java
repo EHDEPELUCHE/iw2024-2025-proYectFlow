@@ -2,10 +2,7 @@ package es.uca.iw.Usuario;
 
 import es.uca.iw.global.AbstractEntity;
 import es.uca.iw.global.Roles;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +13,12 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
+@Table(
+        indexes = @Index(
+                name = "idx_correo",
+                columnList = "correo",
+                unique = true)
+)
 public class Usuario extends AbstractEntity implements UserDetails {
     @NotEmpty
     @Column(unique = true, nullable = false)
@@ -32,6 +35,7 @@ public class Usuario extends AbstractEntity implements UserDetails {
     @NotEmpty
     @Email
     @Column(unique = true, nullable = false)
+
     private String correo;
 
     @NotEmpty

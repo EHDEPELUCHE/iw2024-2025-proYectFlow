@@ -2,6 +2,7 @@ package es.uca.iw.Proyecto;
 
 import es.uca.iw.Usuario.Usuario;
 import es.uca.iw.email.EmailSender;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ public class ProyectoService {
         this.mailSender = mailSender;
     }
 
+    @Cacheable("Proyecto")
     public Optional<Proyecto> get(UUID id) {
         return repository.findById(id);
     }
