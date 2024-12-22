@@ -140,7 +140,7 @@ public class Usuario extends AbstractEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true/*this.activo*/;
+        return this.activo;
     }
 
     @Override

@@ -27,7 +27,7 @@ import java.util.List;
 @PageTitle("Registro Proyecto Alineamiento")
 @Route("registro-proyecto-alineamiento")
 @Menu(order = 3, icon = "line-awesome/svg/egg-solid.svg")
-@RolesAllowed("CIO")
+@RolesAllowed("ROLE_CIO")
 public class RegistroProyectoAlineamientoView extends Composite<VerticalLayout> {
     public RegistroProyectoAlineamientoView() {
         VerticalLayout layoutColumn2 = new VerticalLayout();

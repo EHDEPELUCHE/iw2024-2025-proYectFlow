@@ -56,9 +56,10 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
         this.usuarioService = usuarioService;
         this.proyectoService = proyectoService;
         this.authenticatedUser = authenticatedUser;
+        H1 titulopromotores = new H1("Actualizar promotores en el sistema");
         Button METER_PROMOTORES = new Button("Meter Promotores");
         METER_PROMOTORES.addClickListener(e -> GuardarPromotores());
-        getContent().add(METER_PROMOTORES);
+        getContent().add(titulopromotores, METER_PROMOTORES);
 
         //Opción de buscar usuario
         H1 titulousuario = new H1("Gestionar Usuarios");

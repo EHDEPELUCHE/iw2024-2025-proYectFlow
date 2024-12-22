@@ -18,10 +18,10 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.iw.Convocatoria.ConvocatoriaService;
 import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
 import es.uca.iw.Usuario.Usuario;
-import es.uca.iw.global.GLOBALES;
 import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -46,17 +46,20 @@ public class ProyectosCIOView extends Div {
     private final ProyectoService proyectoService;
     private Grid<Proyecto> grid;
     private Filters filters;
-
-    public ProyectosCIOView(ProyectoService proyectoService, AuthenticatedUser user) {
+    private ConvocatoriaService convocatoriaService;
+    public ProyectosCIOView(ProyectoService proyectoService, AuthenticatedUser user, ConvocatoriaService convocatoriaService) {
         this.user = user;
+        this.proyectoService = proyectoService;
+        this.convocatoriaService = convocatoriaService;
+
         H1 h1Titulo = new H1("Proyectos por evaluar");
         h1Titulo.addClassNames(LumoUtility.Margin.Bottom.NONE, LumoUtility.Margin.Top.XLARGE,
                 LumoUtility.FontSize.XXXLARGE, LumoUtility.Margin.Left.LARGE);
         setSizeFull();
         addClassNames("proyectos-view");
-        this.proyectoService = proyectoService;
+
         Date hoy = new Date();
-        if (GLOBALES.FECHA_LIMITE.compareTo(hoy) > 0) {
+        if (!convocatoriaService.ConvocatoriaActual().EnPlazo()) {
             filters = new Filters() {
                 @Override
                 public Predicate toPredicate(Root<Proyecto> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
