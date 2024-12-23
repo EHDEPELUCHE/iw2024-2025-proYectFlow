@@ -126,7 +126,7 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
                 Notification.show("Usuario registrado con éxito");
                 passwordField2.setValue("");
             } else {
-                Notification.show("El nombre de usuario ya está en uso");
+                Notification.show("El nombre de usuario o el email ya está en uso");
             }
         } else {
             Notification.show("Por favor, verifique los datos de entrada");

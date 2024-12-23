@@ -9,6 +9,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -69,7 +70,8 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         this.proyectoService = proyectoService;
         this.convocatoriaService = convocatoriaService;
         binder = new BeanValidationBinder<>(Proyecto.class);
-        if(convocatoriaService.ConvocatoriaActual().EnPlazo()){
+
+        if(convocatoriaService.ConvocatoriaActual() != null && convocatoriaService.ConvocatoriaActual().EnPlazo()){
             VerticalLayout layoutColumn2 = new VerticalLayout();
             H3 h3 = new H3();
             FormLayout formLayout2Col = new FormLayout();
@@ -158,7 +160,6 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             formLayout2Col.add(descripcion);
             formLayout2Col.add(interesados);
             formLayout2Col.add(alcance);
-            //formLayout2Col.add(numberField);
             formLayout2Col.add(aportacionInicial);
             formLayout2Col.add(coste);
             formLayout2Col.add(fechaLimite);
@@ -171,9 +172,8 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             binder.bindInstanceFields(this);
             binder.forField(promotor).bind(Proyecto::getPromotor, Proyecto::setPromotor);
         }else{
-            getContent().add(new H1("Lo lamentamos, el plazo para proponer proyectos terminó." ));
+            getContent().add(new H2("Lo lamentamos, en estos momentos el plazo de solicitudes está cerrado." ));
         }
-
     }
 
     public void OnRegistroProyecto() {
