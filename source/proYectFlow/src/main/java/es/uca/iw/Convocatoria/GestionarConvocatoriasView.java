@@ -23,7 +23,7 @@ import java.time.ZoneId;
 
 @Route("GestionarConvocatorias")
 @PageTitle("Gestionar Convocatorias")
-@Menu(order = 1, icon = "line-awesome/svg/archive-solid.svg")
+@Menu(order = 7, icon = "line-awesome/svg/archive-solid.svg")
 @Uses(Icon.class)
 @RolesAllowed("ROLE_ADMIN")
 public class GestionarConvocatoriasView extends Composite<VerticalLayout> {

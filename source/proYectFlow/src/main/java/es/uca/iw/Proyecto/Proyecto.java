@@ -26,8 +26,6 @@ public class Proyecto extends AbstractEntity {
     @Column(nullable = true)
     Date fechaLimite;
 
-    /* @NotEmpty CAMBIAR
-     @Column(nullable = false)*/
     Date fechaSolicitud;
 
     @NotNull(message = "Por favor, rellene el campo requerido")
