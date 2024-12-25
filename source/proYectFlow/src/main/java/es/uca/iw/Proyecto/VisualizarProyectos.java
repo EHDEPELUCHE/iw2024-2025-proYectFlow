@@ -15,6 +15,10 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public abstract class VisualizarProyectos extends Div {
     protected Grid<Proyecto> grid;
@@ -53,11 +57,19 @@ public abstract class VisualizarProyectos extends Div {
             } else {
                 return "Sin promotor";
             }
-        }).setHeader("Promotor").setAutoWidth(true);
+        }).setHeader("Promotor").setAutoWidth(true)
+                .setSortable(true);
         grid.addColumn("coste").setHeader("Coste").setAutoWidth(true);
         grid.addColumn("aportacionInicial").setHeader("Aportación Inicial").setAutoWidth(true);
-        grid.addColumn("fechaSolicitud").setHeader("Fecha de Solicitud").setAutoWidth(true);
-        grid.addColumn("fechaLimite").setHeader("Fecha Límite").setAutoWidth(true);
+
+        grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFechaSolicitud()))
+                .setHeader("Fecha de Solicitud").setAutoWidth(true)
+                .setSortable(true);
+
+        grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFechaLimite()))
+                .setHeader("Fecha Límite").setAutoWidth(true)
+                .setSortable(true);
+
         grid.addColumn("estado").setHeader("Estado").setAutoWidth(true);
 
         grid.addComponentColumn(this::crearBotonDescargaMemoria).setHeader("PDF").setAutoWidth(true);

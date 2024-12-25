@@ -7,6 +7,10 @@ import jakarta.persistence.Version;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.UUID;
 
 @MappedSuperclass
@@ -44,5 +48,17 @@ public abstract class AbstractEntity {
             return getId().equals(that.getId());
         }
         return super.equals(that);
+    }
+
+    public String formatoFecha(Date fecha) {
+        if (fecha != null) {
+            LocalDate localDate = fecha.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            return localDate.format(formatter);
+        } else {
+            return "";
+        }
     }
 }

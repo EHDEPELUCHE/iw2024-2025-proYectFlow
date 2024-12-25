@@ -46,13 +46,26 @@ public class GestionarConvocatorias extends Div {
         Grid<Convocatoria> grid = new Grid<>(Convocatoria.class, false);
 
         grid.addColumn("nombre").setHeader("Nombre").setAutoWidth(true);
-        grid.addColumn("fecha_inicio").setHeader("Fecha inicio").setAutoWidth(true);
-        grid.addColumn("fecha_limite").setHeader("Fecha límite").setAutoWidth(true);
-        grid.addColumn("fecha_final").setHeader("Fecha final").setAutoWidth(true);
+
+        grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFecha_inicio()))
+                .setHeader("Fecha inicio").setAutoWidth(true)
+                .setSortable(true);
+
+        grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFecha_limite()))
+                .setHeader("Fecha límite").setAutoWidth(true)
+                .setSortable(true);
+
+        grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFecha_final()))
+                .setHeader("Fecha final").setAutoWidth(true)
+                .setSortable(true);
+
         grid.addColumn("presupuestorestante").setHeader("Presupuesto restante").setAutoWidth(true);
         grid.addColumn("presupuestototal").setHeader("Presupuesto total").setAutoWidth(true);
 
-        grid.addColumn("activa").setHeader("Estado").setAutoWidth(true);
+        grid.addColumn(solicitud -> {
+            return solicitud.getActiva() ? "Actual" : "";
+        }).setHeader("Estado").setAutoWidth(true)
+                .setSortable(true);
 
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
 
