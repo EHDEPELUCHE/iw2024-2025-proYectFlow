@@ -1,8 +1,12 @@
 package es.uca.iw.Convocatoria;
 
+import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Usuario.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,4 +35,9 @@ public class ConvocatoriaService {
     public void guardar(Convocatoria convocatoria) {
         repository.save(convocatoria);
     }
+
+    public Page<Convocatoria> list(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
 }

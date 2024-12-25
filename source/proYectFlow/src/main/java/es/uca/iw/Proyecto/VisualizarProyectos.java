@@ -96,7 +96,6 @@ public abstract class VisualizarProyectos extends Div {
         return downloadButton;
     }
 
-    //CAMBIAR A EDITAR PROYECTO
     protected Component crearBotonesAcciones(Proyecto proyecto) {
         Button cambiarButton = new Button("Editar");
         cambiarButton.addClickListener(e -> {

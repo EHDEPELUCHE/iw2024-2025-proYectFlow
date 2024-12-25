@@ -21,12 +21,12 @@ import jakarta.annotation.security.RolesAllowed;
 import java.util.Date;
 import java.time.ZoneId;
 
-@Route("GestionarConvocatorias")
-@PageTitle("Gestionar Convocatorias")
+@Route("CrearConvocatoria")
+@PageTitle("Nueva Convocatoria")
 @Menu(order = 7, icon = "line-awesome/svg/archive-solid.svg")
 @Uses(Icon.class)
 @RolesAllowed("ROLE_ADMIN")
-public class GestionarConvocatoriasView extends Composite<VerticalLayout> {
+public class CrearConvocatoriaView extends Composite<VerticalLayout> {
     ConvocatoriaService convocatoriaservice;
     BigDecimalField presupuestototal = new BigDecimalField("Presupuesto");
     DatePicker fecha_inicio = new DatePicker();
@@ -34,7 +34,7 @@ public class GestionarConvocatoriasView extends Composite<VerticalLayout> {
     DatePicker fecha_final = new DatePicker();
 
     private final BeanValidationBinder<Convocatoria> binder = new BeanValidationBinder<>(Convocatoria.class);
-    public GestionarConvocatoriasView(ConvocatoriaService convocatoriaservice) {
+    public CrearConvocatoriaView(ConvocatoriaService convocatoriaservice) {
         this.convocatoriaservice = convocatoriaservice;
         Convocatoria convocatoria = convocatoriaservice.ConvocatoriaActual();
 
@@ -47,8 +47,6 @@ public class GestionarConvocatoriasView extends Composite<VerticalLayout> {
             presupuestototal.setValue(convocatoria.getPresupuestototal());
         }
 
-
-
         if (convocatoria != null) {
             fecha_inicio.setValue(convocatoria.getFecha_inicio().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         }
@@ -56,21 +54,17 @@ public class GestionarConvocatoriasView extends Composite<VerticalLayout> {
         fecha_inicio.setRequiredIndicatorVisible(true);
         fecha_inicio.setLabel("Fecha de inicio de la convocatoria");
 
-
         fecha_limite.setLabel("Fecha limite para presentar proyectos");
         fecha_limite.setRequiredIndicatorVisible(true);
         if (convocatoria != null) {
             fecha_limite.setValue(convocatoria.getFecha_limite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         }
 
-
-
         fecha_final.setLabel("Fecha en la que termina la cartera de proyectos este año ");
         fecha_final.setRequiredIndicatorVisible(true);
         if (convocatoria != null) {
             fecha_final.setValue(convocatoria.getFecha_final().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         }
-
 
         Button Guardar = new Button("Hacerla vigente");
         Guardar.addClickShortcut(Key.ENTER);
@@ -79,7 +73,6 @@ public class GestionarConvocatoriasView extends Composite<VerticalLayout> {
             Convocatoria convocatoriaActual;
             if (convocatoria != null) {
                 convocatoriaActual = binder.getBean();
-
             }else{
                 convocatoriaActual = new Convocatoria(
                         presupuestototal.getValue(),
@@ -87,24 +80,18 @@ public class GestionarConvocatoriasView extends Composite<VerticalLayout> {
                         Date.from(fecha_inicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
                         Date.from(fecha_final.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())
                 );
-
-
             }
             convocatoriaservice.hacerVigente(convocatoriaActual, convocatoriaservice.ConvocatoriaActual());
             Notification.show("Datos actualizados correctamente");
-
-
-
         });
+
         FormLayout formLayout = new FormLayout();
         formLayout.add(presupuestototal, fecha_inicio, fecha_limite, fecha_final);
         if (convocatoria != null) {
             binder.bindInstanceFields(this);
             binder.setBean(convocatoria);
-
         }
 
         getContent().add(title, formLayout, Guardar);
-
     }
 }

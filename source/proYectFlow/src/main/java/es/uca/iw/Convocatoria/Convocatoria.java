@@ -33,10 +33,10 @@ public class Convocatoria extends AbstractEntity {
 
     public Convocatoria(BigDecimal presupuesto, Date fecha_limite, Date fecha_inicio, Date fecha_final) {
         this.presupuestototal = presupuesto;
-        this.fecha_limite = fecha_limite;
-        this.fecha_inicio = fecha_inicio;
         this.presupuestorestante = presupuesto;
-        this.fecha_final = fecha_final;
+        this.fecha_inicio = fecha_inicio;
+        setFecha_limite(fecha_limite);
+        setFecha_final(fecha_final);
         setNombre();
     }
 
@@ -53,6 +53,9 @@ public class Convocatoria extends AbstractEntity {
         return fecha_final;
     }
     public void setFecha_final(Date fecha_final) {
+        if (fecha_limite != null && fecha_final != null && !fecha_limite.before(fecha_final)) {
+            throw new IllegalArgumentException("La fecha final debe ser posterior a la fecha límite.");
+        }
         this.fecha_final = fecha_final;
         setNombre();
     }
@@ -60,6 +63,9 @@ public class Convocatoria extends AbstractEntity {
         return fecha_limite;
     }
     public void setFecha_limite(Date fecha_limite) {
+        if (fecha_limite != null && fecha_inicio != null && !fecha_inicio.before(fecha_limite)) {
+            throw new IllegalArgumentException("La fecha límite debe ser posterior a la fecha de inicio.");
+        }
         this.fecha_limite = fecha_limite;
     }
     public BigDecimal getPresupuestototal() {
