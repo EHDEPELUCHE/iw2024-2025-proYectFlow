@@ -1,5 +1,6 @@
 package es.uca.iw.Proyecto;
 
+import es.uca.iw.Convocatoria.Convocatoria;
 import es.uca.iw.Usuario.Usuario;
 import es.uca.iw.global.AbstractEntity;
 import jakarta.persistence.*;
@@ -52,6 +53,10 @@ public class Proyecto extends AbstractEntity {
 
     @ManyToMany
     List<AlineamientoEstrategico> ObjEstrategicos;
+
+    @ManyToOne
+    @JoinColumn(name = "convocatoria_id", nullable = false)
+    private Convocatoria convocatoria;
 
     public Proyecto(String nombre, String descripcion, String interesados, String alcance, BigDecimal coste,
                     BigDecimal aportacionInicial, Usuario aval, Usuario solicitante, Date fechaLimite, Blob memoria) {
@@ -226,6 +231,14 @@ public class Proyecto extends AbstractEntity {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Convocatoria getConvocatoria() {
+        return convocatoria;
+    }
+
+    public void setConvocatoria(Convocatoria convocatoria) {
+        this.convocatoria = convocatoria;
     }
 
     public enum Estado {solicitado, avalado, evaluadoTecnicamente, evaluadoEstrategicamente, aceptado, enDesarrollo, denegado}

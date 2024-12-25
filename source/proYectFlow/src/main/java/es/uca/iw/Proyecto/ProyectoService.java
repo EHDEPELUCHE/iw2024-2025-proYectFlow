@@ -1,7 +1,10 @@
 package es.uca.iw.Proyecto;
 
+import es.uca.iw.Convocatoria.Convocatoria;
+import es.uca.iw.Convocatoria.ConvocatoriaService;
 import es.uca.iw.Usuario.Usuario;
 import es.uca.iw.email.EmailSender;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -19,10 +22,13 @@ import java.util.UUID;
 public class ProyectoService {
     private final ProyectoRepository repository;
     private final EmailSender mailSender;
+    @Autowired
+    private ConvocatoriaService convocatoriaService;
 
     public ProyectoService(ProyectoRepository repository, EmailSender mailSender) {
         this.repository = repository;
         this.mailSender = mailSender;
+        this.convocatoriaService = convocatoriaService;
     }
 
     @Cacheable("Proyecto")
@@ -52,6 +58,12 @@ public class ProyectoService {
 
     public boolean registerProyecto(Proyecto proyecto) {
         try {
+            //Convocatoria activa
+            Convocatoria convocatoriaActiva = convocatoriaService.ConvocatoriaActual();
+            if (convocatoriaActiva == null) {
+                throw new IllegalStateException("No hay ninguna convocatoria activa en este momento.");
+            }
+            proyecto.setConvocatoria(convocatoriaActiva);
             //MANDAR CORREO
             if (proyecto.getPromotor() != null) {
                 mailSender.sendEmail(proyecto.getPromotor().getCorreo(), "Petición de avalar",
