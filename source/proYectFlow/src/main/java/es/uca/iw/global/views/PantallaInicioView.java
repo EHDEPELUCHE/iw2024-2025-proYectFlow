@@ -36,7 +36,7 @@ public class PantallaInicioView extends VerticalLayout {
         CrearProyecto.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         //setMargin(true);
 
-        H1 texto2 = new H1("Para consultar los proyectos que se están desarrollando actualmente pulse el siguiente botón:");
+        H2 texto2 = new H2("Para consultar los proyectos que se están desarrollando actualmente pulse el siguiente botón:");
 
         Button VerProyectos = new Button("Ver Proyectos en desarrollo");
         VerProyectos.addClickListener(e -> {
