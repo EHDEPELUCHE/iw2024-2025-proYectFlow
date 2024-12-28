@@ -1,6 +1,8 @@
 package es.uca.iw.Convocatoria;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.grid.Grid;
@@ -8,6 +10,8 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
@@ -65,14 +69,9 @@ public class GestionarConvocatoriasView extends Div {
         grid.addColumn("presupuestorestante").setHeader("Presupuesto restante").setAutoWidth(true);
         grid.addColumn("presupuestototal").setHeader("Presupuesto total").setAutoWidth(true);
 
-        grid.addColumn(solicitud -> {
-            if (solicitud.getActiva()) {
-                return "Actual";
-            } else {
-                return "NO";
-            }
-            //return solicitud.getActiva() ? "Actual" : "";
-        }).setHeader("Estado").setAutoWidth(true)
+        grid.addComponentColumn(this::estadoConvocatoria)
+                .setHeader("Estado")
+                .setAutoWidth(true)
                 .setSortable(true);
 
         grid.addComponentColumn(this::editarConvocatoria).setHeader("Acciones").setAutoWidth(true);
@@ -94,11 +93,23 @@ public class GestionarConvocatoriasView extends Div {
         return editarButton;
     }
 
-    protected Component actualizarConvocatoriaActual(Convocatoria convocatoria, Convocatoria convocatoriaActual) {
-        Button actualizarConvocatoriaButton = new Button("Establecer");
-        actualizarConvocatoriaButton.addClickListener(e -> {
-            //public void hacerVigente(convocatoria, convocatoriaActual) {
+    protected Component estadoConvocatoria(Convocatoria convocatoria) {
+        if (!convocatoria.getActiva()) {
+            Button activarButton = new Button("Activar");
+            activarButton.addClickListener(e -> {
+                try {
+                    convocatoriaService.hacerVigente(convocatoria);
+                    Notification.show("Convocatoria activada");
+                    UI.getCurrent().getPage().reload();
+                } catch (IllegalArgumentException ex) {
+                    Notification errorNotification = new Notification(ex.getMessage(), 3000, Notification.Position.MIDDLE);
+                    errorNotification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    errorNotification.open();
+                }
             });
-        return actualizarConvocatoriaButton;
+            return activarButton;
+        } else {
+            return new Div(new Text("Activada"));
+        }
     }
 }

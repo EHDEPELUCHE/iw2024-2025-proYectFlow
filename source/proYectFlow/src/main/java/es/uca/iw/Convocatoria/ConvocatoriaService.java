@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,7 +27,12 @@ public class ConvocatoriaService {
     }
 
     @Transactional
-    public void hacerVigente(Convocatoria convocatoriaActual, Convocatoria convocatoriaAnterior) {
+    public void hacerVigente(Convocatoria convocatoriaActual) {
+        if (convocatoriaActual.getFecha_final().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("No se puede activar la convocatoria porque su fecha final ya ha pasado.");
+        }
+        Convocatoria convocatoriaAnterior = repository.findByActiva(true);
+
         if(convocatoriaAnterior != null) {
             convocatoriaAnterior.setActiva(false);
             repository.save(convocatoriaAnterior);

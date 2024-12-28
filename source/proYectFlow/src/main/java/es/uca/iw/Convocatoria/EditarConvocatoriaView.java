@@ -56,16 +56,13 @@ public class EditarConvocatoriaView extends Composite<VerticalLayout> implements
 
         guardarButton.addClickListener(e -> {
             if (convocatoria != null) {
-                // Actualizar el objeto convocatoria con los valores del formulario
                 convocatoria.setPresupuestototal(presupuestototal.getValue());
                 convocatoria.setFecha_inicio(Date.from(fecha_inicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
                 convocatoria.setFecha_limite(Date.from(fecha_limite.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
                 convocatoria.setFecha_final(Date.from(fecha_final.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-                // Guardar los cambios en la base de datos
                 convocatoriaService.guardar(convocatoria);
 
-                // Mostrar un mensaje de éxito
                 Notification.show("Convocatoria actualizada correctamente");
             } else {
                 Notification.show("Error: No se pudo encontrar la convocatoria para actualizar.");
