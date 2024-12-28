@@ -1,5 +1,7 @@
 package es.uca.iw.Convocatoria;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -21,11 +23,12 @@ import org.springframework.data.domain.PageRequest;
 @Menu(order = 8, icon = "line-awesome/svg/archive-solid.svg")
 @Uses(Icon.class)
 @RolesAllowed("ROLE_ADMIN")
-public class GestionarConvocatorias extends Div {
+public class GestionarConvocatoriasView extends Div {
     private final ConvocatoriaService convocatoriaService;
 
-    public GestionarConvocatorias(ConvocatoriaService convocatoriaService) {
+    public GestionarConvocatoriasView(ConvocatoriaService convocatoriaService) {
         this.convocatoriaService = convocatoriaService;
+        Convocatoria convocatoriaActual = convocatoriaService.ConvocatoriaActual();
 
         setSizeFull();
         addClassNames("convocatorias-view");
@@ -63,9 +66,16 @@ public class GestionarConvocatorias extends Div {
         grid.addColumn("presupuestototal").setHeader("Presupuesto total").setAutoWidth(true);
 
         grid.addColumn(solicitud -> {
-            return solicitud.getActiva() ? "Actual" : "";
+            if (solicitud.getActiva()) {
+                return "Actual";
+            } else {
+                return "NO";
+            }
+            //return solicitud.getActiva() ? "Actual" : "";
         }).setHeader("Estado").setAutoWidth(true)
                 .setSortable(true);
+
+        grid.addComponentColumn(this::editarConvocatoria).setHeader("Acciones").setAutoWidth(true);
 
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
 
@@ -73,5 +83,22 @@ public class GestionarConvocatorias extends Div {
                 PageRequest.of(query.getPage(), query.getPageSize())).stream());
 
         return grid;
+    }
+
+    protected Component editarConvocatoria(Convocatoria convocatoria) {
+        Button editarButton = new Button("Editar");
+        editarButton.addClickListener(e -> {
+            getUI().ifPresent(ui -> ui.navigate("EditarConvocatoria/" + convocatoria.getId()));
+
+        });
+        return editarButton;
+    }
+
+    protected Component actualizarConvocatoriaActual(Convocatoria convocatoria, Convocatoria convocatoriaActual) {
+        Button actualizarConvocatoriaButton = new Button("Establecer");
+        actualizarConvocatoriaButton.addClickListener(e -> {
+            //public void hacerVigente(convocatoria, convocatoriaActual) {
+            });
+        return actualizarConvocatoriaButton;
     }
 }

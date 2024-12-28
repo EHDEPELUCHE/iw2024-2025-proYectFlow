@@ -99,6 +99,6 @@ public class Convocatoria extends AbstractEntity {
         dateFormat.format(fecha_inicio);
         dateFormat.format(fecha_final);
 
-        this.nombre = "Convocatoria " + dateFormat.format(fecha_inicio) + "- " + dateFormat.format(fecha_final);
+        this.nombre = "Convocatoria " + dateFormat.format(fecha_inicio) + " - " + dateFormat.format(fecha_final);
     }
 }

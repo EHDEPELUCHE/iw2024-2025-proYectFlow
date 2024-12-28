@@ -9,6 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class ConvocatoriaService {
     private final ConvocatoriaRepository repository;
@@ -32,6 +35,7 @@ public class ConvocatoriaService {
         repository.save(convocatoriaActual);
     }
 
+    @Transactional
     public void guardar(Convocatoria convocatoria) {
         repository.save(convocatoria);
     }
@@ -40,4 +44,9 @@ public class ConvocatoriaService {
         return repository.findAll(pageable);
     }
 
+    @Transactional
+    public Convocatoria findById(UUID id) {
+        Optional<Convocatoria> convocatoriaOptional = repository.findById(id);
+        return convocatoriaOptional.orElse(null);
+    }
 }

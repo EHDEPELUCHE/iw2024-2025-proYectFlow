@@ -15,10 +15,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public abstract class VisualizarProyectos extends Div {
     protected Grid<Proyecto> grid;
