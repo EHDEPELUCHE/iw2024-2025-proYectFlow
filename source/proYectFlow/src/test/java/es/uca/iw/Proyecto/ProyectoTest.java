@@ -195,8 +195,8 @@ class ProyectoTest {
 
     @Test
     void setEstado() {
-        proyecto.setEstado(Proyecto.Estado.aceptado);
-        assertEquals(Proyecto.Estado.aceptado, proyecto.getEstado());
+        proyecto.setEstado(Proyecto.Estado.enDesarrollo);
+        assertEquals(Proyecto.Estado.enDesarrollo, proyecto.getEstado());
     }
 
     @Test

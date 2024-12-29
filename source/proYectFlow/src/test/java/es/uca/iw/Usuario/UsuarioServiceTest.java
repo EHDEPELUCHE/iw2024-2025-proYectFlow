@@ -11,6 +11,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import org.springframework.data.domain.Page;
+import com.vaadin.hilla.mappedtypes.Pageable;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -58,8 +61,6 @@ class UsuarioServiceTest {
         usuarioAdmin.setTipo(Roles.ADMIN);
         usuarioAdmin.setActivo(true);
 
-
-        when(repository.save(any(Usuario.class))).thenReturn(usuarioAdmin);
         when(repository.save(any(Usuario.class))).thenReturn(usuarioAdmin);
         doNothing().when(emailService).sendEmail(anyString(), anyString(), anyString());
 
@@ -103,7 +104,6 @@ class UsuarioServiceTest {
 
     @Test
     void getUsuarioById() {
-
         Usuario user = new Usuario();
         UUID id = user.getId();
 
@@ -129,5 +129,72 @@ class UsuarioServiceTest {
         assertTrue(result.isPresent());
         assertEquals(user, result.get());
         verify(repository, times(1)).findByUsername(nombre);
+    }
+
+    @Test
+    void deleteUserById() {
+        UUID id = UUID.randomUUID();
+
+        doNothing().when(repository).deleteById(id);
+
+        usuarioService.delete(id);
+
+        verify(repository, times(1)).deleteById(id);
+    }
+
+    @Test
+    void deleteUserByRole() {
+        Roles role = Roles.SOLICITANTE;
+
+        doNothing().when(repository).deleteByTipo(role);
+
+        usuarioService.delete(role);
+
+        verify(repository, times(1)).deleteByTipo(role);
+    }
+
+  
+    @Test
+    void countUsuarios() {
+        long count = 10L;
+
+        when(repository.count()).thenReturn(count);
+
+        int result = usuarioService.count();
+
+        assertEquals(count, result);
+        verify(repository, times(1)).count();
+    }
+
+    @Test
+    void authenticateUser() {
+        String username = "testUser";
+        String password = "password";
+        Usuario user = new Usuario();
+        user.setUsername(username);
+        user.setContrasenna(passwordEncoder.encode(password));
+
+        when(repository.findByUsername(username)).thenReturn(user);
+
+        boolean result = usuarioService.authenticate(username, password);
+
+        assertTrue(result);
+        verify(repository, times(1)).findByUsername(username);
+    }
+
+    @Test
+    void authenticateUser_Failure() {
+        String username = "testUser";
+        String password = "wrongPassword";
+        Usuario user = new Usuario();
+        user.setUsername(username);
+        user.setContrasenna(passwordEncoder.encode("password"));
+
+        when(repository.findByUsername(username)).thenReturn(user);
+
+        boolean result = usuarioService.authenticate(username, password);
+
+        assertFalse(result);
+        verify(repository, times(1)).findByUsername(username);
     }
 }
