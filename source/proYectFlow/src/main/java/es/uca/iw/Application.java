@@ -43,6 +43,7 @@ public class Application implements AppShellConfigurator {
                 if (repository.count() == 0L) {
                     Usuario usuarioAdmin;
                     usuarioAdmin = new Usuario("Administrador", "Administrador", "Administrador", "admin@flow.com", "Administrador", Roles.ADMIN);
+                    usuarioAdmin.setActivo(true);
                     usuarioService.registerUserAdmin(usuarioAdmin);
                     return super.initializeDatabase();
 
