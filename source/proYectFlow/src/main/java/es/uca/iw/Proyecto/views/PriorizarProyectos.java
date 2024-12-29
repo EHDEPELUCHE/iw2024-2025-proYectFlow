@@ -24,6 +24,7 @@ import es.uca.iw.Convocatoria.Convocatoria;
 import es.uca.iw.Convocatoria.ConvocatoriaService;
 import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
+import es.uca.iw.Proyecto.VisualizarProyectos;
 import es.uca.iw.Usuario.Usuario;
 import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
@@ -39,11 +40,12 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 
-@PageTitle("Proyectos Final")
-@Route("proyectosPosibles")
+@PageTitle("Priorizar Proyectos ")
+@Route("priorizarproyectos")
 @Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg")
 @Uses(Icon.class)
 @RolesAllowed("ROLE_CIO")
+
 public class PriorizarProyectos extends Div {
     static AuthenticatedUser user;
     private final ProyectoService proyectoService;
@@ -61,12 +63,15 @@ public class PriorizarProyectos extends Div {
         h1Titulo.addClassNames(LumoUtility.Margin.Bottom.NONE, LumoUtility.Margin.Top.XLARGE,
                 LumoUtility.FontSize.XXXLARGE, LumoUtility.Margin.Left.LARGE);
         setSizeFull();
+        H2 h2Titulo = new H2("Selecciona los proyectos que van a desarrollarse");
+        h2Titulo.addClassNames(LumoUtility.Margin.Bottom.SMALL, LumoUtility.Margin.Top.SMALL,
+                LumoUtility.FontSize.MEDIUM, LumoUtility.Margin.Left.LARGE);
+        setSizeFull();
         addClassNames("proyectos-view");
         Date hoy = new Date();
         boolean hasInvalidStateProjects = proyectoService.list(PageRequest.of(0, Integer.MAX_VALUE)).stream()
             .anyMatch(proyecto -> proyecto.getEstado() == Proyecto.Estado.avalado || proyecto.getEstado() == Proyecto.Estado.evaluadoTecnicamente);
 
-        
         if (!convocatoriaService.ConvocatoriaActual().EnPlazo()) {
             if (hasInvalidStateProjects) {
                 add(new H1("Existen proyectos en estado avalado o evaluado técnicamente"));
@@ -80,12 +85,12 @@ public class PriorizarProyectos extends Div {
                         return criteriaBuilder.and(estadoPredicate);
                     }
                 };
-                VerticalLayout layout = new VerticalLayout(h1Titulo, filters, createGrid());
+                VerticalLayout layout = new VerticalLayout(h1Titulo,h2Titulo, filters, createGrid());
                 layout.setSizeFull();
                 layout.setPadding(false);
                 layout.setSpacing(false);
                 add(layout);
-            }  
+            }
         } else {
             add(new H1("Aún no se puede realizar la evaluación"));
         }
@@ -123,8 +128,12 @@ public class PriorizarProyectos extends Div {
         grid.addColumn(proyecto -> (proyecto.getPromotor().getNombre() + " " + proyecto.getPromotor().getApellido())).setHeader("Promotor").setAutoWidth(true);
         grid.addColumn("coste").setAutoWidth(true);
         grid.addColumn("aportacionInicial").setAutoWidth(true);
-        grid.addColumn("fechaSolicitud").setAutoWidth(true);
-        grid.addColumn("fechaLimite").setAutoWidth(true);
+        grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFechaSolicitud()))
+                .setHeader("Fecha Solicitud").setAutoWidth(true)
+                .setSortable(true);
+        grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFechaLimite()))
+                .setHeader("Fecha Límite").setAutoWidth(true)
+                .setSortable(true);
         grid.addColumn("estado").setAutoWidth(true);
         grid.addComponentColumn(proyecto -> {
             Button downloadButton = new Button("Memoria");
@@ -174,7 +183,7 @@ public class PriorizarProyectos extends Div {
                             dialog.close();
                             Notification.show("Este proyecto se realizará");
                         }else{
-                            Notification.show("No tenemos suficiente presupuesto");
+                            Notification.show("El presupuesto disponible es insuficiente para desarrollar este proyecto");
                         }
                     }
                 });
@@ -210,3 +219,4 @@ public class PriorizarProyectos extends Div {
         //private final CheckboxGroup<String> roles = new CheckboxGroup<>("Role");
     }
 }
+

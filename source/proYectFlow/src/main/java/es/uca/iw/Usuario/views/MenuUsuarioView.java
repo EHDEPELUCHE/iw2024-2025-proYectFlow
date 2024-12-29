@@ -91,6 +91,18 @@ public class MenuUsuarioView extends Main implements HasComponents, HasStyle {
                 "Evaluar", "proyectosOTP",
                 List.of("ROLE_OTP"));
 
+        addCardIfRoleMatches("Evaluación de proyectos",
+                "Aquí puedes evaluar los proyectos pendientes",
+                "https://images.unsplash.com/photo-1452457750107-cd084dce177d?q=80&w=2001&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "Evaluar", "proyectosCIO",
+                List.of("ROLE_CIO"));
+
+        addCardIfRoleMatches("Priorización de proyectos",
+                "Aquí puedes priorizar los proyectos pendientes",
+                "https://images.unsplash.com/photo-1452457750107-cd084dce177d?q=80&w=2001&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "Priorizar", "priorizarproyectos",
+                List.of("ROLE_CIO"));
+
         addCardIfRoleMatches("Historial de proyectos",
                 "Aquí puedes consultar todos los proyectos",
                 "https://images.unsplash.com/photo-1569235186275-626cb53b83ce?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
