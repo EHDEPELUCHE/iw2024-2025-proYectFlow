@@ -2,7 +2,10 @@ package es.uca.iw;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
+import es.uca.iw.Usuario.Usuario;
 import es.uca.iw.Usuario.UsuarioRepository;
+import es.uca.iw.Usuario.UsuarioService;
+import es.uca.iw.global.Roles;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.sql.init.SqlDataSourceScriptDatabaseInitializer;
@@ -19,6 +22,12 @@ import javax.sql.DataSource;
 @Theme(value = "proyectflow")
 @EnableJpaRepositories
 public class Application implements AppShellConfigurator {
+    private final UsuarioService usuarioService;
+
+    public Application(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
@@ -32,7 +41,11 @@ public class Application implements AppShellConfigurator {
             @Override
             public boolean initializeDatabase() {
                 if (repository.count() == 0L) {
+                    Usuario usuarioAdmin;
+                    usuarioAdmin = new Usuario("Administrador", "Administrador", "Administrador", "admin@flow.com", "Administrador", Roles.ADMIN);
+                    usuarioService.registerUserAdmin(usuarioAdmin);
                     return super.initializeDatabase();
+
                 }
                 return false;
             }
