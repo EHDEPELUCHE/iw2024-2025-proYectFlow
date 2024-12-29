@@ -68,6 +68,7 @@ public class ProyectosView extends Div {
         H1 h1Titulo = new H1("Proyectos");
         h1Titulo.addClassNames(LumoUtility.Margin.Bottom.NONE, LumoUtility.Margin.Top.XLARGE,
                 LumoUtility.FontSize.XXXLARGE, LumoUtility.Margin.Left.LARGE);
+        h1Titulo.getElement().setAttribute("aria-label", "Título de la página");
         return h1Titulo;
     }
 
@@ -109,7 +110,8 @@ public class ProyectosView extends Div {
                 filters).stream());
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.addClassNames(LumoUtility.Border.TOP, LumoUtility.BorderColor.CONTRAST_10);
-       grid.setAllRowsVisible(true);
+        grid.setAllRowsVisible(true);
+        grid.getElement().setAttribute("aria-label", "Tabla de proyectos");
         return grid;
     }
 
@@ -135,6 +137,7 @@ public class ProyectosView extends Div {
     private Button createDownloadButton(Proyecto proyecto) {
         Button downloadButton = new Button("Memoria");
         downloadButton.addClickListener(e -> downloadPdf(proyecto));
+        downloadButton.getElement().setAttribute("aria-label", "Descargar memoria del proyecto");
         return downloadButton;
     }
 
@@ -161,6 +164,7 @@ public class ProyectosView extends Div {
         evaluarButton.addClickListener(e -> {
             getUI().ifPresent(ui -> ui.navigate("EditarProyecto/" + (proyecto.getId()).toString()));
         });
+        evaluarButton.getElement().setAttribute("aria-label", "Editar proyecto");
         return evaluarButton;
     }
 
@@ -211,6 +215,7 @@ public class ProyectosView extends Div {
                 estado.clear();
                 onSearch.run();
             });
+            resetBtn.getElement().setAttribute("aria-label", "Borrar filtros");
             return resetBtn;
         }
 
@@ -218,14 +223,15 @@ public class ProyectosView extends Div {
             Button searchBtn = new Button("Buscar");
             searchBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             searchBtn.addClickListener(e -> onSearch.run());
+            searchBtn.getElement().setAttribute("aria-label", "Buscar proyectos");
             return searchBtn;
         }
 
         private Component createDateRangeFilter() {
             startDate.setPlaceholder("Desde");
             endDate.setPlaceholder("Hasta");
-            startDate.setAriaLabel("From date");
-            endDate.setAriaLabel("To date");
+            startDate.setAriaLabel("Fecha desde");
+            endDate.setAriaLabel("Fecha hasta");
 
             FlexLayout dateRangeComponent = new FlexLayout(startDate, new Text(" – "), endDate);
             dateRangeComponent.setAlignItems(FlexComponent.Alignment.BASELINE);

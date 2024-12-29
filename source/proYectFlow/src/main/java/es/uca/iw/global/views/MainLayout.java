@@ -49,6 +49,9 @@ public class MainLayout extends AppLayout {
         DrawerToggle toggle = new DrawerToggle();
         toggle.setAriaLabel("Menu toggle");
         toggle.setClassName("fondo");
+        toggle.getElement().setAttribute("tabindex", "0"); // Make focusable
+        toggle.getElement().setAttribute("role", "button"); // ARIA role
+
         HorizontalLayout horAux = new HorizontalLayout();
         HorizontalLayout horAuxFondo = new HorizontalLayout();
         horAux.setSpacing(true);
@@ -59,6 +62,9 @@ public class MainLayout extends AppLayout {
         Image image = new Image("favicon.ico", "Logo");
         image.setHeight("50px");
         image.setWidth("50px");
+        image.getElement().setAttribute("alt", "Logo de la aplicación");
+        image.getElement().setAttribute("tabindex", "0"); // Make focusable
+        image.getElement().setAttribute("role", "link"); // ARIA role
 
         image.addClickListener(imageClickEvent -> {
             image.getUI().ifPresent(ui -> ui.navigate(""));
@@ -66,10 +72,14 @@ public class MainLayout extends AppLayout {
 
         viewTitle = new H1();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, "fondo");
+        viewTitle.getElement().setAttribute("aria-label", "Título de la vista");
 
         Image ayuda = new Image("img/ayuda.png", "Ayuda");
         ayuda.setHeight("50px");
         ayuda.setWidth("50px");
+        ayuda.getElement().setAttribute("alt", "Icono de ayuda");
+        ayuda.getElement().setAttribute("tabindex", "0"); // Make focusable
+        ayuda.getElement().setAttribute("role", "button"); // ARIA role
         horAuxFondo.add(ayuda);
         ayuda.addClickListener(ayudaClickEvent -> {
             RouterLink pagayuda = new RouterLink("Ayuda", AyudaView.class);
@@ -88,14 +98,18 @@ public class MainLayout extends AppLayout {
             menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
 
             MenuItem menuItem = menuBar.addItem(avatarBasic);
+            menuItem.getElement().setAttribute("aria-label", "Menú de usuario");
             SubMenu subMenu = menuItem.getSubMenu();
             subMenu.addItem(new RouterLink("Mis datos", MisDatosView.class));
 
             MenuItem logoutItem = subMenu.addItem("Cerrar sesión");
+            logoutItem.getElement().setAttribute("tabindex", "0"); // Make focusable
+            logoutItem.getElement().setAttribute("aria-label", "Cerrar sesión");
             logoutItem.addClickListener(event -> {
                 user.logout();
             });
 
+            menuItem.getElement().setAttribute("tabindex", "0"); // Make focusable
             menuItem.addClassName("fondo");
             horAuxFondo.add(menuBar);
         } else {
@@ -108,14 +122,14 @@ public class MainLayout extends AppLayout {
             menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
 
             MenuItem menuItem = menuBar.addItem(avatarBasic);
+            menuItem.getElement().setAttribute("aria-label", "Menú de usuario");
             SubMenu subMenu = menuItem.getSubMenu();
             subMenu.addItem(new RouterLink("Iniciar sesión", MenuUsuarioView.class));
 
+            menuItem.getElement().setAttribute("tabindex", "0"); // Make focusable
             menuItem.addClassName("fondo");
             horAuxFondo.add(menuBar);
         }
-
-
 
         horAux.add(toggle, image, viewTitle, horAuxFondo);
 
@@ -127,13 +141,15 @@ public class MainLayout extends AppLayout {
         horAuxFondo.addClassNames(LumoUtility.AlignItems.CENTER, LumoUtility.JustifyContent.END);
 
         horAux.addClassName("fondo");
-        //horAux.expand(viewTitle, avatarBasic);
         addToNavbar(true, horAux);
     }
 
     private void addDrawerContent() {
         Span appName = new Span("proYectFlow");
         appName.addClassNames(LumoUtility.FontWeight.SEMIBOLD, LumoUtility.FontSize.LARGE);
+        appName.getElement().setAttribute("aria-label", "Nombre de la aplicación");
+        appName.getElement().setAttribute("role", "heading"); // ARIA role
+        appName.getElement().setAttribute("tabindex", "0"); // Make focusable
         Header header = new Header(appName);
         header.addClassName("fondo");
         Scroller scroller = new Scroller(createNavigation());
@@ -143,14 +159,20 @@ public class MainLayout extends AppLayout {
 
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
+        nav.getElement().setAttribute("aria-label", "Navegación principal");
+        nav.getElement().setAttribute("role", "navigation"); // ARIA role
 
         List<MenuEntry> menuEntries = MenuConfiguration.getMenuEntries();
         menuEntries.forEach(entry -> {
+            SideNavItem item;
             if (entry.icon() != null) {
-                nav.addItem(new SideNavItem(entry.title(), entry.path(), new SvgIcon(entry.icon())));
+                item = new SideNavItem(entry.title(), entry.path(), new SvgIcon(entry.icon()));
             } else {
-                nav.addItem(new SideNavItem(entry.title(), entry.path()));
+                item = new SideNavItem(entry.title(), entry.path());
             }
+            item.getElement().setAttribute("tabindex", "0"); // Make focusable
+            item.getElement().setAttribute("role", "link"); // ARIA role
+            nav.addItem(item);
         });
 
         return nav;
@@ -158,7 +180,9 @@ public class MainLayout extends AppLayout {
 
     private Footer createFooter() {
         Footer layout = new Footer();
-        // layout.addClassName("fondo");
+        layout.getElement().setAttribute("aria-label", "Pie de página");
+        layout.getElement().setAttribute("role", "contentinfo"); // ARIA role
+        layout.getElement().setAttribute("tabindex", "0"); // Make focusable
         return layout;
     }
 

@@ -16,14 +16,19 @@ public class AyudaView extends Composite<VerticalLayout> {
 
     public AyudaView() {
         H1 title = new H1("Ayuda y preguntas frecuentes");
-        Accordion acordeon  = new Accordion();
+        title.getElement().setAttribute("aria-label", "Título de la página de ayuda");
+
+        Accordion acordeon = new Accordion();
+        acordeon.getElement().setAttribute("aria-label", "Secciones de ayuda");
+
         Span paso1_Iniciosesion = new Span("Mire si al registrarse escribió bien su correo y recibió el código");
         Span paso2_Iniciosesion = new Span("Acceda a /ActivarUsuario y escriba su correo y el código que se le envió");
         Span paso3_Iniciosesion = new Span("Si ni con la cuenta activa y usando su USUARIO y CONTRASEÑA puede iniciar sesión, pruebe a crear otra cuenta con otro nombre de usuario y mismo correo. Si no lo consigue póngase en contacto con: iwproyectflow@gmail.com");
-        VerticalLayout Problema1Layout =new VerticalLayout(paso1_Iniciosesion, paso2_Iniciosesion, paso3_Iniciosesion);
-        acordeon.add("Problemas al iniciar sesión", Problema1Layout);
 
-        
+        VerticalLayout problema1Layout = new VerticalLayout(paso1_Iniciosesion, paso2_Iniciosesion, paso3_Iniciosesion);
+        problema1Layout.getElement().setAttribute("aria-label", "Pasos para resolver problemas al iniciar sesión");
+
+        acordeon.add("Problemas al iniciar sesión", problema1Layout);
 
         getContent().add(title, acordeon);
     }
