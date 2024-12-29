@@ -46,33 +46,33 @@ import java.util.logging.Logger;
 public class GestionarUsuariosView extends Composite<VerticalLayout> {
     private static final Logger logger = Logger.getLogger(GestionarUsuariosView.class.getName());
     private final BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
-    RestTemplate restTemplate;
-    UsuarioService usuarioService;
-    ProyectoService proyectoService;
-    AuthenticatedUser authenticatedUser;
-    Grid<Usuario> grid;
+    private final RestTemplate restTemplate;
+    private final UsuarioService usuarioService;
+    private final ProyectoService proyectoService;
+    private final AuthenticatedUser authenticatedUser;
+    private final Grid<Usuario> grid;
+    private H1 titulo;
 
     @Autowired
-    public GestionarUsuariosView(UsuarioService usuarioService, ProyectoService proyectoService, AuthenticatedUser authenticatedUser) throws Exception {
+    public GestionarUsuariosView(UsuarioService usuarioService, ProyectoService proyectoService, AuthenticatedUser authenticatedUser) {
         this.restTemplate = new RestTemplate();
         this.usuarioService = usuarioService;
         this.proyectoService = proyectoService;
         this.authenticatedUser = authenticatedUser;
-        H1 titulopromotores = new H1("Actualizar promotores en el sistema");
-        Button METER_PROMOTORES = new Button("Meter Promotores");
-        METER_PROMOTORES.addClickListener(e -> GuardarPromotores());
-        getContent().add(titulopromotores, METER_PROMOTORES);
 
-        //Opción de buscar usuario
+        titulo = new H1("Actualizar promotores en el sistema");
+        Button meterPromotoresButton = new Button("Meter Promotores");
+        meterPromotoresButton.addClickListener(e -> guardarPromotores());
+        getContent().add(titulo, meterPromotoresButton);
+
         H1 titulousuario = new H1("Gestionar Usuarios");
-        EmailField correo = new EmailField("Correo del usuario a buscar");
-        Button Buscar = new Button("Buscar");
-        Buscar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        Buscar.addClickListener(e -> GestionarUsu(correo.getValue()));
-        Buscar.addClickShortcut(Key.ENTER);
-        getContent().add(titulousuario, correo, Buscar);
+        EmailField correoField = new EmailField("Correo del usuario a buscar");
+        Button buscarButton = new Button("Buscar");
+        buscarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buscarButton.addClickListener(e -> gestionarUsuario(correoField.getValue()));
+        buscarButton.addClickShortcut(Key.ENTER);
+        getContent().add(titulousuario, correoField, buscarButton);
 
-        // Crear tabla de usuarios
         grid = new Grid<>(Usuario.class, false);
         grid.addColumn(Usuario::getNombre).setHeader("Nombre");
         grid.addColumn(Usuario::getApellido).setHeader("Apellido");
@@ -80,89 +80,75 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
         grid.addColumn(Usuario::getTipo).setHeader("Rol");
         grid.addColumn(Usuario::getActivo).setHeader("Activo");
 
-        // Añadir columna de modificar
         grid.addComponentColumn(usuario -> {
             Button modificarButton = new Button("Modificar");
-            modificarButton.addClickListener(e -> GestionarUsu(usuario.getCorreo()));
+            modificarButton.addClickListener(e -> gestionarUsuario(usuario.getCorreo()));
             return modificarButton;
         }).setHeader("Modificar");
 
-        // Añadir datos a la tabla con paginación
-        Pageable pageable = Pageable.unpaged(); // Puedes ajustar la paginación según tus necesidades
+        Pageable pageable = Pageable.unpaged();
         Page<Usuario> usuariosPage = usuarioService.list(pageable);
         grid.setItems(usuariosPage.getContent());
 
-        // Añadir la tabla al layout
         getContent().add(grid);
     }
 
-    private void GestionarUsu(String correo) {
+    private void gestionarUsuario(String correo) {
         Usuario user = usuarioService.getCorreo(correo);
         if (user != null) {
             Dialog dialog = new Dialog();
             dialog.open();
-            FormLayout formLayout2Col = new FormLayout();
-            HorizontalLayout layoutRow = new HorizontalLayout();
             dialog.setHeaderTitle("Usuario: " + user.getNombre());
             dialog.add(new H4("Escriba los datos que desea modificar"));
-            TextField username = new TextField("Username");
-            username.setValue(user.getUsername());
-            TextField nombre = new TextField("Nombre");
-            nombre.setValue(user.getNombre());
-            TextField apellido = new TextField("Apellido");
-            apellido.setValue(user.getApellido());
-            EmailField correoNuevo = new EmailField("Correo");
-            correoNuevo.setValue(user.getCorreo());
-            correoNuevo.setRequired(true);
 
-            PasswordField password = new PasswordField("Contraseña");
+            FormLayout formLayout = new FormLayout();
+            TextField usernameField = new TextField("Username");
+            usernameField.setValue(user.getUsername());
+            TextField nombreField = new TextField("Nombre");
+            nombreField.setValue(user.getNombre());
+            TextField apellidoField = new TextField("Apellido");
+            apellidoField.setValue(user.getApellido());
+            EmailField correoNuevoField = new EmailField("Correo");
+            correoNuevoField.setValue(user.getCorreo());
+            correoNuevoField.setRequired(true);
 
-            PasswordField confirmarPassword = new PasswordField("Repetir contraseña");
-            VerticalLayout dialogLayout = new VerticalLayout();
-            ComboBox<Roles> Tipo = new ComboBox<>();
-            Tipo.setLabel("Rol");
-            Tipo.setWidth("min-content");
-            Tipo.setItems(Roles.values());
-            Tipo.setValue(user.getTipo());
-            Checkbox activo = new Checkbox("Validado");
-            activo.setValue(true);
+            PasswordField passwordField = new PasswordField("Contraseña");
+            PasswordField confirmarPasswordField = new PasswordField("Repetir contraseña");
 
-            Button Borrar = new Button("Borrar datos del usuario", event -> {
+            ComboBox<Roles> tipoComboBox = new ComboBox<>();
+            tipoComboBox.setLabel("Rol");
+            tipoComboBox.setItems(Roles.values());
+            tipoComboBox.setValue(user.getTipo());
+
+            Checkbox activoCheckbox = new Checkbox("Validado");
+            activoCheckbox.setValue(user.getActivo());
+
+            Button borrarButton = new Button("Borrar datos del usuario", event -> {
                 proyectoService.desligarUsuario(user);
                 grid.getDataProvider().refreshItem(user);
                 usuarioService.delete(user.getId());
                 dialog.close();
             });
-            Borrar.addClassName("button-danger");
-            Borrar.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            borrarButton.addClassName("button-danger");
+            borrarButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-            dialogLayout.add(formLayout2Col);
-            formLayout2Col.add(nombre);
-            formLayout2Col.add(apellido);
-            formLayout2Col.add(correoNuevo);
-            formLayout2Col.add(username);
-            formLayout2Col.add(password);
-            formLayout2Col.add(confirmarPassword);
-            formLayout2Col.add(Tipo);
-            formLayout2Col.add(activo);
-            //formLayout2Col.add(Borrar);
-
-            dialog.add(dialogLayout, Borrar);
+            formLayout.add(nombreField, apellidoField, correoNuevoField, usernameField, passwordField, confirmarPasswordField, tipoComboBox, activoCheckbox);
+            dialog.add(formLayout, borrarButton);
 
             Button saveButton = new Button("Guardar", e -> {
                 try {
-                    if (Objects.equals(password.getValue(), confirmarPassword.getValue())) {
-                        if (!Objects.equals(username.getValue(), username.getEmptyValue()))
-                            user.setUsername(username.getValue());
-                        if (!Objects.equals(nombre.getValue(), nombre.getEmptyValue()))
-                            user.setNombre(nombre.getValue());
-                        if (!Objects.equals(apellido.getValue(), apellido.getEmptyValue()))
-                            user.setApellido(apellido.getValue());
-                        user.setCorreo(correoNuevo.getValue());
-                        if (!Objects.equals(password.getValue(), password.getEmptyValue()))
-                            user.setContrasenna(usuarioService.encriptar(password.getValue()));
-                        if (Tipo.getValue() != Tipo.getEmptyValue()) user.setTipo(Tipo.getValue());
-                        user.setActivo(activo.getValue());
+                    if (Objects.equals(passwordField.getValue(), confirmarPasswordField.getValue())) {
+                        if (!Objects.equals(usernameField.getValue(), usernameField.getEmptyValue()))
+                            user.setUsername(usernameField.getValue());
+                        if (!Objects.equals(nombreField.getValue(), nombreField.getEmptyValue()))
+                            user.setNombre(nombreField.getValue());
+                        if (!Objects.equals(apellidoField.getValue(), apellidoField.getEmptyValue()))
+                            user.setApellido(apellidoField.getValue());
+                        user.setCorreo(correoNuevoField.getValue());
+                        if (!Objects.equals(passwordField.getValue(), passwordField.getEmptyValue()))
+                            user.setContrasenna(usuarioService.encriptar(passwordField.getValue()));
+                        if (tipoComboBox.getValue() != tipoComboBox.getEmptyValue()) user.setTipo(tipoComboBox.getValue());
+                        user.setActivo(activoCheckbox.getValue());
                         usuarioService.update(user);
                         Notification.show("Usuario guardado correctamente");
                         grid.getDataProvider().refreshItem(user);
@@ -171,18 +157,17 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
                         Notification.show("Revise los datos de entrada");
                     }
                 } catch (Exception ex) {
-                    Notification.show("Revise los datos de entrada" + ex.getMessage());
+                    Notification.show("Revise los datos de entrada: " + ex.getMessage());
                 }
             });
             saveButton.addClassName("buttonPrimary");
             saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             saveButton.addClickShortcut(Key.ENTER);
-            Button cancelButton = new Button("Cancel", e -> dialog.close());
-            cancelButton.addClassName("buttonSecondary");
-            dialog.getFooter().add(cancelButton);
-            dialog.getFooter().add(saveButton);
 
-            //Button button = new Button("Show dialog", e -> dialog.open());
+            Button cancelButton = new Button("Cancelar", e -> dialog.close());
+            cancelButton.addClassName("buttonSecondary");
+
+            dialog.getFooter().add(cancelButton, saveButton);
 
             getContent().add(dialog);
         } else {
@@ -191,13 +176,10 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
     }
 
     @Transactional
-    public void GuardarPromotores() {
+    public void guardarPromotores() {
         String API_URL = "https://e608f590-1a0b-43c5-b363-e5a883961765.mock.pstmn.io/sponsors";
-        RestTemplate restTemplate = new RestTemplate();//context.getBean(RestTemplate.class);
         try {
-            // Realizar solicitud GET
             ResponseEntity<Respuesta> response = restTemplate.getForEntity(API_URL, Respuesta.class);
-            // Verificar si la respuesta es exitosa
             if (response.getStatusCode().is2xxSuccessful()) {
                 try {
                     usuarioService.destituyePromotores();
@@ -206,7 +188,6 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
                 }
                 Respuesta apiResponse = response.getBody();
                 Notification.show("Respuesta de la API: " + response.getBody());
-                // Trabajar con los datos
                 if (apiResponse != null && apiResponse.getData() != null) {
                     for (Promotor promotor : apiResponse.getData()) {
                         logger.info("Promotor nombre: " + promotor.getNombre());

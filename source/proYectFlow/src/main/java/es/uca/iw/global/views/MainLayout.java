@@ -93,8 +93,9 @@ public class MainLayout extends AppLayout {
             avatarBasic.setWidth("40px");
             avatarBasic.setHeight("40px");
             avatarBasic.addClassNames(LumoUtility.AlignSelf.END, "fondoAvatar");
-            MenuBar menuBar = new MenuBar();
+            avatarBasic.getElement().setAttribute("aria-label", "Avatar de usuario");
 
+            MenuBar menuBar = new MenuBar();
             menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
 
             MenuItem menuItem = menuBar.addItem(avatarBasic);
@@ -117,8 +118,9 @@ public class MainLayout extends AppLayout {
             avatarBasic.setWidth("40px");
             avatarBasic.setHeight("40px");
             avatarBasic.addClassNames(LumoUtility.AlignSelf.END, "fondoAvatar");
-            MenuBar menuBar = new MenuBar();
+            avatarBasic.getElement().setAttribute("aria-label", "Avatar de usuario");
 
+            MenuBar menuBar = new MenuBar();
             menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
 
             MenuItem menuItem = menuBar.addItem(avatarBasic);
@@ -148,6 +150,7 @@ public class MainLayout extends AppLayout {
         Span appName = new Span("proYectFlow");
         appName.addClassNames(LumoUtility.FontWeight.SEMIBOLD, LumoUtility.FontSize.LARGE);
         appName.getElement().setAttribute("aria-label", "Nombre de la aplicación");
+        appName.getElement().setAttribute("aria-level", "1"); // ARIA heading level
         appName.getElement().setAttribute("role", "heading"); // ARIA role
         appName.getElement().setAttribute("tabindex", "0"); // Make focusable
         Header header = new Header(appName);
@@ -161,6 +164,9 @@ public class MainLayout extends AppLayout {
         SideNav nav = new SideNav();
         nav.getElement().setAttribute("aria-label", "Navegación principal");
         nav.getElement().setAttribute("role", "navigation"); // ARIA role
+        nav.getElement().setAttribute("tabindex", "0"); // Make focusable
+        //nav.getElement().setAttribute("class", "fondo");
+        nav.getElement().setAttribute("style", "overflow-y: auto;");
 
         List<MenuEntry> menuEntries = MenuConfiguration.getMenuEntries();
         menuEntries.forEach(entry -> {
@@ -172,6 +178,10 @@ public class MainLayout extends AppLayout {
             }
             item.getElement().setAttribute("tabindex", "0"); // Make focusable
             item.getElement().setAttribute("role", "link"); // ARIA role
+            item.getElement().setAttribute("aria-label", entry.title()); // ARIA label
+            item.getElement().setAttribute("aria-current", "page"); // ARIA current page
+            
+
             nav.addItem(item);
         });
 
