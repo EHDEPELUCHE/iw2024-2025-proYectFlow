@@ -1,5 +1,6 @@
 package es.uca.iw.Proyecto.views;
 
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -20,12 +21,15 @@ public class ProyectosEnDesarrolloView extends VisualizarProyectos {
     public ProyectosEnDesarrolloView(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
         super(proyectoService,false);
         Convocatoria convocatoriaActual = convocatoriaService.ConvocatoriaActual();
+        if(convocatoriaActual != null) {
+            Specification<Proyecto> filters = (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.enDesarrollo),
+                    criteriaBuilder.equal(root.get("convocatoria"), convocatoriaActual)
+            );
+            inicializarVistaProyectos("Proyectos que se están desarrollando actualmente", filters);
+        }else{
+            add(new H1("No existe una proyecto en desarrollo"));
+        }
 
-        Specification<Proyecto> filters = (root, query, criteriaBuilder) -> criteriaBuilder.and(
-            criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.enDesarrollo),
-            criteriaBuilder.greaterThanOrEqualTo(root.get("fechaSolicitud"), convocatoriaActual.getFecha_inicio()),
-            criteriaBuilder.lessThanOrEqualTo(root.get("fechaSolicitud"), convocatoriaActual.getFecha_final())
-        );
-        inicializarVistaProyectos("Proyectos que se están desarrollando actualmente", filters);
     }
 }
