@@ -5,7 +5,6 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-
 import es.uca.iw.Convocatoria.Convocatoria;
 import es.uca.iw.Convocatoria.ConvocatoriaService;
 import es.uca.iw.Proyecto.Proyecto;
@@ -19,17 +18,16 @@ import org.springframework.data.jpa.domain.Specification;
 @AnonymousAllowed
 public class ProyectosEnDesarrolloView extends VisualizarProyectos {
     public ProyectosEnDesarrolloView(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
-        super(proyectoService,false);
+        super(proyectoService, false);
         Convocatoria convocatoriaActual = convocatoriaService.ConvocatoriaActual();
-        if(convocatoriaActual != null) {
+        if (convocatoriaActual != null) {
             Specification<Proyecto> filters = (root, query, criteriaBuilder) -> criteriaBuilder.and(
                     criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.enDesarrollo),
                     criteriaBuilder.equal(root.get("convocatoria"), convocatoriaActual)
             );
             inicializarVistaProyectos("Proyectos que se están desarrollando actualmente", filters);
-        }else{
-            add(new H1("No existe una proyecto en desarrollo"));
+        } else {
+            add(new H1("No existe ningún proyecto en desarrollo actualmente."));
         }
-
     }
 }
