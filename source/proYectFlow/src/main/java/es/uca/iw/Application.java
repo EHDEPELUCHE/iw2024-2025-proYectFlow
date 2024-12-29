@@ -51,17 +51,16 @@ public class Application implements AppShellConfigurator {
             @Override
             public boolean initializeDatabase() {
                 if (repository.count() == 0L) {
-                   meterSolicitantesprueba();
-                   meterproyectosPrueba();
+                    meterUsuariosPrueba();
+                    meterProyectosPrueba();
                     return super.initializeDatabase();
-
                 }
                 return false;
             }
         };
     }
 
-    public void meterSolicitantesprueba(){
+    public void meterUsuariosPrueba() {
         Usuario usuarioAdmin;
         usuarioAdmin = new Usuario("Administrador", "Administrador", "Administrador", "admin@flow.com", "Administrador", Roles.ADMIN);
         usuarioAdmin.setActivo(true);
@@ -104,75 +103,75 @@ public class Application implements AppShellConfigurator {
 
     }
 
-    public void meterproyectosPrueba(){
-        Convocatoria convocatoria = new Convocatoria(BigDecimal.valueOf(2000000), new Date("11/1/2025"), new Date("11/11/2024") , new Date("5/5/2025"));
+    public void meterProyectosPrueba() {
+        Convocatoria convocatoria = new Convocatoria(BigDecimal.valueOf(2000000), new Date("11/1/2025"), new Date("11/11/2024"), new Date("5/5/2025"));
         convocatoriaService.hacerVigente(convocatoria);
         Proyecto proyecto;
         proyecto = new Proyecto("Proyecto 1", "Primer proyecto de prueba", "Interesados de la uca",
                 "alcance del proyecto", BigDecimal.valueOf(10000), BigDecimal.valueOf(700),
-                usuarioService.getCorreo("solicitante1@flow.com"),null, new Date("5/5/2024"), null);
+                usuarioService.getCorreo("solicitante1@flow.com"), null, new Date("5/5/2024"), null);
         proyecto.setConvocatoria(convocatoria);
         proyectoService.registerProyecto(proyecto);
 
         Proyecto proyecto2;
         proyecto2 = new Proyecto("Proyecto 2", "Primer proyecto de prueba", "Interesados de la uca",
                 "alcance del proyecto", BigDecimal.valueOf(10000), BigDecimal.valueOf(700),
-                usuarioService.getCorreo("solicitante1@flow.com"),null, new Date("5/5/2024"), null);
+                usuarioService.getCorreo("solicitante1@flow.com"), null, new Date("5/5/2024"), null);
         proyecto2.setConvocatoria(convocatoria);
         proyectoService.registerProyecto(proyecto2);
 
         Proyecto proyecto3;
         proyecto3 = new Proyecto("Proyecto 3", "Primer proyecto de prueba", "Interesados de la uca",
                 "alcance del proyecto", BigDecimal.valueOf(10000), BigDecimal.valueOf(700),
-                usuarioService.getCorreo("solicitante2@flow.com"),null, new Date("5/5/2024"), null);
+                usuarioService.getCorreo("solicitante2@flow.com"), null, new Date("5/5/2024"), null);
         proyecto3.setConvocatoria(convocatoria);
         proyectoService.registerProyecto(proyecto3);
 
         Proyecto proyecto4;
         proyecto4 = new Proyecto("Proyecto 4", "Primer proyecto de prueba", "Interesados de la uca",
                 "alcance del proyecto", BigDecimal.valueOf(10000), BigDecimal.valueOf(700),
-                usuarioService.getCorreo("solicitante2@flow.com"),null, new Date("5/5/2024"), null);
+                usuarioService.getCorreo("solicitante2@flow.com"), null, new Date("5/5/2024"), null);
         proyecto4.setConvocatoria(convocatoria);
         proyectoService.registerProyecto(proyecto4);
 
         Proyecto proyecto5;
         proyecto5 = new Proyecto("Proyecto 5", "Primer proyecto de prueba", "Interesados de la uca",
                 "alcance del proyecto", BigDecimal.valueOf(10000), BigDecimal.valueOf(700),
-                usuarioService.getCorreo("solicitante3@flow.com"),null, new Date("5/5/2024"), null);
+                usuarioService.getCorreo("solicitante3@flow.com"), null, new Date("5/5/2024"), null);
         proyecto5.setConvocatoria(convocatoria);
         proyectoService.registerProyecto(proyecto5);
 
         Proyecto proyecto6;
         proyecto6 = new Proyecto("Proyecto 6", "Primer proyecto de prueba", "Interesados de la uca",
                 "alcance del proyecto", BigDecimal.valueOf(10000), BigDecimal.valueOf(700),
-                usuarioService.getCorreo("solicitante3@flow.com"),null, new Date("5/5/2024"), null);
+                usuarioService.getCorreo("solicitante3@flow.com"), null, new Date("5/5/2024"), null);
         proyecto6.setConvocatoria(convocatoria);
         proyectoService.registerProyecto(proyecto6);
 
         Proyecto proyecto7;
         proyecto7 = new Proyecto("Proyecto 7", "Primer proyecto de prueba", "Interesados de la uca",
                 "alcance del proyecto", BigDecimal.valueOf(10000), BigDecimal.valueOf(700),
-                usuarioService.getCorreo("solicitante4@flow.com"),null, new Date("5/5/2024"), null);
+                usuarioService.getCorreo("solicitante4@flow.com"), null, new Date("5/5/2024"), null);
         proyecto7.setConvocatoria(convocatoria);
         proyectoService.registerProyecto(proyecto7);
 
         Proyecto proyecto8;
         proyecto8 = new Proyecto("Proyecto 8", "Primer proyecto de prueba", "Interesados de la uca",
                 "alcance del proyecto", BigDecimal.valueOf(10000), BigDecimal.valueOf(700),
-                usuarioService.getCorreo("solicitante4@flow.com"),null, new Date("5/5/2024"), null);
+                usuarioService.getCorreo("solicitante4@flow.com"), null, new Date("5/5/2024"), null);
         proyectoService.registerProyecto(proyecto8);
 
         Proyecto proyecto9;
         proyecto9 = new Proyecto("Proyecto 9", "Primer proyecto de prueba", "Interesados de la uca",
                 "alcance del proyecto", BigDecimal.valueOf(10000), BigDecimal.valueOf(700),
-                usuarioService.getCorreo("solicitante5@flow.com"),null, new Date("5/5/2024"), null);
+                usuarioService.getCorreo("solicitante5@flow.com"), null, new Date("5/5/2024"), null);
         proyecto9.setConvocatoria(convocatoria);
         proyectoService.registerProyecto(proyecto9);
 
         Proyecto proyecto10;
         proyecto10 = new Proyecto("Proyecto 10", "Primer proyecto de prueba", "Interesados de la uca",
                 "alcance del proyecto", BigDecimal.valueOf(10000), BigDecimal.valueOf(700),
-                usuarioService.getCorreo("solicitante5@flow.com"),null, new Date("5/5/2024"), null);
+                usuarioService.getCorreo("solicitante5@flow.com"), null, new Date("5/5/2024"), null);
         proyecto10.setConvocatoria(convocatoria);
         proyectoService.registerProyecto(proyecto10);
 
