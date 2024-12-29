@@ -239,5 +239,5 @@ public class Proyecto extends AbstractEntity {
         this.convocatoria = convocatoria;
     }
 
-    public enum Estado {solicitado, avalado, evaluadoTecnicamente, evaluadoEstrategicamente, aceptado, enDesarrollo, denegado}
+    public enum Estado {solicitado, avalado, evaluadoTecnicamente, evaluadoEstrategicamente, noenDesarrollo, enDesarrollo, denegado}
 }

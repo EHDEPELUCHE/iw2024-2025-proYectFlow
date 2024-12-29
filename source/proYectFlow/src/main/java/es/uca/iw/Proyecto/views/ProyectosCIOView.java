@@ -18,7 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Date;
 
-@PageTitle("Proyectos CIO")
+@PageTitle("Evaluar Proyectos CIO")
 @Route("proyectosCIO")
 @Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg")
 @Uses(Icon.class)
