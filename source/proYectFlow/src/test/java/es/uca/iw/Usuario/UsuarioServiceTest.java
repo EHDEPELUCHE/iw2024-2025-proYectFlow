@@ -21,17 +21,13 @@ import static org.mockito.Mockito.*;
 
 class UsuarioServiceTest {
 
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Mock
     private UsuarioRepository repository;
-
     @Mock
     private EmailService emailService;
-
     @InjectMocks
     private UsuarioService usuarioService;
-
-    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    
 
     @BeforeEach
     void setUp() {
@@ -57,12 +53,12 @@ class UsuarioServiceTest {
     @Test
     void registerUserAdmin() {
         Usuario usuarioAdmin = new Usuario("Administrador", "Administrador", "Administrador", "admin@flow.com", "Administrador", Roles.ADMIN);
-		
+
         usuarioAdmin.setContrasenna(passwordEncoder.encode(usuarioAdmin.getPassword()));
         usuarioAdmin.setTipo(Roles.ADMIN);
         usuarioAdmin.setActivo(true);
 
-        
+
         when(repository.save(any(Usuario.class))).thenReturn(usuarioAdmin);
         when(repository.save(any(Usuario.class))).thenReturn(usuarioAdmin);
         doNothing().when(emailService).sendEmail(anyString(), anyString(), anyString());
@@ -107,7 +103,7 @@ class UsuarioServiceTest {
 
     @Test
     void getUsuarioById() {
-        
+
         Usuario user = new Usuario();
         UUID id = user.getId();
 
