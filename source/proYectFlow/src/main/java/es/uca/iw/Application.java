@@ -104,13 +104,14 @@ public class Application implements AppShellConfigurator {
     }
 
     public void meterProyectosPrueba() {
-        Convocatoria convocatoria = new Convocatoria(BigDecimal.valueOf(2000000), new Date("11/1/2025"), new Date("11/11/2024"), new Date("5/5/2025"));
+        Convocatoria convocatoria = new Convocatoria(BigDecimal.valueOf(2000000), new Date("1/11/2025"), new Date("11/11/2024"), new Date("5/5/2025"));
         convocatoriaService.hacerVigente(convocatoria);
         Proyecto proyecto;
         proyecto = new Proyecto("Proyecto 1", "Primer proyecto de prueba", "Interesados de la uca",
                 "alcance del proyecto", BigDecimal.valueOf(10000), BigDecimal.valueOf(700),
                 usuarioService.getCorreo("solicitante1@flow.com"), null, new Date("5/5/2024"), null);
         proyecto.setConvocatoria(convocatoria);
+        proyecto.setEstado(Proyecto.Estado.enDesarrollo);
         proyectoService.registerProyecto(proyecto);
 
         Proyecto proyecto2;
@@ -174,7 +175,5 @@ public class Application implements AppShellConfigurator {
                 usuarioService.getCorreo("solicitante5@flow.com"), null, new Date("5/5/2024"), null);
         proyecto10.setConvocatoria(convocatoria);
         proyectoService.registerProyecto(proyecto10);
-
-
     }
 }
