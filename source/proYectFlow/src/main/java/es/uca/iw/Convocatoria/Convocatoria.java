@@ -12,7 +12,7 @@ import java.util.Date;
 @Entity
 public class Convocatoria extends AbstractEntity {
 
-    @Column(unique = true, nullable = true)
+    @Column(nullable = true)
     String nombre;
 
     @NotNull(message = "Por favor, rellene el campo requerido")
