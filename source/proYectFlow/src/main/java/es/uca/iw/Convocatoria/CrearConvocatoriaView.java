@@ -34,64 +34,49 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
     DatePicker fecha_final = new DatePicker();
 
     private final BeanValidationBinder<Convocatoria> binder = new BeanValidationBinder<>(Convocatoria.class);
+
     public CrearConvocatoriaView(ConvocatoriaService convocatoriaservice) {
         this.convocatoriaservice = convocatoriaservice;
-        Convocatoria convocatoria = convocatoriaservice.ConvocatoriaActual();
 
-        H1 title = new H1("Gestionar siguiente convocatoria");
-
+        H1 title = new H1("Crear una nueva convocatoria");
 
         presupuestototal.setLabel("Presupuesto");
         presupuestototal.setRequiredIndicatorVisible(true);
-        if (convocatoria != null) {
-            presupuestototal.setValue(convocatoria.getPresupuestototal());
-        }
 
-        if (convocatoria != null) {
-            fecha_inicio.setValue(convocatoria.getFecha_inicio().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        }
-
-        fecha_inicio.setRequiredIndicatorVisible(true);
         fecha_inicio.setLabel("Fecha de inicio de la convocatoria");
+        fecha_inicio.setRequiredIndicatorVisible(true);
 
         fecha_limite.setLabel("Fecha limite para presentar proyectos");
         fecha_limite.setRequiredIndicatorVisible(true);
-        if (convocatoria != null) {
-            fecha_limite.setValue(convocatoria.getFecha_limite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        }
 
         fecha_final.setLabel("Fecha en la que termina la cartera de proyectos este año ");
         fecha_final.setRequiredIndicatorVisible(true);
-        if (convocatoria != null) {
-            fecha_final.setValue(convocatoria.getFecha_final().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        }
 
-        Button Guardar = new Button("Hacerla vigente");
-        Guardar.addClickShortcut(Key.ENTER);
-        Guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        Guardar.addClickListener(e -> {
-            Convocatoria convocatoriaActual;
-            if (convocatoria != null) {
-                convocatoriaActual = binder.getBean();
-            }else{
-                convocatoriaActual = new Convocatoria(
-                        presupuestototal.getValue(),
-                        Date.from(fecha_limite.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                        Date.from(fecha_inicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                        Date.from(fecha_final.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())
-                );
-            }
-            convocatoriaservice.hacerVigente(convocatoriaActual, convocatoriaservice.ConvocatoriaActual());
-            Notification.show("Datos actualizados correctamente");
+        Button guardarButton = new Button("Crear convocatoria");
+        guardarButton.addClickShortcut(Key.ENTER);
+        guardarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        guardarButton.addClickListener(e -> {
+            Convocatoria convocatoria = new Convocatoria(
+                presupuestototal.getValue(),
+                Date.from(fecha_limite.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                Date.from(fecha_inicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                Date.from(fecha_final.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())
+            );
+
+            convocatoria.setActiva(false);
+            convocatoriaservice.guardar(convocatoria);
+            Notification.show("Convocatoria creada correctamente");
+
+            Button vigenteButton = new Button("Hacerla vigente");
+            vigenteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            vigenteButton.addClickListener(ev -> {
+                convocatoriaservice.hacerVigente(convocatoria);
+            });
+            getContent().add(vigenteButton);
         });
 
         FormLayout formLayout = new FormLayout();
         formLayout.add(presupuestototal, fecha_inicio, fecha_limite, fecha_final);
-        if (convocatoria != null) {
-            binder.bindInstanceFields(this);
-            binder.setBean(convocatoria);
-        }
-
-        getContent().add(title, formLayout, Guardar);
+        getContent().add(title, formLayout, guardarButton);
     }
 }
