@@ -35,5 +35,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          cd /home/runner/work/iw2024-2025-proYectFlow/source/proYectFlow
+          cd /home/runner/work/iw2024-2025-proYectFlow/iw2024-2025-proYectFlow/source/proYectFlow
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=EHDEPELUCHE_iw2024-2025-proYectFlow
