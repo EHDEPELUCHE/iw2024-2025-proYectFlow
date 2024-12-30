@@ -9,6 +9,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,7 +20,7 @@ import java.io.IOException;
 public abstract class VisualizarProyectos extends Div {
     protected Grid<Proyecto> grid;
     protected ProyectoService proyectoService;
-    private boolean mostrarColumnaAcciones;
+    private final boolean mostrarColumnaAcciones;
 
     public VisualizarProyectos(ProyectoService proyectoService, boolean mostrarColumnaAcciones) {
         this.proyectoService = proyectoService;
@@ -43,7 +44,7 @@ public abstract class VisualizarProyectos extends Div {
     private Component crearGridDatosProyecto(Specification<Proyecto> filters) {
         grid = new Grid<>(Proyecto.class, false);
 
-        grid.addColumn("nombre").setHeader("Nombre").setAutoWidth(true);
+        grid.addColumn("nombre").setHeader("Nombre").setAutoWidth(true).setSortable(true);
         grid.addColumn("descripcion").setHeader("Descripción").setAutoWidth(true);
         grid.addColumn("interesados").setHeader("Interesados").setAutoWidth(true);
         grid.addColumn("alcance").setHeader("Alcance").setAutoWidth(true);
@@ -73,8 +74,9 @@ public abstract class VisualizarProyectos extends Div {
         if (mostrarColumnaAcciones) {
             grid.addComponentColumn(this::crearBotonesAcciones).setHeader("Acciones").setAutoWidth(true);
         }
+
         grid.setItems(query -> proyectoService.list(
-                PageRequest.of(query.getPage(), query.getPageSize()),
+                PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)),
                 filters).stream());
 
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
