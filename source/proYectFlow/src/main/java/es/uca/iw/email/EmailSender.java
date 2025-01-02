@@ -5,8 +5,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.net.InetAddress;
-
 @Service
 public class EmailSender implements EmailService {
     @Autowired
@@ -18,8 +16,8 @@ public class EmailSender implements EmailService {
     public String getServerUrl() {
         // Generate the server URL
         String serverUrl = "http://";
-        serverUrl += InetAddress.getLoopbackAddress().getHostAddress();
-        serverUrl += ":" + serverPort + "/";
+        serverUrl += "ec2-54-91-9-101.compute-1.amazonaws.com";
+        serverUrl += "/";
         return serverUrl;
     }
 

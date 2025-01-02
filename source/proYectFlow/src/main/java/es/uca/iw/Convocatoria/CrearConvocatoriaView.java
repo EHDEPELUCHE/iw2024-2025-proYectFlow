@@ -18,8 +18,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 
-import java.util.Date;
 import java.time.ZoneId;
+import java.util.Date;
 
 @Route("CrearConvocatoria")
 @PageTitle("Nueva Convocatoria")
@@ -27,13 +27,12 @@ import java.time.ZoneId;
 @Uses(Icon.class)
 @RolesAllowed("ROLE_ADMIN")
 public class CrearConvocatoriaView extends Composite<VerticalLayout> {
+    private final BeanValidationBinder<Convocatoria> binder = new BeanValidationBinder<>(Convocatoria.class);
     ConvocatoriaService convocatoriaservice;
     BigDecimalField presupuestototal = new BigDecimalField("Presupuesto");
     DatePicker fecha_inicio = new DatePicker();
     DatePicker fecha_limite = new DatePicker();
     DatePicker fecha_final = new DatePicker();
-
-    private final BeanValidationBinder<Convocatoria> binder = new BeanValidationBinder<>(Convocatoria.class);
 
     public CrearConvocatoriaView(ConvocatoriaService convocatoriaservice) {
         this.convocatoriaservice = convocatoriaservice;
@@ -57,10 +56,10 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
         guardarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         guardarButton.addClickListener(e -> {
             Convocatoria convocatoria = new Convocatoria(
-                presupuestototal.getValue(),
-                Date.from(fecha_limite.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                Date.from(fecha_inicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                Date.from(fecha_final.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())
+                    presupuestototal.getValue(),
+                    Date.from(fecha_limite.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    Date.from(fecha_inicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    Date.from(fecha_final.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())
             );
 
             convocatoria.setActiva(false);
