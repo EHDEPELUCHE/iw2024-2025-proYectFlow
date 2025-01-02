@@ -107,9 +107,7 @@ public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
         Usuario usuarioRegistro = new Usuario(nombre.getValue(),
                 username.getValue(), apellido.getValue(),
                 correo.getValue(), contrasenna.getValue(), Tipo.getValue());
-        Notification.show(usuarioRegistro.getPassword());
         binder.setBean(usuarioRegistro);
-        Notification.show(binder.getBean().toString());
 
         if (!contrasenna.getValue().equals(passwordField2.getValue())) {
             Notification.show("Las contraseñas no coinciden");

@@ -2,6 +2,8 @@ package es.uca.iw.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.text.Normalizer;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Promotor {
     private String id;
@@ -40,7 +42,11 @@ public class Promotor {
     }
 
     public String getCorreo() {
-        return ((nombre.substring(0, nombre.lastIndexOf(" ")) + "." + nombre.substring(nombre.lastIndexOf(" ") + 1)
-                + "@gmail.com").toLowerCase()).replace(" ", "");
+        String nombreSinTildes = Normalizer.normalize(nombre, Normalizer.Form.NFD);
+        nombreSinTildes = nombreSinTildes.replaceAll("[^\\p{ASCII}]", "");
+
+        return ((nombreSinTildes.substring(0, nombreSinTildes.lastIndexOf(" ")) + "." +
+                nombreSinTildes.substring(nombreSinTildes.lastIndexOf(" ") + 1) +
+                "@gmail.com").toLowerCase()).replace(" ", "");
     }
 }

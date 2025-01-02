@@ -81,7 +81,7 @@ public class MisDatosView extends Composite<VerticalLayout> {
                 try {
                     uservice.update(binder.getBean());
                     binder.setBean(new Usuario());
-                    Notification.show("datos actualizados correctamente");
+                    Notification.show("Datos actualizados correctamente");
 
                 } catch (Exception ex) {
                     Notification.show("Usuario o correo repetido");

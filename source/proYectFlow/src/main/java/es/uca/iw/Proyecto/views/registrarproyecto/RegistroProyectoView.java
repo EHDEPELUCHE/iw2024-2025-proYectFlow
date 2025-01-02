@@ -195,8 +195,6 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
                     alcance.getValue(), coste.getValue(), aportacionInicial.getValue(),
                     promotor.getValue(), usuarioService.getCorreo(emailField.getValue()), fechaSql, pdfBlob));
 
-            Notification.show(binder.getBean().toString());
-
             if (binder.validate().isOk()) {
                 if (proyectoService.registerProyecto(binder.getBean())) {
                     binder.setBean(new Proyecto());

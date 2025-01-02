@@ -84,7 +84,6 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         formLayout2Col.add(nombre);
         formLayout2Col.add(apellido);
         formLayout2Col.add(correo);
-        //formLayout2Col.add(textField3);
         formLayout2Col.add(contrasenna);
         formLayout2Col.add(passwordField2);
         layoutColumn2.add(layoutRow);
@@ -109,9 +108,7 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         Usuario usuarioRegistro = new Usuario(nombre.getValue(),
                 username.getValue(), apellido.getValue(),
                 correo.getValue(), contrasenna.getValue());
-        Notification.show(usuarioRegistro.getPassword());
         binder.setBean(usuarioRegistro);
-        Notification.show(binder.getBean().toString());
 
         if (!contrasenna.getValue().equals(passwordField2.getValue())) {
             Notification.show("Las contraseñas no coinciden");

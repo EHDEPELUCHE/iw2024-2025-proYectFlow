@@ -25,19 +25,19 @@ public class InitBDData {
         return args -> {
             if (usuarioRepository.count() == 0) {
                 List<Usuario> usuarios = List.of(
-                        new Usuario("Juan", "juan", "Pérez", "juan.perez@example.com",
+                        new Usuario("Juan", "juan1", "Pérez", "juan.perez@example.com",
                                 passwordEncoder.encode("pppppP1@"), Roles.ADMIN),
-                        new Usuario("Maria", "maria", "López", "maria.lopez@example.com",
+                        new Usuario("Maria", "maria1", "López", "maria.lopez@example.com",
                                 passwordEncoder.encode("pppppP1@"), Roles.PROMOTOR),
-                        new Usuario("Carlos", "carlos", "García", "carlos.garcia@example.com",
+                        new Usuario("Carlos", "carlos1", "García", "carlos.garcia@example.com",
                                 passwordEncoder.encode("pppppP1@"), Roles.PROMOTOR),
-                        new Usuario("Lucia", "lucia", "Pérez", "lucia.perez@example.com",
+                        new Usuario("Lucia", "lucia1", "Pérez", "lucia.perez@example.com",
                                 passwordEncoder.encode("pppppP1@"), Roles.SOLICITANTE),
-                        new Usuario("Pedro", "pedro", "Pérez", "pedro.prez@example.com",
+                        new Usuario("Pedro", "pedro1", "Pérez", "pedro.perez@example.com",
                                 passwordEncoder.encode("pppppP1@"), Roles.SOLICITANTE),
-                        new Usuario("Sara", "sara", "Santos", "sara.santos@example.com",
+                        new Usuario("Sara", "sara1", "Santos", "sara.santos@example.com",
                                 passwordEncoder.encode("pppppP1@"), Roles.CIO),
-                        new Usuario("Pablo", "pablo", "Pérez", "pablo.perez@example.com",
+                        new Usuario("Pablo", "pablo1", "Pérez", "pablo.perez@example.com",
                                 passwordEncoder.encode("pppppP1@"), Roles.OTP)
                 );
                 usuarios.forEach(usuario -> usuario.setActivo(true));

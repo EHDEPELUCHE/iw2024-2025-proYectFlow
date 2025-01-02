@@ -45,8 +45,6 @@ public class Application implements AppShellConfigurator {
             @Override
             public boolean initializeDatabase() {
                 if (repository.count() == 0L) {
-                    meterUsuariosPrueba();
-                    meterProyectosPrueba();
                     return super.initializeDatabase();
                 }
                 return false;
@@ -54,9 +52,4 @@ public class Application implements AppShellConfigurator {
         };
     }
 
-    public void meterUsuariosPrueba() {
-    }
-
-    public void meterProyectosPrueba() {
-    }
 }
