@@ -16,7 +16,7 @@ public class EmailSender implements EmailService {
     public String getServerUrl() {
         // Generate the server URL
         String serverUrl = "http://";
-        serverUrl += "ec2-54-91-9-101.compute-1.amazonaws.com";
+        serverUrl += "ec2-3-95-191-7.compute-1.amazonaws.com";
         serverUrl += "/";
         return serverUrl;
     }
