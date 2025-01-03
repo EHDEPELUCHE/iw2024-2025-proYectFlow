@@ -28,24 +28,41 @@ jobs:
         sleep 10
         docker ps
 
-    # 4. Construir el proyecto con Maven
+    # 4. Configurar SonarCloud
+    - name: Set up SonarCloud
+      uses: sonarsource/sonarcloud-github-action@v2
+      with:
+        token: ${{ secrets.SONAR_TOKEN }}
+        projectBaseDir: ./source/proYectFlow
+        projectKey: EHDEPELUCHE_iw2024-2025-proYectFlow
+        organization: ehdepeluche
+
+    # 5. Análisis con SonarCloud
+    - name: Run SonarCloud Analysis
+      run: mvn clean verify sonar:sonar
+      working-directory: ./source/proYectFlow
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: https://sonarcloud.io
+
+    # 6. Construir el proyecto con Maven
     - name: Build with Maven
       run: mvn clean package
       working-directory: ./source/proYectFlow
 
-    # 5. Configurar SSH
+    # 7. Configurar SSH
     - name: Add SSH key
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }} 
 
-    # 6. Verificar y agregar la clave del host de Azure a known_hosts
+    # 8. Verificar y agregar la clave del host de Azure a known_hosts
     - name: Add Azure Host to known_hosts
       run: |
         mkdir -p ~/.ssh
         ssh-keyscan proyectflow.westeurope.cloudapp.azure.com >> ~/.ssh/known_hosts
 
-    # 7. Desplegar el JAR en la máquina virtual de Azure
+    # 9. Desplegar el JAR en la máquina virtual de Azure
     - name: Deploy to Azure VM
       run: |
         scp ./source/proYectFlow/target/*.jar DaniFlow@proyectflow.westeurope.cloudapp.azure.com:/home/DaniFlow/proYectFlow/proyectflow.jar
