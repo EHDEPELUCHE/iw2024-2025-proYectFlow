@@ -27,7 +27,7 @@ jobs:
         docker run -ti --rm -d --name mysql_local -p 3306:3306 alvareitor01/desarrollo_iw
         sleep 10
         docker ps
-        
+
     # 3. Construir el proyecto con Maven
     - name: Build with Maven
       run: mvn clean package
@@ -42,7 +42,7 @@ jobs:
     # 5. Desplegar el JAR en la máquina virtual de Azure
     - name: Deploy to Azure VM
       run: |
-        scp target/*.jar DaniFlow@proyectflow.westeurope.cloudapp.azure.com:/home/DaniFlow/proYectFlow/proyectflow.jar
+        scp ./source/proYectFlow/target/*.jar DaniFlow@proyectflow.westeurope.cloudapp.azure.com:/home/DaniFlow/proYectFlow/proyectflow.jar
         ssh DaniFlow@proyectflow.westeurope.cloudapp.azure.com << 'EOF'
           sudo systemctl stop proyectflow || true
           systemctl start proyectflow
