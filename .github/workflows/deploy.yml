@@ -50,6 +50,6 @@ jobs:
       run: |
         scp ./source/proYectFlow/target/*.jar DaniFlow@proyectflow.westeurope.cloudapp.azure.com:/home/DaniFlow/proYectFlow/proyectflow.jar
         ssh DaniFlow@proyectflow.westeurope.cloudapp.azure.com << 'EOF'
-          sudo systemctl stop proyectflow || true
-          systemctl start proyectflow
+          sudo -n systemctl stop proyectflow || true
+          sudo -n systemctl start proyectflow
         EOF
