@@ -1,6 +1,5 @@
 package es.uca.iw.Proyecto.views;
 
-
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
@@ -29,6 +28,7 @@ import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
 import es.uca.iw.Usuario.Usuario;
 import es.uca.iw.Usuario.UsuarioService;
+import es.uca.iw.global.DownloadPdfComponent;
 import es.uca.iw.global.Roles;
 import es.uca.iw.global.views.PantallaInicioView;
 import es.uca.iw.security.AuthenticatedUser;
@@ -43,32 +43,31 @@ import java.util.UUID;
 @PageTitle("Editar Proyecto")
 @Route("EditarProyecto")
 @RolesAllowed("ROLE_ADMIN")
+
 public class EditarProyectosAdmin extends Composite<VerticalLayout> implements HasUrlParameter<String> {
     Optional<Proyecto> proyecto;
-    ProyectoService proyectoService;
+    final ProyectoService proyectoService;
     private final BeanValidationBinder<Proyecto> binder = new BeanValidationBinder<>(Proyecto.class);
     UUID uuid;
-    UsuarioService usuarioService;
-    AuthenticatedUser authenticatedUser;
-    EmailField emailField = new EmailField();
-    ComboBox<Usuario> promotor = new ComboBox<>();
-    TextField nombre = new TextField();
-    TextField descripcion = new TextField();
-    TextField alcance = new TextField();
-    DatePicker fechaLimite = new DatePicker("fecha límite");
-    TextField interesados = new TextField("Interesados");
-    //NumberField numberField = new NumberField();
-    BigDecimalField aportacionInicial = new BigDecimalField();
-    BigDecimalField coste = new BigDecimalField();
-    MemoryBuffer buffer = new MemoryBuffer();
-    Upload upload = new Upload(buffer);
+    final UsuarioService usuarioService;
+    final AuthenticatedUser authenticatedUser;
+    final EmailField emailField = new EmailField();
+    final ComboBox<Usuario> promotor = new ComboBox<>();
+    final TextField nombre = new TextField();
+    final TextField descripcion = new TextField();
+    final TextField alcance = new TextField();
+    final DatePicker fechaLimite = new DatePicker("fecha límite");
+    final TextField interesados = new TextField("Interesados");
+    final BigDecimalField aportacionInicial = new BigDecimalField();
+    final BigDecimalField coste = new BigDecimalField();
+    final MemoryBuffer buffer = new MemoryBuffer();
+    final Upload upload = new Upload(buffer);
 
     public EditarProyectosAdmin(ProyectoService proyectoService, UsuarioService usuarioService, AuthenticatedUser authenticatedUser) {
         this.proyectoService = proyectoService;
         this.usuarioService = usuarioService;
         this.authenticatedUser = authenticatedUser;
     }
-
 
     @Override
     public void setParameter(BeforeEvent event, String parameter) {
@@ -82,7 +81,7 @@ public class EditarProyectosAdmin extends Composite<VerticalLayout> implements H
         } else {
             this.proyecto = Optional.empty();
         }
-        if (proyecto == null || proyecto.isEmpty()) {
+        if (proyecto.isEmpty()) {
             H1 title = new H1("Ha ocurrido un error, no se encuentra el proyecto :(");
             getContent().add(title);
         } else {
@@ -143,17 +142,17 @@ public class EditarProyectosAdmin extends Composite<VerticalLayout> implements H
 
             fechaLimite.setPlaceholder("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entrar en vigor");
             fechaLimite.setAriaLabel("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entrar en vigor");
-            fechaLimite.setValue(proyectoAux.getFechaLimite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            if (proyectoAux.getFechaLimite() != null) {
+                fechaLimite.setValue(proyectoAux.getFechaLimite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            }
 
             upload.setAcceptedFileTypes("application/pdf", ".pdf");
 
-            Button uploadButton = new Button("Upload PDF...");
+            Button uploadButton = new Button("Añadir memoria");
             uploadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
             upload.setUploadButton(uploadButton);
 
-            // Disable the upload button after the file is selected
-            // Re-enable the upload button after the file is cleared
             upload.getElement()
                     .addEventListener("max-files-reached-changed", eventy -> {
                         boolean maxFilesReached = eventy.getEventData()
@@ -161,28 +160,16 @@ public class EditarProyectosAdmin extends Composite<VerticalLayout> implements H
                         uploadButton.setEnabled(!maxFilesReached);
                     }).addEventData("event.detail.value");
 
-            Button btncancelar = new Button("Volver", eventy -> UI.getCurrent().navigate(PantallaInicioView.class));
+            Button btncancelar = new Button("Volver", eventy -> UI.getCurrent().navigate(ProyectosView.class));
             btncancelar.addClassName("buttonSecondary");
 
-            Button downloadButton = new Button("Memoria");
-            downloadButton.addClickListener(e -> {
-                        // Logic to download the PDF
-                        byte[] pdfContent = null;
-                        try {
-                            pdfContent = proyectoService.getPdf(proyecto.get().getId());
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        if (pdfContent != null) {
-                            byte[] finalPdfContent = pdfContent;
-                            StreamResource resource = new StreamResource("Memoria.pdf", () -> new ByteArrayInputStream(finalPdfContent));
-                            Anchor downloadLink = new Anchor(resource, "Download");
-                            downloadLink.getElement().setAttribute("download", true);
-                            downloadLink.getElement().setAttribute("style", "display: none;");
-                            getContent().add(downloadLink);
-                            downloadLink.getElement().callJsFunction("click");
-                            downloadLink.remove();
-                        }
+            // Usar el DownloadPdfComponent
+            Button downloadButton = DownloadPdfComponent.createDownloadButton("Memoria", () -> {
+                try {
+                    return proyectoService.getPdf(proyecto.get().getId());
+                } catch (IOException ex) {
+                    throw new RuntimeException("Error al obtener el PDF", ex);
+                }
             });
 
             layoutRow.addClassName(LumoUtility.Gap.MEDIUM);
@@ -201,16 +188,7 @@ public class EditarProyectosAdmin extends Composite<VerticalLayout> implements H
             getContent().add(layoutColumn2);
             layoutColumn2.add(h3);
             layoutColumn2.add(formLayout2Col);
-            formLayout2Col.add(emailField);
-            formLayout2Col.add(promotor);
-            formLayout2Col.add(nombre);
-            formLayout2Col.add(descripcion);
-            formLayout2Col.add(interesados);
-            formLayout2Col.add(alcance);
-            formLayout2Col.add(aportacionInicial);
-            formLayout2Col.add(coste);
-            formLayout2Col.add(fechaLimite);
-            formLayout2Col.add(upload);
+            formLayout2Col.add(emailField, promotor, nombre, descripcion, interesados, alcance, aportacionInicial, coste, fechaLimite, upload);
 
             Button Borrar = new Button("Borrar Proyecto", eventy -> {
                 if(proyectoAux.getEstado() == Proyecto.Estado.denegado){
@@ -219,7 +197,6 @@ public class EditarProyectosAdmin extends Composite<VerticalLayout> implements H
                 }else{
                     Notification.show("Este proyecto aún no se puede eliminar");
                 }
-
             });
             Borrar.addClassName("button-danger");
             Borrar.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -232,11 +209,10 @@ public class EditarProyectosAdmin extends Composite<VerticalLayout> implements H
             binder.bindInstanceFields(this);
             binder.setBean(proyectoAux);
         }
-
     }
+
     private void ActualizarProyecto(Proyecto proyectoAux) {
-        if(proyectoAux.getEstado() == Proyecto.Estado.denegado) proyectoService.update(proyectoAux);
+        if(proyectoAux.getEstado() == Proyecto.Estado.solicitado) proyectoService.update(proyectoAux);
         else Notification.show("Este proyecto no se puede editar");
     }
 }
-

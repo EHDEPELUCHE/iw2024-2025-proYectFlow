@@ -31,10 +31,10 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
     private final AuthenticatedUser authenticatedUser;
     private final PasswordEncoder passwordEncoder;
-    UsuarioService uservice;
-    private PasswordField contrasenna2 = new PasswordField();
-    private PasswordField password1 = new PasswordField();
-    private PasswordField password2 = new PasswordField();
+    final UsuarioService uservice;
+    private final PasswordField contrasenna2 = new PasswordField();
+    private final PasswordField password1 = new PasswordField();
+    private final PasswordField password2 = new PasswordField();
 
     public CambioContrasennaView(AuthenticatedUser authenticatedUser, UsuarioService uservice, PasswordEncoder passwordEncoder) {
         this.authenticatedUser = authenticatedUser;

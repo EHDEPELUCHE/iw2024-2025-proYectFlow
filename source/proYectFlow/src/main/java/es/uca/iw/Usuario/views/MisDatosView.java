@@ -34,17 +34,15 @@ import java.util.Optional;
 @PermitAll
 public class MisDatosView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
-    private final AuthenticatedUser authenticatedUser;
-    UsuarioService uservice;
-    ProyectoService proyectoservice;
+    final UsuarioService uservice;
+    final ProyectoService proyectoservice;
 
-    TextField username = new TextField();
-    TextField nombre = new TextField();
-    TextField apellido = new TextField();
-    EmailField correo = new EmailField();
+    final TextField username = new TextField();
+    final TextField nombre = new TextField();
+    final TextField apellido = new TextField();
+    final EmailField correo = new EmailField();
 
     public MisDatosView(AuthenticatedUser authenticatedUser, UsuarioService uservice, ProyectoService proyectoservice) {
-        this.authenticatedUser = authenticatedUser;
         this.uservice = uservice;
         this.proyectoservice = proyectoservice;
         Optional<Usuario> user = authenticatedUser.get();

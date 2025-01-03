@@ -34,7 +34,7 @@ import java.util.Optional;
 @Layout
 @AnonymousAllowed
 public class MainLayout extends AppLayout {
-    AuthenticatedUser user;
+    final AuthenticatedUser user;
 
     private H1 viewTitle;
 

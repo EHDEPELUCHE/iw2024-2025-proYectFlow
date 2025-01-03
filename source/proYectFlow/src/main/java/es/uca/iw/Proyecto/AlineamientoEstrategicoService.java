@@ -21,7 +21,7 @@ public class AlineamientoEstrategicoService {
         return repository.findById(id).orElse(null);
     }
     @Transactional
-    public AlineamientoEstrategico guardar(AlineamientoEstrategico alineamiento) {
-        return repository.save(alineamiento) ;
+    public void guardar(AlineamientoEstrategico alineamiento) {
+        repository.save(alineamiento);
     }
 }

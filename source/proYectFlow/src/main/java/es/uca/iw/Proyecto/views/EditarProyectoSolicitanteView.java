@@ -29,6 +29,7 @@ import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
 import es.uca.iw.Usuario.Usuario;
 import es.uca.iw.Usuario.UsuarioService;
+import es.uca.iw.global.DownloadPdfComponent;
 import es.uca.iw.global.Roles;
 import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
@@ -45,22 +46,22 @@ import java.util.UUID;
 
 public class EditarProyectoSolicitanteView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
     Optional<Proyecto> proyecto;
-    ProyectoService proyectoService;
+    final ProyectoService proyectoService;
     private final BeanValidationBinder<Proyecto> binder = new BeanValidationBinder<>(Proyecto.class);
     UUID uuid;
-    UsuarioService usuarioService;
-    AuthenticatedUser authenticatedUser;
-    EmailField emailField = new EmailField();
-    ComboBox<Usuario> promotor = new ComboBox<>();
-    TextField nombre = new TextField();
-    TextField descripcion = new TextField();
-    TextField alcance = new TextField();
-    DatePicker fechaLimite = new DatePicker("fecha límite");
-    TextField interesados = new TextField("Interesados");
-    BigDecimalField aportacionInicial = new BigDecimalField();
-    BigDecimalField coste = new BigDecimalField();
-    MemoryBuffer buffer = new MemoryBuffer();
-    Upload upload = new Upload(buffer);
+    final UsuarioService usuarioService;
+    final AuthenticatedUser authenticatedUser;
+    final EmailField emailField = new EmailField();
+    final ComboBox<Usuario> promotor = new ComboBox<>();
+    final TextField nombre = new TextField();
+    final TextField descripcion = new TextField();
+    final TextField alcance = new TextField();
+    final DatePicker fechaLimite = new DatePicker("fecha límite");
+    final TextField interesados = new TextField("Interesados");
+    final BigDecimalField aportacionInicial = new BigDecimalField();
+    final BigDecimalField coste = new BigDecimalField();
+    final MemoryBuffer buffer = new MemoryBuffer();
+    final Upload upload = new Upload(buffer);
 
     public EditarProyectoSolicitanteView(ProyectoService proyectoService, UsuarioService usuarioService, AuthenticatedUser authenticatedUser) {
         this.proyectoService = proyectoService;
@@ -80,7 +81,7 @@ public class EditarProyectoSolicitanteView extends Composite<VerticalLayout> imp
         } else {
             this.proyecto = Optional.empty();
         }
-        if (proyecto == null || proyecto.isEmpty()) {
+        if (proyecto.isEmpty()) {
             H1 title = new H1("Ha ocurrido un error, no se encuentra el proyecto :(");
             getContent().add(title);
         } else {
@@ -161,9 +162,8 @@ public class EditarProyectoSolicitanteView extends Composite<VerticalLayout> imp
 
                 upload.setAcceptedFileTypes("application/pdf", ".pdf");
 
-                Button uploadButton = new Button("Upload PDF...");
+                Button uploadButton = new Button("Añadir memoria");
                 uploadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
                 upload.setUploadButton(uploadButton);
 
                 upload.getElement()
@@ -176,23 +176,11 @@ public class EditarProyectoSolicitanteView extends Composite<VerticalLayout> imp
                 Button btncancelar = new Button("Volver", eventy -> UI.getCurrent().navigate(EstadoProyectosView.class));
                 btncancelar.addClassName("buttonSecondary");
 
-                Button downloadButton = new Button("Memoria");
-                downloadButton.addClickListener(e -> {
-                    byte[] pdfContent = null;
+                Button downloadButton = DownloadPdfComponent.createDownloadButton("Memoria", () -> {
                     try {
-                        pdfContent = proyectoService.getPdf(proyecto.get().getId());
+                        return proyectoService.getPdf(proyecto.get().getId());
                     } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    if (pdfContent != null) {
-                        byte[] finalPdfContent = pdfContent;
-                        StreamResource resource = new StreamResource("Memoria.pdf", () -> new ByteArrayInputStream(finalPdfContent));
-                        Anchor downloadLink = new Anchor(resource, "Download");
-                        downloadLink.getElement().setAttribute("download", true);
-                        downloadLink.getElement().setAttribute("style", "display: none;");
-                        getContent().add(downloadLink);
-                        downloadLink.getElement().callJsFunction("click");
-                        downloadLink.remove();
+                        throw new RuntimeException("Error al obtener el PDF", ex);
                     }
                 });
 
@@ -254,8 +242,9 @@ public class EditarProyectoSolicitanteView extends Composite<VerticalLayout> imp
             }
         }
     }
+
     private void ActualizarProyecto(Proyecto proyectoAux) {
-        if(proyectoAux.getEstado() != Proyecto.Estado.solicitado) proyectoService.update(proyectoAux);
+        if(proyectoAux.getEstado() == Proyecto.Estado.solicitado) proyectoService.update(proyectoAux);
         else Notification.show("Este proyecto no se puede editar");
     }
 }

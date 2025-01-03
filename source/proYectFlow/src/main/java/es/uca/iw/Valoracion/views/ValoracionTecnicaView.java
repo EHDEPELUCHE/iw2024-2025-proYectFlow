@@ -15,6 +15,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamResource;
 import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
+import es.uca.iw.global.DownloadPdfComponent;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.io.ByteArrayInputStream;
@@ -30,7 +31,7 @@ import java.util.UUID;
 @RolesAllowed("ROLE_OTP")
 public class ValoracionTecnicaView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
     Optional<Proyecto> proyecto;
-    ProyectoService proyectoService;
+    final ProyectoService proyectoService;
     UUID uuid;
 
     public ValoracionTecnicaView(ProyectoService proyectoService) {
@@ -50,7 +51,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             this.proyecto = Optional.empty();
         }
 
-        if (proyecto == null || proyecto.isEmpty()) {
+        if (proyecto.isEmpty()) {
             H1 title = new H1("Ha ocurrido un error, no se encuentra el proyecto :(");
             getContent().add(title);
         } else {
@@ -61,29 +62,15 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             Grid<Proyecto> grid = new Grid<>(Proyecto.class);
             grid.setItems(List.of(proyectoAux));
             grid.setColumns("nombre", "descripcion", "fechaSolicitud", "coste", "aportacionInicial");
-            grid.addComponentColumn(proyecto -> {
-                Button downloadButton = new Button("Memoria");
-                downloadButton.addClickListener(e -> {
-                    // Logic to download the PDF
-                    byte[] pdfContent = null;
+            grid.addComponentColumn(proyecto ->
+                DownloadPdfComponent.createDownloadButton("Memoria", () -> {
                     try {
-                        pdfContent = proyectoService.getPdf(proyecto.getId());
+                        return proyectoService.getPdf(proyecto.getId());
                     } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                        throw new RuntimeException("Error al obtener el PDF", ex);
                     }
-                    if (pdfContent != null) {
-                        byte[] finalPdfContent = pdfContent;
-                        StreamResource resource = new StreamResource("Memoria.pdf", () -> new ByteArrayInputStream(finalPdfContent));
-                        Anchor downloadLink = new Anchor(resource, "Download");
-                        downloadLink.getElement().setAttribute("download", true);
-                        downloadLink.getElement().setAttribute("style", "display: none;");
-                        getContent().add(downloadLink);
-                        downloadLink.getElement().callJsFunction("click");
-                        downloadLink.remove();
-                    }
-                });
-                return downloadButton;
-            }).setHeader("PDF").setAutoWidth(true);
+                })
+            ).setHeader("PDF").setAutoWidth(true);
             grid.setAllRowsVisible(true);
             getContent().add(grid);
 
@@ -98,24 +85,18 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             precio.setLabel("Precio restante");
             precio.setValue(proyectoAux.getCoste().subtract(proyectoAux.getAportacionInicial()));
             precio.setWidth("300px"); // Set the width of the field
-            //precio.setMin(BigDecimal.ZERO);
-            //precio.setMax(proyectoAux.getCoste());
             horlayout.add(precio);
 
             //Dejamos que rellene las horas que estima que tardará y recursos
             BigDecimalField Horas = new BigDecimalField("Horas total");
             Horas.setLabel("Esfuerzo necesario de nuestros empleados");
             Horas.setWidth("300px"); // Set the width of the field
-            //Horas.setMin(BigDecimal.ZERO);
-            // Horas.setMax(BigDecimal.valueOf(10));
             horlayout.add(Horas);
 
             //Idoneidad técnica
             BigDecimalField Idoneidadtecnica = new BigDecimalField("Idoneidad total");
             Idoneidadtecnica.setLabel("Idoneidad total");
             Idoneidadtecnica.setWidth("300px"); // Set the width of the field
-            //Idoneidadtecnica.setMin(BigDecimal.ZERO);
-            //Idoneidadtecnica.setMax(BigDecimal.valueOf(10));
             horlayout.add(Idoneidadtecnica);
 
             getContent().add(horlayout);

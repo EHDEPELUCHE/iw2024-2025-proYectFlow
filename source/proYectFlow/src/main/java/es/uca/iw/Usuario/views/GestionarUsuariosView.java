@@ -49,18 +49,15 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
     private final RestTemplate restTemplate;
     private final UsuarioService usuarioService;
     private final ProyectoService proyectoService;
-    private final AuthenticatedUser authenticatedUser;
     private final Grid<Usuario> grid;
-    private H1 titulo;
 
     @Autowired
-    public GestionarUsuariosView(UsuarioService usuarioService, ProyectoService proyectoService, AuthenticatedUser authenticatedUser) {
+    public GestionarUsuariosView(UsuarioService usuarioService, ProyectoService proyectoService) {
         this.restTemplate = new RestTemplate();
         this.usuarioService = usuarioService;
         this.proyectoService = proyectoService;
-        this.authenticatedUser = authenticatedUser;
 
-        titulo = new H1("Actualizar promotores en el sistema");
+        H1 titulo = new H1("Actualizar promotores en el sistema");
         Button meterPromotoresButton = new Button("Meter Promotores");
         meterPromotoresButton.addClickListener(e -> guardarPromotores());
         getContent().add(titulo, meterPromotoresButton);
@@ -184,6 +181,7 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
                 try {
                     usuarioService.destituyePromotores();
                 } catch (Exception e) {
+                    logger.severe("Error al destituir promotores: " + e.getMessage());
                     throw new RuntimeException(e);
                 }
                 Respuesta apiResponse = response.getBody();
@@ -196,16 +194,18 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
                             usuarioService.createPromotor(promotor);
                             Notification.show("Promotor guardado exitosamente");
                         } catch (Exception ex) {
-                            ex.printStackTrace();
+                            logger.severe("Error al guardar el promotor: " + ex.getMessage());
                             Notification.show("Error al guardar el promotor");
                         }
                     }
                 }
             } else {
-                System.out.println("Error en la solicitud: " + response.getStatusCode());
+                logger.warning("Error en la solicitud: " + response.getStatusCode());
+                Notification.show("Error en la solicitud: " + response.getStatusCode());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.severe("Error al obtener los promotores: " + e.getMessage());
+            Notification.show("Error al obtener los promotores");
         }
     }
 }

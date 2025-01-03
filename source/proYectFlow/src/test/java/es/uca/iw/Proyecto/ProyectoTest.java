@@ -19,7 +19,7 @@ class ProyectoTest {
     private static Convocatoria convocatoria;
 
     @BeforeEach
-    void setUpBeforeClass() throws Exception {
+    void setUpBeforeClass() {
         promotor = new Usuario();
         solicitante = new Usuario();
         convocatoria = new Convocatoria();

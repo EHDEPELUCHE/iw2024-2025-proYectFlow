@@ -11,6 +11,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.iw.global.DownloadPdfComponent;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -19,7 +20,7 @@ import java.io.IOException;
 
 public abstract class VisualizarProyectos extends Div {
     protected Grid<Proyecto> grid;
-    protected ProyectoService proyectoService;
+    protected final ProyectoService proyectoService;
     private final boolean mostrarColumnaAcciones;
 
     public VisualizarProyectos(ProyectoService proyectoService, boolean mostrarColumnaAcciones) {
@@ -84,26 +85,13 @@ public abstract class VisualizarProyectos extends Div {
     }
 
     private Button crearBotonDescargaMemoria(Proyecto proyecto) {
-        Button downloadButton = new Button("Memoria");
-        downloadButton.addClickListener(e -> {
-            byte[] pdfContent = null;
+        return DownloadPdfComponent.createDownloadButton("Memoria", () -> {
             try {
-                pdfContent = proyectoService.getPdf(proyecto.getId());
+                return proyectoService.getPdf(proyecto.getId());
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-            if (pdfContent != null) {
-                byte[] finalPdfContent = pdfContent;
-                StreamResource resource = new StreamResource("Memoria.pdf", () -> new ByteArrayInputStream(finalPdfContent));
-                Anchor downloadLink = new Anchor(resource, "Download");
-                downloadLink.getElement().setAttribute("download", true);
-                downloadLink.getElement().setAttribute("style", "display: none;");
-                add(downloadLink);
-                downloadLink.getElement().callJsFunction("click");
-                downloadLink.remove();
+                throw new RuntimeException("Error al obtener el PDF", ex);
             }
         });
-        return downloadButton;
     }
 
     protected Component crearBotonesAcciones(Proyecto proyecto) {

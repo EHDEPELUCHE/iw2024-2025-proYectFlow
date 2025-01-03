@@ -18,6 +18,7 @@ import es.uca.iw.Proyecto.AlineamientoEstrategico;
 import es.uca.iw.Proyecto.AlineamientoEstrategicoService;
 import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
+import es.uca.iw.global.DownloadPdfComponent;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.io.ByteArrayInputStream;
@@ -39,8 +40,8 @@ import org.aspectj.weaver.ast.Not;
 @RolesAllowed("ROLE_CIO")
 public class ValoracionEstrategicaView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
     Optional<Proyecto> proyecto;
-    ProyectoService proyectoService;
-    AlineamientoEstrategicoService alineamientoEstrategicoService;
+    final ProyectoService proyectoService;
+    final AlineamientoEstrategicoService alineamientoEstrategicoService;
     UUID uuid;
 
     public ValoracionEstrategicaView(ProyectoService proyectoService, AlineamientoEstrategicoService alineamientoEstrategicoService) {
@@ -61,7 +62,7 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
             this.proyecto = Optional.empty();
         }
 
-        if (proyecto == null || proyecto.isEmpty()) {
+        if (proyecto.isEmpty()) {
             H1 title = new H1("Ha ocurrido un error, no se encuentra el proyecto :(");
             getContent().add(title);
         } else {
@@ -75,7 +76,6 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
             if(proyectoAux.getSolicitante()!=null) {
                 formLayout.addFormItem(new Span(proyectoAux.getSolicitante().getNombre()), "Solicitante");
             }
-
 
             LocalDate localDate = proyectoAux.getFechaSolicitud().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd MMMM yyyy");
@@ -94,24 +94,11 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
             DateTimeFormatter formatterDateL = DateTimeFormatter.ofPattern("dd MMMM yyyy");
             formLayout.addFormItem(new Span(localDateL.format(formatterDateL)), "Fecha Límite de puesta en marcha");
 
-            Button downloadButton = new Button("Memoria");
-            downloadButton.addClickListener(e -> {
-                // Logic to download the PDF
-                byte[] pdfContent = null;
+            Button downloadButton = DownloadPdfComponent.createDownloadButton("Memoria", () -> {
                 try {
-                    pdfContent = proyectoService.getPdf(proyectoAux.getId());
+                    return proyectoService.getPdf(proyectoAux.getId());
                 } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                if (pdfContent != null) {
-                    byte[] finalPdfContent = pdfContent;
-                    StreamResource resource = new StreamResource("Memoria.pdf", () -> new ByteArrayInputStream(finalPdfContent));
-                    Anchor downloadLink = new Anchor(resource, "Download");
-                    downloadLink.getElement().setAttribute("download", true);
-                    downloadLink.getElement().setAttribute("style", "display: none;");
-                    getContent().add(downloadLink);
-                    downloadLink.getElement().callJsFunction("click");
-                    downloadLink.remove();
+                    throw new RuntimeException("Error al obtener el PDF", ex);
                 }
             });
 

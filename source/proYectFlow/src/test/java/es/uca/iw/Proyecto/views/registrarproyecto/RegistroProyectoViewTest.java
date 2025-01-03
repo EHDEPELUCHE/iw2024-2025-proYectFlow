@@ -32,17 +32,15 @@ import static org.mockito.Mockito.*;
 class RegistroProyectoViewTest {
 
     private UsuarioService usuarioService;
-    private AuthenticatedUser authenticatedUser;
     private ProyectoService proyectoService;
-    private ConvocatoriaService convocatoriaService;
     private RegistroProyectoView registroProyectoView;
 
     @BeforeEach
-    void setUp() throws ParseException {
+    void setUp() {
         usuarioService = mock(UsuarioService.class);
-        authenticatedUser = mock(AuthenticatedUser.class);
+        AuthenticatedUser authenticatedUser = mock(AuthenticatedUser.class);
         proyectoService = mock(ProyectoService.class);
-        convocatoriaService = mock(ConvocatoriaService.class);
+        ConvocatoriaService convocatoriaService = mock(ConvocatoriaService.class);
 
         when(authenticatedUser.get()).thenReturn(Optional.of(new Usuario()));
         registroProyectoView = new RegistroProyectoView(usuarioService, authenticatedUser, proyectoService, convocatoriaService);
@@ -97,8 +95,6 @@ class RegistroProyectoViewTest {
         verify(proyectoService, times(1)).registerProyecto(any(Proyecto.class));
     }
 
-
-
     public void onRegistroProyecto() {
         Usuario solicitante4 = new Usuario("solicitante4", "solicitante4", "solicitante4", "solicitante4@flow.com", "solicitante4", Roles.SOLICITANTE);
 
@@ -121,12 +117,9 @@ class RegistroProyectoViewTest {
                     registroProyectoView.alcance.getValue(), registroProyectoView.coste.getValue(), registroProyectoView.aportacionInicial.getValue(),
                     registroProyectoView.promotor.getValue(), usuarioService.getCorreo(registroProyectoView.emailField.getValue()), fechaSql, pdfBlob));
 
-
-
             if (binder.validate().isOk()) {
                 if (proyectoService.registerProyecto(binder.getBean())) {
                     binder.setBean(new Proyecto());
-
                 }
             } else {
 

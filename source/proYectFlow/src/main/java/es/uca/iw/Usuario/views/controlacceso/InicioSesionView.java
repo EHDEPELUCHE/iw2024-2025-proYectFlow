@@ -19,11 +19,9 @@ import es.uca.iw.security.AuthenticatedUser;
 public class InicioSesionView extends Composite<VerticalLayout> implements BeforeEnterObserver {
     private final LoginOverlay loginOverlay;
     private final AuthenticatedUser authenticatedUser;
-    private final UsuarioService usuarioService;
 
     public InicioSesionView(AuthenticatedUser authenticatedUser, UsuarioService usuarioService) {
         this.authenticatedUser = authenticatedUser;
-        this.usuarioService = usuarioService;
         this.loginOverlay = new LoginOverlay();
 
         VerticalLayout layoutColumn2 = new VerticalLayout();

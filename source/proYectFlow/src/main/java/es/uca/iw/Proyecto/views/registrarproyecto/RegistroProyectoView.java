@@ -46,22 +46,22 @@ import java.util.Optional;
 @PermitAll
 public class RegistroProyectoView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Proyecto> binder;
-    UsuarioService usuarioService;
-    AuthenticatedUser authenticatedUser;
-    ProyectoService proyectoService;
+    final UsuarioService usuarioService;
+    final AuthenticatedUser authenticatedUser;
+    final ProyectoService proyectoService;
     EmailField emailField = new EmailField();
     ComboBox<Usuario> promotor = new ComboBox<>();
     TextField nombre = new TextField();
     TextField descripcion = new TextField();
     TextField alcance = new TextField();
-    DatePicker fechaLimite = new DatePicker("fecha límite");
+    final DatePicker fechaLimite = new DatePicker("fecha límite");
     TextField interesados = new TextField("Interesados");
     //NumberField numberField = new NumberField();
     BigDecimalField aportacionInicial = new BigDecimalField();
     BigDecimalField coste = new BigDecimalField();
-    MemoryBuffer buffer = new MemoryBuffer();
+    final MemoryBuffer buffer = new MemoryBuffer();
     Upload upload = new Upload(buffer);
-    ConvocatoriaService convocatoriaService;
+    final ConvocatoriaService convocatoriaService;
 
     public RegistroProyectoView(UsuarioService usuarioService, AuthenticatedUser authenticatedUser, ProyectoService proyectoService
                                 , ConvocatoriaService convocatoriaService) {
@@ -121,13 +121,11 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
 
             upload.setAcceptedFileTypes("application/pdf", ".pdf");
 
-            Button uploadButton = new Button("Upload PDF...");
+            Button uploadButton = new Button("Añadir memoria");
             uploadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
             upload.setUploadButton(uploadButton);
 
-            // Disable the upload button after the file is selected
-            // Re-enable the upload button after the file is cleared
             upload.getElement()
                     .addEventListener("max-files-reached-changed", event -> {
                         boolean maxFilesReached = event.getEventData()

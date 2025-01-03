@@ -150,7 +150,7 @@ public class MenuUsuarioView extends Main implements HasComponents, HasStyle {
         } else {
             List<String> userRoles = getCurrentUserRoles();
             boolean hasPermission = allowedRoles.stream()
-                    .anyMatch(role -> userRoles.contains(role));
+                    .anyMatch(userRoles::contains);
             if (hasPermission) {
                 imageContainer.add(new MenuUsuarioViewCard(title, description, imageUrl, null, buttonText,
                         navigationTarget, allowedRoles));

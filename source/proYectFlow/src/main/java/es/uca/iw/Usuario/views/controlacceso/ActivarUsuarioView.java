@@ -17,7 +17,7 @@ import es.uca.iw.Usuario.UsuarioService;
 @Route("ActivarUsuario")
 @AnonymousAllowed
 public class ActivarUsuarioView extends Composite<VerticalLayout> {
-    UsuarioService usuarioService;
+    final UsuarioService usuarioService;
 
     public ActivarUsuarioView(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;

@@ -25,11 +25,8 @@ import java.util.Date;
 @RolesAllowed("ROLE_OTP")
 public class ProyectosOTPView extends VisualizarProyectos {
 
-    private final ConvocatoriaService convocatoriaService;
-
     public ProyectosOTPView(ProyectoService proyectoService, AuthenticatedUser user, ConvocatoriaService convocatoriaService) {
         super(proyectoService, true);
-        this.convocatoriaService = convocatoriaService;
 
         Date hoy = new Date();
         if (!convocatoriaService.ConvocatoriaActual().EnPlazo()) {

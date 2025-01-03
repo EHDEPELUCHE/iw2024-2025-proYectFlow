@@ -26,7 +26,7 @@ import java.util.Objects;
 @Uses(Icon.class)
 @RolesAllowed("ROLE_CIO")
 public class AnnadirAlineamientoEstrategico extends Composite<VerticalLayout> {
-    AlineamientoEstrategicoService alineamientoEstrategicoService;
+    final AlineamientoEstrategicoService alineamientoEstrategicoService;
 
     public AnnadirAlineamientoEstrategico(AlineamientoEstrategicoService alineamientoEstrategicoService) {
         this.alineamientoEstrategicoService = alineamientoEstrategicoService;

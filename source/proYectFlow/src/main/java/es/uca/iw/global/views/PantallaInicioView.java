@@ -20,14 +20,13 @@ import es.uca.iw.Proyecto.views.ProyectosEnDesarrolloView;
 @Menu(order = 0, icon = "line-awesome/svg/globe-solid.svg")
 public class PantallaInicioView extends VerticalLayout {
 
-    private H2 titulo;
-    private Button CrearProyecto;
+    private final Button CrearProyecto;
 
     public PantallaInicioView() {
         Image imagenfondo = new Image("img/fondo_uca.jpg", "fondouca");
         imagenfondo.getElement().setAttribute("alt", "Imagen de fondo de la UCA");
 
-        titulo = new H2("Bienvenido a ProYectFlow. " +
+        H2 titulo = new H2("Bienvenido a ProYectFlow. " +
                 "Inicia sesión y registra tu proyecto");
         titulo.getElement().setAttribute("role", "heading");
         titulo.getElement().setAttribute("aria-level", "2");

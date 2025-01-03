@@ -28,7 +28,6 @@ public class ProyectoService {
     public ProyectoService(ProyectoRepository repository, EmailSender mailSender) {
         this.repository = repository;
         this.mailSender = mailSender;
-        this.convocatoriaService = convocatoriaService;
     }
 
     @Cacheable("Proyecto")
@@ -36,8 +35,8 @@ public class ProyectoService {
         return repository.findById(id);
     }
 
-    public Proyecto update(Proyecto entity) {
-        return repository.save(entity);
+    public void update(Proyecto entity) {
+        repository.save(entity);
     }
 
     public void delete(UUID id) {

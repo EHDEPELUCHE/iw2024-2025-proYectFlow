@@ -26,10 +26,10 @@ public class EditarConvocatoriaView extends Composite<VerticalLayout> implements
     private final ConvocatoriaService convocatoriaService;
     private Convocatoria convocatoria; // Convocatoria a editar
 
-    BigDecimalField presupuestototal = new BigDecimalField("Presupuesto");
-    DatePicker fecha_inicio = new DatePicker();
-    DatePicker fecha_limite = new DatePicker();
-    DatePicker fecha_final = new DatePicker();
+    final BigDecimalField presupuestototal = new BigDecimalField("Presupuesto");
+    final DatePicker fecha_inicio = new DatePicker();
+    final DatePicker fecha_limite = new DatePicker();
+    final DatePicker fecha_final = new DatePicker();
 
     private final BeanValidationBinder<Convocatoria> binder = new BeanValidationBinder<>(Convocatoria.class);
 

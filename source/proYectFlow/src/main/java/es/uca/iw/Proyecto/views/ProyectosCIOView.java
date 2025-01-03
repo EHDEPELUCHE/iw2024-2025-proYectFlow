@@ -26,11 +26,8 @@ import java.util.Date;
 
 public class ProyectosCIOView extends VisualizarProyectos {
 
-    private final ConvocatoriaService convocatoriaService;
-
     public ProyectosCIOView(ProyectoService proyectoService, AuthenticatedUser user, ConvocatoriaService convocatoriaService) {
         super(proyectoService, true);
-        this.convocatoriaService = convocatoriaService;
 
         Date hoy = new Date();
         if (!convocatoriaService.ConvocatoriaActual().EnPlazo()) {

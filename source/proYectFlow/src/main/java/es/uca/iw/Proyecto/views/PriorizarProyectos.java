@@ -26,6 +26,7 @@ import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
 import es.uca.iw.Proyecto.VisualizarProyectos;
 import es.uca.iw.Usuario.Usuario;
+import es.uca.iw.global.DownloadPdfComponent;
 import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -49,10 +50,9 @@ import java.util.Optional;
 public class PriorizarProyectos extends Div {
     static AuthenticatedUser user;
     private final ProyectoService proyectoService;
-    private Grid<Proyecto> grid;
     private Filters filters;
-    private ConvocatoriaService convocatoriaService;
-    Convocatoria convocatoria;
+    private final ConvocatoriaService convocatoriaService;
+    final Convocatoria convocatoria;
 
     public PriorizarProyectos(ProyectoService proyectoService, AuthenticatedUser user, ConvocatoriaService convocatoriaService) {
         this.user = user;
@@ -120,7 +120,7 @@ public class PriorizarProyectos extends Div {
     }
 
     private Component createGrid() {
-        grid = new Grid<>(Proyecto.class, false);
+        Grid<Proyecto> grid = new Grid<>(Proyecto.class, false);
         grid.addColumn("nombre").setAutoWidth(true);
         grid.addColumn("descripcion").setAutoWidth(true);
         grid.addColumn("interesados").setAutoWidth(true);
@@ -135,28 +135,15 @@ public class PriorizarProyectos extends Div {
                 .setHeader("Fecha Límite").setAutoWidth(true)
                 .setSortable(true);
         grid.addColumn("estado").setAutoWidth(true);
+
         grid.addComponentColumn(proyecto -> {
-            Button downloadButton = new Button("Memoria");
-            downloadButton.addClickListener(e -> {
-                // Logic to download the PDF
-                byte[] pdfContent = null;
+            return DownloadPdfComponent.createDownloadButton("Memoria", () -> {
                 try {
-                    pdfContent = proyectoService.getPdf(proyecto.getId());
+                    return proyectoService.getPdf(proyecto.getId());
                 } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                if (pdfContent != null) {
-                    byte[] finalPdfContent = pdfContent;
-                    StreamResource resource = new StreamResource("Memoria.pdf", () -> new ByteArrayInputStream(finalPdfContent));
-                    Anchor downloadLink = new Anchor(resource, "Download");
-                    downloadLink.getElement().setAttribute("download", true);
-                    downloadLink.getElement().setAttribute("style", "display: none;");
-                    add(downloadLink);
-                    downloadLink.getElement().callJsFunction("click");
-                    downloadLink.remove();
+                    throw new RuntimeException("Error al obtener el PDF", ex);
                 }
             });
-            return downloadButton;
         }).setHeader("PDF").setAutoWidth(true);
 
         grid.addComponentColumn(proyecto -> {
@@ -214,9 +201,7 @@ public class PriorizarProyectos extends Div {
 
     public static abstract class Filters extends Div implements Specification<Proyecto> {
         private final Optional<Usuario> promotor = user.get();
-
         private final Proyecto.Estado estado = Proyecto.Estado.evaluadoEstrategicamente;
-        //private final CheckboxGroup<String> roles = new CheckboxGroup<>("Role");
     }
 }
 

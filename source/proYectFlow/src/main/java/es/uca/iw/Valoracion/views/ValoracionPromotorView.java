@@ -16,6 +16,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamResource;
 import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
+import es.uca.iw.global.DownloadPdfComponent;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.io.ByteArrayInputStream;
@@ -33,7 +34,7 @@ import java.util.UUID;
 @RolesAllowed("ROLE_PROMOTOR")
 public class ValoracionPromotorView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
     Optional<Proyecto> proyecto;
-    ProyectoService proyectoService;
+    final ProyectoService proyectoService;
     UUID uuid;
 
     public ValoracionPromotorView(ProyectoService proyectoService) {
@@ -53,7 +54,7 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
             this.proyecto = Optional.empty();
         }
 
-        if (proyecto == null || proyecto.isEmpty()) {
+        if (proyecto.isEmpty() || proyecto.isEmpty()) {
             H1 title = new H1("Ha ocurrido un error, no se encuentra el proyecto :(");
             getContent().add(title);
         } else {
@@ -86,24 +87,11 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
                 formLayout.addFormItem(new Span(localDateL.format(formatterDateL)), "Fecha Límite de puesta en marcha");
             }
 
-            Button downloadButton = new Button("Memoria");
-            downloadButton.addClickListener(e -> {
-                // Logic to download the PDF
-                byte[] pdfContent = null;
+            Button downloadButton = DownloadPdfComponent.createDownloadButton("Memoria", () -> {
                 try {
-                    pdfContent = proyectoService.getPdf(proyectoAux.getId());
+                    return proyectoService.getPdf(proyecto.get().getId());
                 } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                if (pdfContent != null) {
-                    byte[] finalPdfContent = pdfContent;
-                    StreamResource resource = new StreamResource("Memoria.pdf", () -> new ByteArrayInputStream(finalPdfContent));
-                    Anchor downloadLink = new Anchor(resource, "Download");
-                    downloadLink.getElement().setAttribute("download", true);
-                    downloadLink.getElement().setAttribute("style", "display: none;");
-                    getContent().add(downloadLink);
-                    downloadLink.getElement().callJsFunction("click");
-                    downloadLink.remove();
+                    throw new RuntimeException("Error al obtener el PDF", ex);
                 }
             });
 

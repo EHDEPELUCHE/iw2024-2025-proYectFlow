@@ -10,7 +10,7 @@ public class EmailSender implements EmailService {
     @Autowired
     private JavaMailSender emailSender;
 
-    private int serverPort = 8080;
+    private final int serverPort = 8080;
 
     @Override
     public String getServerUrl() {

@@ -28,11 +28,11 @@ import java.util.Date;
 @RolesAllowed("ROLE_ADMIN")
 public class CrearConvocatoriaView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Convocatoria> binder = new BeanValidationBinder<>(Convocatoria.class);
-    ConvocatoriaService convocatoriaservice;
-    BigDecimalField presupuestototal = new BigDecimalField("Presupuesto");
-    DatePicker fecha_inicio = new DatePicker();
-    DatePicker fecha_limite = new DatePicker();
-    DatePicker fecha_final = new DatePicker();
+    final ConvocatoriaService convocatoriaservice;
+    final BigDecimalField presupuestototal = new BigDecimalField("Presupuesto");
+    final DatePicker fecha_inicio = new DatePicker();
+    final DatePicker fecha_limite = new DatePicker();
+    final DatePicker fecha_final = new DatePicker();
 
     public CrearConvocatoriaView(ConvocatoriaService convocatoriaservice) {
         this.convocatoriaservice = convocatoriaservice;

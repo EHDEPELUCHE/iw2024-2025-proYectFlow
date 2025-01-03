@@ -26,6 +26,7 @@ import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
+import es.uca.iw.global.DownloadPdfComponent;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -135,28 +136,13 @@ public class ProyectosView extends Div {
     }
 
     private Button createDownloadButton(Proyecto proyecto) {
-        Button downloadButton = new Button("Memoria");
-        downloadButton.addClickListener(e -> downloadPdf(proyecto));
-        downloadButton.getElement().setAttribute("aria-label", "Descargar memoria del proyecto");
-        return downloadButton;
-    }
-
-    private void downloadPdf(Proyecto proyecto) {
-        byte[] pdfContent;
-        try {
-            pdfContent = proyectoService.getPdf(proyecto.getId());
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        if (pdfContent != null) {
-            StreamResource resource = new StreamResource("Memoria.pdf", () -> new ByteArrayInputStream(pdfContent));
-            Anchor downloadLink = new Anchor(resource, "Download");
-            downloadLink.getElement().setAttribute("download", true);
-            downloadLink.getElement().setAttribute("style", "display: none;");
-            add(downloadLink);
-            downloadLink.getElement().callJsFunction("click");
-            downloadLink.remove();
-        }
+        return DownloadPdfComponent.createDownloadButton("Memoria", () -> {
+            try {
+                return proyectoService.getPdf(proyecto.getId());
+            } catch (IOException ex) {
+                throw new RuntimeException("Error al obtener el PDF", ex);
+            }
+        });
     }
 
     private Button createEditButton(Proyecto proyecto) {

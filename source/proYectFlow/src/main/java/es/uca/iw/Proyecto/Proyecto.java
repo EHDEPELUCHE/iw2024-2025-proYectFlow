@@ -10,11 +10,16 @@ import jakarta.validation.constraints.NotNull;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Entity
 public class Proyecto extends AbstractEntity {
+    private static final Logger logger = Logger.getLogger(Proyecto.class.getName());
+
     @NotEmpty(message = "Por favor, introduzca un nombre para el proyecto")
     @Column(unique = true, nullable = false)
     String nombre;
@@ -212,9 +217,13 @@ public class Proyecto extends AbstractEntity {
 
     public InputStream getPdf() {
         try {
-            if (memoria != null) return memoria.getBinaryStream();
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (memoria != null) {
+                return memoria.getBinaryStream();
+            } else {
+                logger.warning("No se puede obtener el PDF.");
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error al acceder la memoria.", e);
         }
         return null;
     }
@@ -224,9 +233,13 @@ public class Proyecto extends AbstractEntity {
             if (memoria != null) {
                 String[] parts = memoria.getBinaryStream().toString().split("/");
                 return parts[parts.length - 1];
+            } else {
+                logger.warning("No se puede obtener el PDF.");
             }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error al acceder a la memoria.", e);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Ocurrió un error inesperado al procesar el PDF.", e);
         }
         return null;
     }

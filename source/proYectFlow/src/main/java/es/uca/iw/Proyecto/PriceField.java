@@ -8,9 +8,8 @@ import com.vaadin.flow.component.textfield.BigDecimalField;
 import java.math.BigDecimal;
 
 public class PriceField extends CustomField<PriceField.Price> {
-    private String[] currencies = new String[]{"EUR", "USD", "PLN"};
-    private Select<String> currency;
-    private BigDecimalField amount;
+    private final Select<String> currency;
+    private final BigDecimalField amount;
 
     public PriceField() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -20,6 +19,7 @@ public class PriceField extends CustomField<PriceField.Price> {
         amount.setPlaceholder("Amount");
 
         currency = new Select<>();
+        String[] currencies = new String[]{"EUR", "USD", "PLN"};
         currency.setItems(currencies);
         currency.setWidth("100px");
 

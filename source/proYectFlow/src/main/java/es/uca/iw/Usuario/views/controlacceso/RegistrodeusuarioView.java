@@ -30,13 +30,13 @@ import es.uca.iw.Usuario.UsuarioService;
 @AnonymousAllowed
 public class RegistrodeusuarioView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Usuario> binder;
-    TextField username = new TextField();
-    TextField nombre = new TextField();
-    TextField apellido = new TextField();
-    EmailField correo = new EmailField();
-    PasswordField contrasenna = new PasswordField();
+    final TextField username = new TextField();
+    final TextField nombre = new TextField();
+    final TextField apellido = new TextField();
+    final EmailField correo = new EmailField();
+    final PasswordField contrasenna = new PasswordField();
 
-    UsuarioService servicio;
+    final UsuarioService servicio;
 
     public RegistrodeusuarioView(UsuarioService usuarioService) {
         PasswordField passwordField2 = new PasswordField();

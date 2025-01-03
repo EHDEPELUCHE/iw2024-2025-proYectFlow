@@ -33,13 +33,13 @@ import jakarta.annotation.security.RolesAllowed;
 //@AnonymousAllowed
 public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Usuario> binder;
-    TextField username = new TextField();
-    TextField nombre = new TextField();
-    TextField apellido = new TextField();
-    EmailField correo = new EmailField();
-    PasswordField contrasenna = new PasswordField();
-    ComboBox<Roles> Tipo = new ComboBox<>();
-    UsuarioService servicio;
+    final TextField username = new TextField();
+    final TextField nombre = new TextField();
+    final TextField apellido = new TextField();
+    final EmailField correo = new EmailField();
+    final PasswordField contrasenna = new PasswordField();
+    final ComboBox<Roles> Tipo = new ComboBox<>();
+    final UsuarioService servicio;
 
     public RegistroUsuarioAdminView(UsuarioService usuarioService) {
         PasswordField passwordField2 = new PasswordField();
