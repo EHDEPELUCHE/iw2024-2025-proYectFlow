@@ -1,3 +1,5 @@
+![Calidad](https://github.com/EHDEPELUCHE/iw2024-2025-proYectFlow/blob/main/assets/SonarQube/measure.svg)
+
 # proYectFlow
 
 Este repositorio contiene el proyecto realizado para la asignatura de Ingeniería Web, un sistema de gestión de proyectos con el nombre de proYectFlow.
