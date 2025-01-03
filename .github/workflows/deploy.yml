@@ -28,18 +28,24 @@ jobs:
         sleep 10
         docker ps
 
-    # 3. Construir el proyecto con Maven
+    # 4. Construir el proyecto con Maven
     - name: Build with Maven
       run: mvn clean package
       working-directory: ./source/proYectFlow
 
-    # 4. Configurar SSH
+    # 5. Configurar SSH
     - name: Add SSH key
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }} 
 
-    # 5. Desplegar el JAR en la máquina virtual de Azure
+    # 6. Verificar y agregar la clave del host de Azure a known_hosts
+    - name: Add Azure Host to known_hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan proyectflow.westeurope.cloudapp.azure.com >> ~/.ssh/known_hosts
+
+    # 7. Desplegar el JAR en la máquina virtual de Azure
     - name: Deploy to Azure VM
       run: |
         scp ./source/proYectFlow/target/*.jar DaniFlow@proyectflow.westeurope.cloudapp.azure.com:/home/DaniFlow/proYectFlow/proyectflow.jar
