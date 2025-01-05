@@ -16,7 +16,7 @@ public class EmailSender implements EmailService {
     public String getServerUrl() {
         // Generate the server URL
         String serverUrl = "http://";
-        if (System.getenv("ENVIRONMENT") != null && System.getenv("ENVIRONMENT").equals("production")) {
+        if (System.getenv("ENVIRONMENT") != null && System.getenv("ENVIRONMENT").equals("prod")) {
             serverUrl += "proyectflow.westeurope.cloudapp.azure.com";
             
         } else {
