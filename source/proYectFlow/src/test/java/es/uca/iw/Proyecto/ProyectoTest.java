@@ -1,6 +1,6 @@
 package es.uca.iw.Proyecto;
 
-import es.uca.iw.Convocatoria.Convocatoria;
+import es.uca.iw.convocatoria.Convocatoria;
 import es.uca.iw.Usuario.Usuario;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

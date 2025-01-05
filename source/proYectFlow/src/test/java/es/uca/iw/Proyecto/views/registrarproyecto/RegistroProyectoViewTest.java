@@ -8,7 +8,7 @@ import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.upload.Upload;
 
 import com.vaadin.flow.data.binder.Binder;
-import es.uca.iw.Convocatoria.ConvocatoriaService;
+import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.Proyecto.ProyectoService;
 import es.uca.iw.Usuario.Usuario;
 import es.uca.iw.Proyecto.Proyecto;

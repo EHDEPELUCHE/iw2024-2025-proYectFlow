@@ -2,7 +2,7 @@ package es.uca.iw;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
-import es.uca.iw.Convocatoria.ConvocatoriaService;
+import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.Proyecto.ProyectoService;
 import es.uca.iw.Usuario.UsuarioRepository;
 import es.uca.iw.Usuario.UsuarioService;

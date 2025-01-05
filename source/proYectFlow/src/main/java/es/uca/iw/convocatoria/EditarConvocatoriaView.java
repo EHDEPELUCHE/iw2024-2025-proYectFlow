@@ -1,4 +1,4 @@
-package es.uca.iw.Convocatoria;
+package es.uca.iw.convocatoria;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.Key;
@@ -27,9 +27,9 @@ public class EditarConvocatoriaView extends Composite<VerticalLayout> implements
     private Convocatoria convocatoria; // Convocatoria a editar
 
     final BigDecimalField presupuestototal = new BigDecimalField("Presupuesto");
-    final DatePicker fecha_inicio = new DatePicker();
-    final DatePicker fecha_limite = new DatePicker();
-    final DatePicker fecha_final = new DatePicker();
+    final DatePicker fechaInicio = new DatePicker();
+    final DatePicker fechaLimite = new DatePicker();
+    final DatePicker fechaFinal = new DatePicker();
 
     private final BeanValidationBinder<Convocatoria> binder = new BeanValidationBinder<>(Convocatoria.class);
 
@@ -41,14 +41,14 @@ public class EditarConvocatoriaView extends Composite<VerticalLayout> implements
         presupuestototal.setLabel("Presupuesto");
         presupuestototal.setRequiredIndicatorVisible(true);
 
-        fecha_inicio.setLabel("Fecha de inicio de la convocatoria");
-        fecha_inicio.setRequiredIndicatorVisible(true);
+        fechaInicio.setLabel("Fecha de inicio de la convocatoria");
+        fechaInicio.setRequiredIndicatorVisible(true);
 
-        fecha_limite.setLabel("Fecha límite para presentar proyectos");
-        fecha_limite.setRequiredIndicatorVisible(true);
+        fechaLimite.setLabel("Fecha límite para presentar proyectos");
+        fechaLimite.setRequiredIndicatorVisible(true);
 
-        fecha_final.setLabel("Fecha en la que termina la cartera de proyectos este año");
-        fecha_final.setRequiredIndicatorVisible(true);
+        fechaFinal.setLabel("Fecha en la que termina la cartera de proyectos este año");
+        fechaFinal.setRequiredIndicatorVisible(true);
 
         Button guardarButton = new Button("Guardar cambios");
         guardarButton.addClickShortcut(Key.ENTER);
@@ -57,9 +57,9 @@ public class EditarConvocatoriaView extends Composite<VerticalLayout> implements
         guardarButton.addClickListener(e -> {
             if (convocatoria != null) {
                 convocatoria.setPresupuestototal(presupuestototal.getValue());
-                convocatoria.setFecha_inicio(Date.from(fecha_inicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-                convocatoria.setFecha_limite(Date.from(fecha_limite.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-                convocatoria.setFecha_final(Date.from(fecha_final.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                convocatoria.setFechaInicio(Date.from(fechaInicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                convocatoria.setFechaLimite(Date.from(fechaLimite.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                convocatoria.setFechaFinal(Date.from(fechaFinal.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
                 convocatoriaService.guardar(convocatoria);
 
@@ -69,7 +69,7 @@ public class EditarConvocatoriaView extends Composite<VerticalLayout> implements
             }
         });
 
-        FormLayout formLayout = new FormLayout(presupuestototal, fecha_inicio, fecha_limite, fecha_final);
+        FormLayout formLayout = new FormLayout(presupuestototal, fechaInicio, fechaLimite, fechaFinal);
         getContent().add(title, formLayout, guardarButton);
     }
 
@@ -80,9 +80,9 @@ public class EditarConvocatoriaView extends Composite<VerticalLayout> implements
 
         if (convocatoria != null) {
             presupuestototal.setValue(convocatoria.getPresupuestototal());
-            fecha_inicio.setValue(convocatoria.getFecha_inicio().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            fecha_limite.setValue(convocatoria.getFecha_limite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            fecha_final.setValue(convocatoria.getFecha_final().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            fechaInicio.setValue(convocatoria.getFechaInicio().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            fechaLimite.setValue(convocatoria.getFechaLimite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            fechaFinal.setValue(convocatoria.getFechaFinal().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 
             binder.setBean(convocatoria);
         } else {

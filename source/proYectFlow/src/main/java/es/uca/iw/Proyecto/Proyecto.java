@@ -1,6 +1,6 @@
 package es.uca.iw.Proyecto;
 
-import es.uca.iw.Convocatoria.Convocatoria;
+import es.uca.iw.convocatoria.Convocatoria;
 import es.uca.iw.Usuario.Usuario;
 import es.uca.iw.global.AbstractEntity;
 import jakarta.persistence.*;

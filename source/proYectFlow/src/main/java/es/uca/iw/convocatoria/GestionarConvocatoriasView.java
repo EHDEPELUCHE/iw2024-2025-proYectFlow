@@ -1,4 +1,4 @@
-package es.uca.iw.Convocatoria;
+package es.uca.iw.convocatoria;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -53,15 +53,15 @@ public class GestionarConvocatoriasView extends Div {
 
         grid.addColumn("nombre").setHeader("Nombre").setAutoWidth(true);
 
-        grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFecha_inicio()))
+        grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFechaInicio()))
                 .setHeader("Fecha inicio").setAutoWidth(true)
                 .setSortable(true);
 
-        grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFecha_limite()))
+        grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFechaLimite()))
                 .setHeader("Fecha límite").setAutoWidth(true)
                 .setSortable(true);
 
-        grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFecha_final()))
+        grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFechaFinal()))
                 .setHeader("Fecha final").setAutoWidth(true)
                 .setSortable(true);
 

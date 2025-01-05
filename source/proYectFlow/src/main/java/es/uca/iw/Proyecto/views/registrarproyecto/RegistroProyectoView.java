@@ -26,7 +26,7 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
-import es.uca.iw.Convocatoria.ConvocatoriaService;
+import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
 import es.uca.iw.Usuario.Usuario;

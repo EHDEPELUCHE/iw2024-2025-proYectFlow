@@ -1,4 +1,4 @@
-package es.uca.iw.Convocatoria;
+package es.uca.iw.convocatoria;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.Key;
@@ -28,9 +28,9 @@ import java.util.Date;
 public class CrearConvocatoriaView extends Composite<VerticalLayout> {
     final ConvocatoriaService convocatoriaservice;
     final BigDecimalField presupuestototal = new BigDecimalField("Presupuesto");
-    final DatePicker fecha_inicio = new DatePicker();
-    final DatePicker fecha_limite = new DatePicker();
-    final DatePicker fecha_final = new DatePicker();
+    final DatePicker fechaInicio = new DatePicker();
+    final DatePicker fechaLimite = new DatePicker();
+    final DatePicker fechaFinal = new DatePicker();
 
     public CrearConvocatoriaView(ConvocatoriaService convocatoriaservice) {
         this.convocatoriaservice = convocatoriaservice;
@@ -40,14 +40,14 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
         presupuestototal.setLabel("Presupuesto");
         presupuestototal.setRequiredIndicatorVisible(true);
 
-        fecha_inicio.setLabel("Fecha de inicio de la convocatoria");
-        fecha_inicio.setRequiredIndicatorVisible(true);
+        fechaInicio.setLabel("Fecha de inicio de la convocatoria");
+        fechaInicio.setRequiredIndicatorVisible(true);
 
-        fecha_limite.setLabel("Fecha limite para presentar proyectos");
-        fecha_limite.setRequiredIndicatorVisible(true);
+        fechaLimite.setLabel("Fecha limite para presentar proyectos");
+        fechaLimite.setRequiredIndicatorVisible(true);
 
-        fecha_final.setLabel("Fecha en la que termina la cartera de proyectos este año ");
-        fecha_final.setRequiredIndicatorVisible(true);
+        fechaFinal.setLabel("Fecha en la que termina la cartera de proyectos este año ");
+        fechaFinal.setRequiredIndicatorVisible(true);
 
         Button guardarButton = new Button("Crear convocatoria");
         guardarButton.addClickShortcut(Key.ENTER);
@@ -55,9 +55,9 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
         guardarButton.addClickListener(e -> {
             Convocatoria convocatoria = new Convocatoria(
                     presupuestototal.getValue(),
-                    Date.from(fecha_limite.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                    Date.from(fecha_inicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                    Date.from(fecha_final.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())
+                    Date.from(fechaLimite.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    Date.from(fechaInicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    Date.from(fechaFinal.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())
             );
 
             convocatoria.setActiva(false);
@@ -73,7 +73,7 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
         });
 
         FormLayout formLayout = new FormLayout();
-        formLayout.add(presupuestototal, fecha_inicio, fecha_limite, fecha_final);
+        formLayout.add(presupuestototal, fechaInicio, fechaLimite, fechaFinal);
         getContent().add(title, formLayout, guardarButton);
     }
 }

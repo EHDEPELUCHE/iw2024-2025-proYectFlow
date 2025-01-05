@@ -1,4 +1,4 @@
-package es.uca.iw.Convocatoria;
+package es.uca.iw.convocatoria;
 
 import jakarta.transaction.Transactional;
 import org.springframework.cache.annotation.Cacheable;
@@ -25,7 +25,7 @@ public class ConvocatoriaService {
 
     @Transactional
     public void hacerVigente(Convocatoria convocatoriaActual) {
-        if (convocatoriaActual.getFecha_final().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isBefore(LocalDate.now())) {
+        if (convocatoriaActual.getFechaFinal().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("No se puede activar la convocatoria porque su fecha final ya ha pasado.");
         }
         Convocatoria convocatoriaAnterior = repository.findByActiva(true);

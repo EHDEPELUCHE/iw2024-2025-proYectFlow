@@ -19,8 +19,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import es.uca.iw.Convocatoria.Convocatoria;
-import es.uca.iw.Convocatoria.ConvocatoriaService;
+import es.uca.iw.convocatoria.Convocatoria;
+import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
 import es.uca.iw.Usuario.Usuario;
@@ -35,7 +35,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Optional;
 
 @PageTitle("Priorizar Proyectos ")

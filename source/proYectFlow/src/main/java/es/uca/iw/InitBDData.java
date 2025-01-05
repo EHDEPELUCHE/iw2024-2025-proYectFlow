@@ -1,8 +1,8 @@
 package es.uca.iw;
 
-import es.uca.iw.Convocatoria.Convocatoria;
-import es.uca.iw.Convocatoria.ConvocatoriaRepository;
-import es.uca.iw.Convocatoria.ConvocatoriaService;
+import es.uca.iw.convocatoria.Convocatoria;
+import es.uca.iw.convocatoria.ConvocatoriaRepository;
+import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoRepository;
 import es.uca.iw.Usuario.Usuario;

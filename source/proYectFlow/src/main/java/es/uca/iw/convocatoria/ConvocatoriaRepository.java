@@ -1,4 +1,4 @@
-package es.uca.iw.Convocatoria;
+package es.uca.iw.convocatoria;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

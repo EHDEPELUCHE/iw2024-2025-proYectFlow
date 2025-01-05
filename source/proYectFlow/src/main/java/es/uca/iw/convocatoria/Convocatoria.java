@@ -1,4 +1,4 @@
-package es.uca.iw.Convocatoria;
+package es.uca.iw.convocatoria;
 
 import es.uca.iw.global.AbstractEntity;
 import jakarta.persistence.Column;
@@ -21,22 +21,22 @@ public class Convocatoria extends AbstractEntity {
 
     BigDecimal presupuestorestante;
 
-    Date fecha_limite;
+    Date fechaLimite;
 
     @Column(nullable = false)
-    Date fecha_inicio;
+    Date fechaInicio;
 
     @Column(nullable = false)
-    Date fecha_final;
+    Date fechaFinal;
 
     Boolean activa;
 
-    public Convocatoria(BigDecimal presupuesto, Date fecha_limite, Date fecha_inicio, Date fecha_final) {
+    public Convocatoria(BigDecimal presupuesto, Date fechaLimite, Date fechaInicio, Date fechaFinal) {
         this.presupuestototal = presupuesto;
         this.presupuestorestante = presupuesto;
-        this.fecha_inicio = fecha_inicio;
-        setFecha_limite(fecha_limite);
-        setFecha_final(fecha_final);
+        this.fechaInicio = fechaInicio;
+        setFechaLimite(fechaLimite);
+        setFechaFinal(fechaFinal);
         setNombre();
     }
 
@@ -46,27 +46,27 @@ public class Convocatoria extends AbstractEntity {
 
     public boolean EnPlazo(){
         Date hoy = new Date();
-        return (hoy.after(fecha_inicio) && hoy.before(fecha_limite));
+        return (hoy.after(fechaInicio) && hoy.before(fechaLimite));
     }
 
-    public Date getFecha_final() {
-        return fecha_final;
+    public Date getFechaFinal() {
+        return fechaFinal;
     }
-    public void setFecha_final(Date fecha_final) {
-        if (fecha_limite != null && fecha_final != null && !fecha_limite.before(fecha_final)) {
+    public void setFechaFinal(Date fechaFinal) {
+        if (fechaLimite != null && fechaFinal != null && !fechaLimite.before(fechaFinal)) {
             throw new IllegalArgumentException("La fecha final debe ser posterior a la fecha límite.");
         }
-        this.fecha_final = fecha_final;
+        this.fechaFinal = fechaFinal;
         setNombre();
     }
-    public Date getFecha_limite() {
-        return fecha_limite;
+    public Date getFechaLimite() {
+        return fechaLimite;
     }
-    public void setFecha_limite(Date fecha_limite) {
-        if (fecha_limite != null && fecha_inicio != null && !fecha_inicio.before(fecha_limite)) {
+    public void setFechaLimite(Date fechaLimite) {
+        if (fechaLimite != null && fechaInicio != null && !fechaInicio.before(fechaLimite)) {
             throw new IllegalArgumentException("La fecha límite debe ser posterior a la fecha de inicio.");
         }
-        this.fecha_limite = fecha_limite;
+        this.fechaLimite = fechaLimite;
     }
     public BigDecimal getPresupuestototal() {
         return presupuestototal;
@@ -74,11 +74,11 @@ public class Convocatoria extends AbstractEntity {
     public void setPresupuestototal(BigDecimal presupuestototal) {
         this.presupuestototal = presupuestototal;
     }
-    public Date getFecha_inicio() {
-        return fecha_inicio;
+    public Date getFechaInicio() {
+        return fechaInicio;
     }
-    public void setFecha_inicio(Date fecha_inicio) {
-        this.fecha_inicio = fecha_inicio;
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
         setNombre();
     }
     public BigDecimal getPresupuestorestante() {
@@ -96,9 +96,9 @@ public class Convocatoria extends AbstractEntity {
     public String getNombre() {return nombre;}
     private void setNombre() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy");
-        dateFormat.format(fecha_inicio);
-        dateFormat.format(fecha_final);
+        dateFormat.format(fechaInicio);
+        dateFormat.format(fechaFinal);
 
-        this.nombre = "Convocatoria " + dateFormat.format(fecha_inicio) + " - " + dateFormat.format(fecha_final);
+        this.nombre = "Convocatoria " + dateFormat.format(fechaInicio) + " - " + dateFormat.format(fechaFinal);
     }
 }

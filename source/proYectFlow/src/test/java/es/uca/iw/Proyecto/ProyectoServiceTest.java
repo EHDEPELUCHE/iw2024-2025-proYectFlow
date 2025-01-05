@@ -1,7 +1,7 @@
 package es.uca.iw.Proyecto;
 
-import es.uca.iw.Convocatoria.Convocatoria;
-import es.uca.iw.Convocatoria.ConvocatoriaService;
+import es.uca.iw.convocatoria.Convocatoria;
+import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.Usuario.Usuario;
 import es.uca.iw.email.EmailSender;
 
