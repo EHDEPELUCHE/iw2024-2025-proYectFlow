@@ -22,12 +22,12 @@ import java.util.UUID;
 public class ProyectoService {
     private final ProyectoRepository repository;
     private final EmailSender mailSender;
-    @Autowired
-    private ConvocatoriaService convocatoriaService;
+    private final ConvocatoriaService convocatoriaService;
 
-    public ProyectoService(ProyectoRepository repository, EmailSender mailSender) {
+    public ProyectoService(ProyectoRepository repository, EmailSender mailSender, ConvocatoriaService convocatoriaService) {
         this.repository = repository;
         this.mailSender = mailSender;
+        this.convocatoriaService = convocatoriaService;
     }
 
     @Cacheable("Proyecto")
@@ -113,8 +113,11 @@ public class ProyectoService {
     }
 
     public byte[] getPdf(UUID id) throws IOException {
-        Proyecto proyecto = repository.findById(id).get();
-        return proyecto.getPdf().readAllBytes();
+        if(repository.findById(id).isPresent()) {
+            Proyecto proyecto = repository.findById(id).get();
+            return proyecto.getPdf().readAllBytes();
+        }
+        return null;
     }
 
     public void setValoracionPromotor(BigDecimal prioridad, Boolean avalado, Proyecto proyectoAux) {

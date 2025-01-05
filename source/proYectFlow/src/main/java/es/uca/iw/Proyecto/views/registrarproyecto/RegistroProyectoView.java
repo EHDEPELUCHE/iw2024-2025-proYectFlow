@@ -90,7 +90,8 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             h3.setWidth("100%");
             formLayout2Col.setWidth("100%");
             emailField.setLabel("Solicitante");
-            emailField.setValue(solicitante.get().getCorreo());
+            if (solicitante.isPresent()) emailField.setValue(solicitante.get().getCorreo());
+            else emailField.setValue("No hay solicitante");
             emailField.setWidth("min-content");
             promotor.setLabel("Promotor");
             promotor.setWidth("min-content");
@@ -176,7 +177,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
 
     public void OnRegistroProyecto() {
         Optional<Usuario> este = Optional.of(usuarioService.getCorreo(emailField.getValue()));
-        if (este.isPresent()) {
+        if (este != null) {
             Blob pdfBlob = null;
             try {
                 pdfBlob = new javax.sql.rowset.serial.SerialBlob(buffer.getInputStream().readAllBytes());

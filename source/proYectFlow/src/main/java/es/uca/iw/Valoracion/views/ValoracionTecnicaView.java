@@ -103,9 +103,9 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
 
             Button Guardar = new Button("Guardar");
             Guardar.addClickListener(e -> {
-                if (precio.getValue().compareTo(BigDecimal.valueOf(10)) == 1 || precio.getValue().compareTo(BigDecimal.ZERO) == -1
-                        || Horas.getValue().compareTo(BigDecimal.valueOf(10)) == 1 || Horas.getValue().compareTo(BigDecimal.ZERO) == -1
-                        || Idoneidadtecnica.getValue().compareTo(BigDecimal.valueOf(10)) == 1 || Idoneidadtecnica.getValue().compareTo(BigDecimal.ZERO) == -1) {
+                if (precio.getValue().compareTo(BigDecimal.TEN) > 0 || precio.getValue().compareTo(BigDecimal.ZERO) < 0
+                        || Horas.getValue().compareTo(BigDecimal.TEN) > 0 || Horas.getValue().compareTo(BigDecimal.ZERO) < 0
+                        || Idoneidadtecnica.getValue().compareTo(BigDecimal.TEN) > 0 || Idoneidadtecnica.getValue().compareTo(BigDecimal.ZERO) < 0) {
                     Notification.show("Las notas tienen que estar entre 0 y 10");
                 } else {
                     proyectoService.setValoracionTecnica(precio.getValue(), Horas.getValue(), Idoneidadtecnica.getValue(), proyectoAux);

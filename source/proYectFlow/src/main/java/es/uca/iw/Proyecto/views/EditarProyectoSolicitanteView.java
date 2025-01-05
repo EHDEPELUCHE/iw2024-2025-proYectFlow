@@ -113,7 +113,8 @@ public class EditarProyectoSolicitanteView extends Composite<VerticalLayout> imp
                 h3.setWidth("100%");
                 formLayout2Col.setWidth("100%");
                 emailField.setLabel("Solicitante");
-                emailField.setValue(solicitante.get().getCorreo());
+                if (solicitante.isPresent()) emailField.setValue(solicitante.get().getCorreo());
+                else emailField.setValue("No se ha podido obtener el solicitante");
                 emailField.setWidth("min-content");
                 emailField.setReadOnly(true);
                 promotor.setLabel("Promotor");

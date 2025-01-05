@@ -1,22 +1,28 @@
 package es.uca.iw.email;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailSender implements EmailService {
-    @Autowired
-    private JavaMailSender emailSender;
-
-    private final int serverPort = 8080;
+    private final JavaMailSender emailSender;
+ 
+    public EmailSender(JavaMailSender emailSender) {
+        this.emailSender = emailSender;
+    }
 
     @Override
     public String getServerUrl() {
         // Generate the server URL
         String serverUrl = "http://";
-        serverUrl += "proyectflow.westeurope.cloudapp.azure.com";
+        if (System.getenv("ENVIRONMENT") != null && System.getenv("ENVIRONMENT").equals("prod")) {
+            serverUrl += "proyectflow.westeurope.cloudapp.azure.com";
+            
+        } else {
+            int serverPort = 8080;
+            serverUrl += "localhost:" + serverPort;
+        }
         serverUrl += "/";
         return serverUrl;
     }
