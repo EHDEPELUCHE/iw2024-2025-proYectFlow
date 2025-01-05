@@ -34,13 +34,13 @@ public class InitBDData {
                                 passwordEncoder.encode("pppppP2@"), Roles.PROMOTOR),
                         new Usuario("Carlos", "carlos3", "García", "carlos.garcia@example.com",
                                 passwordEncoder.encode("pppppP3@"), Roles.PROMOTOR),
-                        new Usuario("Lucia", "lucia4", "González", "lucia.perez@example.com",
+                        new Usuario("Lucia", "lucia4", "González", "lucia.gonzalez@example.com",
                                 passwordEncoder.encode("pppppP4@"), Roles.SOLICITANTE),
-                        new Usuario("Pedro", "pedro5", "Ramos", "pedro.perez@example.com",
+                        new Usuario("Pedro", "pedro5", "Ramos", "pedro.ramos@example.com",
                                 passwordEncoder.encode("pppppP5@"), Roles.SOLICITANTE),
                         new Usuario("Sara", "sara6", "Santos", "sara.santos@example.com",
                                 passwordEncoder.encode("pppppP6@"), Roles.CIO),
-                        new Usuario("Pablo", "pablo7", "Palacios", "pablo.perez@example.com",
+                        new Usuario("Pablo", "pablo7", "Palacios", "pablo.palacios@example.com",
                                 passwordEncoder.encode("pppppP7@"), Roles.OTP)
                 );
                 usuarios.forEach(usuario -> usuario.setActivo(true));

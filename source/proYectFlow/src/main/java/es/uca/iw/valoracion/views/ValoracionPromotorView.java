@@ -52,7 +52,7 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
             this.proyecto = Optional.empty();
         }
 
-        if (proyecto.isEmpty() || proyecto.isEmpty()) {
+        if (proyecto.isEmpty()) {
             H1 title = new H1("Ha ocurrido un error, no se encuentra el proyecto :(");
             getContent().add(title);
         } else {

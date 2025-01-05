@@ -95,7 +95,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
             layoutColumn2.setWidth("100%");
             layoutColumn2.setMaxWidth("800px");
             layoutColumn2.setHeight(mincontent);
-            h3.setText("Registro de proyecto");
+            h3.setText("Editar datos del proyecto");
             h3.setWidth("100%");
             formLayout2Col.setWidth("100%");
 
@@ -150,7 +150,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
         Optional<Usuario> solicitante = authenticatedUser.get();
 
         emailField.setLabel("Solicitante");
-        emailField.setValue(solicitante.isPresent() ? solicitante.get().getCorreo() : "No se ha encontrado el solicitante");
+        emailField.setValue(proyectoAux.getSolicitante().getCorreo());
         emailField.setWidth(mincontent);
         emailField.setReadOnly(true);
 

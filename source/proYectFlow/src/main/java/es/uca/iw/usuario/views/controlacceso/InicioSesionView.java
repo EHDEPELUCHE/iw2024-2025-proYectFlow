@@ -37,6 +37,7 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
         i18nForm.setSubmit("Aceptar");
         i18nForm.setForgotPassword("¿No tienes cuenta? Regístrate");
         loginOverlay.addForgotPasswordListener(event -> {
+            loginOverlay.setOpened(false);
             getUI().ifPresent(ui -> ui.navigate("registro-usuario"));
         });
         i18n.setForm(i18nForm);
