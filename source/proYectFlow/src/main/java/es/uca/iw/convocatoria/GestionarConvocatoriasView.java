@@ -93,7 +93,7 @@ public class GestionarConvocatoriasView extends Div {
     }
 
     protected Component estadoConvocatoria(Convocatoria convocatoria) {
-        if (!convocatoria.getActiva()) {
+        if (convocatoria.getActiva() == false) {
             Button activarButton = new Button("Activar");
             activarButton.addClickListener(e -> {
                 try {

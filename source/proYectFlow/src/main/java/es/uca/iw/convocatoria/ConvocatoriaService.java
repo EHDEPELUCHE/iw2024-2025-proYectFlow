@@ -6,20 +6,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class ConvocatoriaService {
+public class ConvocatoriaService implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final ConvocatoriaRepository repository;
     public ConvocatoriaService(ConvocatoriaRepository repository) {
         this.repository = repository;
     }
 
     @Cacheable("Convocatoria")
-    public Convocatoria ConvocatoriaActual() {
+    public Convocatoria convocatoriaActual() {
         return repository.findByActiva(true);
     }
 

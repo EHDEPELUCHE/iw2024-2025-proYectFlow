@@ -19,7 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 public class ProyectosEnDesarrolloView extends VisualizarProyectos {
     public ProyectosEnDesarrolloView(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
         super(proyectoService, false);
-        Convocatoria convocatoriaActual = convocatoriaService.ConvocatoriaActual();
+        Convocatoria convocatoriaActual = convocatoriaService.convocatoriaActual();
         if (convocatoriaActual != null) {
             Specification<Proyecto> filters = (root, query, criteriaBuilder) -> criteriaBuilder.and(
                     criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.enDesarrollo),

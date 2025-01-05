@@ -28,7 +28,7 @@ public class ProyectosCIOView extends VisualizarProyectos {
     public ProyectosCIOView(ProyectoService proyectoService, AuthenticatedUser user, ConvocatoriaService convocatoriaService) {
         super(proyectoService, true);
 
-        if (!convocatoriaService.ConvocatoriaActual().EnPlazo()) {
+        if (!convocatoriaService.convocatoriaActual().enPlazo()) {
             Specification<Proyecto> filtroEvaluados = (root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.evaluadoTecnicamente);
             inicializarVistaProyectos("Proyectos por evaluar", filtroEvaluados);

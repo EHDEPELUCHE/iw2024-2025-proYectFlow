@@ -66,7 +66,7 @@ public class InitBDData {
 
             // Espera a que los datos sean cargados
             waitUntilDataIsReady(usuarioRepository, convocatoriaRepository);
-            insertProjects(usuarioRepository, convocatoriaRepository, proyectoRepository, convocatoriaService);
+            insertProjects(usuarioRepository, proyectoRepository, convocatoriaService);
         };
     }
 
@@ -80,7 +80,7 @@ public class InitBDData {
         }
     }
 
-    private void insertProjects(UsuarioRepository usuarioRepository, ConvocatoriaRepository convocatoriaRepository,
+    private void insertProjects(UsuarioRepository usuarioRepository,
                                 ProyectoRepository proyectoRepository, ConvocatoriaService convocatoriaService) throws ParseException {
 
         if (proyectoRepository.count() == 0) {
@@ -89,7 +89,7 @@ public class InitBDData {
 
             Usuario promotor = usuarioRepository.findByUsername("maria2");
             Usuario solicitante = usuarioRepository.findByUsername("lucia4");
-            Convocatoria convocatoriaActiva = convocatoriaService.ConvocatoriaActual();
+            Convocatoria convocatoriaActiva = convocatoriaService.convocatoriaActual();
 
             if (promotor != null && solicitante != null && convocatoriaActiva != null) {
                 List<Proyecto> proyectos = List.of(

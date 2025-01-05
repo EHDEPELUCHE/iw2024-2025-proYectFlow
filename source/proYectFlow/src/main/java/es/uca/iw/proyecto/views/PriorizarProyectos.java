@@ -54,7 +54,7 @@ public class PriorizarProyectos extends Div {
         this.user = user;
         this.proyectoService = proyectoService;
         this.convocatoriaService = convocatoriaService;
-        convocatoria = convocatoriaService.ConvocatoriaActual();
+        convocatoria = convocatoriaService.convocatoriaActual();
         H1 h1Titulo = new H1("Proyectos evaluados");
         h1Titulo.addClassNames(LumoUtility.Margin.Bottom.NONE, LumoUtility.Margin.Top.XLARGE,
                 LumoUtility.FontSize.XXXLARGE, LumoUtility.Margin.Left.LARGE);
@@ -67,7 +67,7 @@ public class PriorizarProyectos extends Div {
         boolean hasInvalidStateProjects = proyectoService.list(PageRequest.of(0, Integer.MAX_VALUE)).stream()
             .anyMatch(proyecto -> proyecto.getEstado() == Proyecto.Estado.avalado || proyecto.getEstado() == Proyecto.Estado.evaluadoTecnicamente);
 
-        if (!convocatoriaService.ConvocatoriaActual().EnPlazo()) {
+        if (!convocatoriaService.convocatoriaActual().enPlazo()) {
             if (hasInvalidStateProjects) {
                 add(new H1("Existen proyectos en estado avalado o evaluado técnicamente"));
                 return;

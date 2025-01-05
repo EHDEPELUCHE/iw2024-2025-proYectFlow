@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class Convocatoria extends AbstractEntity {
@@ -40,11 +41,9 @@ public class Convocatoria extends AbstractEntity {
         setNombre();
     }
 
-    public Convocatoria() {
+    public Convocatoria() {}
 
-    }
-
-    public boolean EnPlazo(){
+    public boolean enPlazo(){
         Date hoy = new Date();
         return (hoy.after(fechaInicio) && hoy.before(fechaLimite));
     }
@@ -100,5 +99,20 @@ public class Convocatoria extends AbstractEntity {
         dateFormat.format(fechaFinal);
 
         this.nombre = "Convocatoria " + dateFormat.format(fechaInicio) + " - " + dateFormat.format(fechaFinal);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Convocatoria that = (Convocatoria) o;
+        return presupuestototal.equals(that.presupuestototal) &&
+                fechaInicio.equals(that.fechaInicio) &&
+                fechaFinal.equals(that.fechaFinal);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(presupuestototal, fechaInicio, fechaFinal);
     }
 }

@@ -27,7 +27,7 @@ public class ProyectosOTPView extends VisualizarProyectos {
     public ProyectosOTPView(ProyectoService proyectoService, AuthenticatedUser user, ConvocatoriaService convocatoriaService) {
         super(proyectoService, true);
 
-        if (!convocatoriaService.ConvocatoriaActual().EnPlazo()) {
+        if (!convocatoriaService.convocatoriaActual().enPlazo()) {
             Specification<Proyecto> filters = (root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.avalado);
 

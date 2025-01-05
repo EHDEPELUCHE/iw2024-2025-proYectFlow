@@ -66,9 +66,7 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
 
             Button vigenteButton = new Button("Hacerla vigente");
             vigenteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-            vigenteButton.addClickListener(ev -> {
-                convocatoriaservice.hacerVigente(convocatoria);
-            });
+            vigenteButton.addClickListener(ev -> convocatoriaservice.hacerVigente(convocatoria));
             getContent().add(vigenteButton);
         });
 

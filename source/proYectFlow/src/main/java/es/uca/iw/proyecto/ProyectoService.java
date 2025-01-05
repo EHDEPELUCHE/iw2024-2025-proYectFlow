@@ -59,7 +59,7 @@ public class ProyectoService {
     public boolean registerProyecto(Proyecto proyecto) {
         try {
             //Convocatoria activa
-            Convocatoria convocatoriaActiva = convocatoriaService.ConvocatoriaActual();
+            Convocatoria convocatoriaActiva = convocatoriaService.convocatoriaActual();
             if (convocatoriaActiva == null) {
                 throw new IllegalStateException("No hay ninguna convocatoria activa en este momento.");
             }

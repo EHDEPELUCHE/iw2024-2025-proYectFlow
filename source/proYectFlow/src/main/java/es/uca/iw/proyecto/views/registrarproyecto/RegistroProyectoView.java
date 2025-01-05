@@ -70,7 +70,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         this.convocatoriaService = convocatoriaService;
         binder = new BeanValidationBinder<>(Proyecto.class);
 
-        if(convocatoriaService.ConvocatoriaActual() != null && convocatoriaService.ConvocatoriaActual().EnPlazo()){
+        if(convocatoriaService.convocatoriaActual() != null && convocatoriaService.convocatoriaActual().enPlazo()){
             VerticalLayout layoutColumn2 = new VerticalLayout();
             H3 h3 = new H3();
             FormLayout formLayout2Col = new FormLayout();

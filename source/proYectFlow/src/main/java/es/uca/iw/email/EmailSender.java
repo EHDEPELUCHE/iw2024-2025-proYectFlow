@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailSender implements EmailService {
-    private final JavaMailSender emailSender;
+    private final JavaMailSender correo;
  
     public EmailSender(JavaMailSender emailSender) {
-        this.emailSender = emailSender;
+        this.correo = emailSender;
     }
 
     @Value("${spring.profiles.active:default}")
@@ -38,10 +38,9 @@ public class EmailSender implements EmailService {
             message.setTo(to);
             message.setSubject(subject);
             message.setText(body);
-            emailSender.send(message);
-            System.out.println("Correo enviado con éxito!");
+            correo.send(message);
         } catch (Exception e) {
-            System.err.println("Error al enviar el correo: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

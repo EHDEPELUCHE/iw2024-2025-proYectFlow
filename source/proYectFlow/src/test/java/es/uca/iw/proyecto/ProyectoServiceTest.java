@@ -49,7 +49,7 @@ class ProyectoServiceTest {
         MockitoAnnotations.openMocks(this);
         // convocatoriaService = mock(ConvocatoriaService.class);
         convocatoriaService = mock(ConvocatoriaService.class);
-        when(convocatoriaService.ConvocatoriaActual()).thenReturn(new Convocatoria());
+        when(convocatoriaService.convocatoriaActual()).thenReturn(new Convocatoria());
     }
 
     @Test
