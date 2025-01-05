@@ -1,8 +1,8 @@
 package es.uca.iw.security;
 
 import com.vaadin.flow.spring.security.AuthenticationContext;
-import es.uca.iw.Usuario.Usuario;
-import es.uca.iw.Usuario.UsuarioRepository;
+import es.uca.iw.usuario.Usuario;
+import es.uca.iw.usuario.UsuarioRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

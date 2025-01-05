@@ -1,4 +1,4 @@
-package es.uca.iw.Usuario;
+package es.uca.iw.usuario;
 
 import es.uca.iw.global.AbstractEntity;
 import es.uca.iw.global.Roles;

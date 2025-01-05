@@ -1,7 +1,7 @@
-package es.uca.iw.Proyecto;
+package es.uca.iw.proyecto;
 
 import es.uca.iw.convocatoria.Convocatoria;
-import es.uca.iw.Usuario.Usuario;
+import es.uca.iw.usuario.Usuario;
 import es.uca.iw.global.AbstractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;

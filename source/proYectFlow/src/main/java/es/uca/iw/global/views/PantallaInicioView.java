@@ -11,7 +11,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import es.uca.iw.Proyecto.views.ProyectosEnDesarrolloView;
+import es.uca.iw.proyecto.views.ProyectosEnDesarrolloView;
 
 @AnonymousAllowed
 @PageTitle("ProYectFlow")

@@ -12,10 +12,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.router.*;
 
-import es.uca.iw.Proyecto.AlineamientoEstrategico;
-import es.uca.iw.Proyecto.AlineamientoEstrategicoService;
-import es.uca.iw.Proyecto.Proyecto;
-import es.uca.iw.Proyecto.ProyectoService;
+import es.uca.iw.proyecto.AlineamientoEstrategico;
+import es.uca.iw.proyecto.AlineamientoEstrategicoService;
+import es.uca.iw.proyecto.Proyecto;
+import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.global.DownloadPdfComponent;
 import jakarta.annotation.security.RolesAllowed;
 

@@ -1,4 +1,4 @@
-package es.uca.iw.Proyecto.views;
+package es.uca.iw.proyecto.views;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.Key;
@@ -12,8 +12,8 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import es.uca.iw.Proyecto.AlineamientoEstrategico;
-import es.uca.iw.Proyecto.AlineamientoEstrategicoService;
+import es.uca.iw.proyecto.AlineamientoEstrategico;
+import es.uca.iw.proyecto.AlineamientoEstrategicoService;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.util.Objects;

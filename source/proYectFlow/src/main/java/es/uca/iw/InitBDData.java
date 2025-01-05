@@ -3,10 +3,10 @@ package es.uca.iw;
 import es.uca.iw.convocatoria.Convocatoria;
 import es.uca.iw.convocatoria.ConvocatoriaRepository;
 import es.uca.iw.convocatoria.ConvocatoriaService;
-import es.uca.iw.Proyecto.Proyecto;
-import es.uca.iw.Proyecto.ProyectoRepository;
-import es.uca.iw.Usuario.Usuario;
-import es.uca.iw.Usuario.UsuarioRepository;
+import es.uca.iw.proyecto.Proyecto;
+import es.uca.iw.proyecto.ProyectoRepository;
+import es.uca.iw.usuario.Usuario;
+import es.uca.iw.usuario.UsuarioRepository;
 import es.uca.iw.global.Roles;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +21,9 @@ import java.util.List;
 public class InitBDData {
 
     @Bean
-    CommandLineRunner initData(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, ConvocatoriaRepository convocatoriaRepository, ProyectoRepository proyectoRepository, ConvocatoriaService convocatoriaService) {
+    CommandLineRunner initData(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder,
+                               ConvocatoriaRepository convocatoriaRepository, ProyectoRepository proyectoRepository,
+                               ConvocatoriaService convocatoriaService) {
         return args -> {
             if (usuarioRepository.count() == 0) {
                 List<Usuario> usuarios = List.of(
@@ -62,9 +64,7 @@ public class InitBDData {
             }
 
             // Espera a que los datos sean cargados
-            while (usuarioRepository.count() < 7 || convocatoriaRepository.count() < 3) {
-                Thread.sleep(100);
-            }
+            waitUntilDataIsReady(usuarioRepository, convocatoriaRepository);
 
             if (proyectoRepository.count() == 0) {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -139,4 +139,15 @@ public class InitBDData {
             }
         };
     }
+
+    private void waitUntilDataIsReady(UsuarioRepository usuarioRepository, ConvocatoriaRepository convocatoriaRepository) {
+        while (usuarioRepository.count() < 7 || convocatoriaRepository.count() < 3) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
 }
+

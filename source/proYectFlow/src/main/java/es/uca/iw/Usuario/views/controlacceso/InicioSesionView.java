@@ -1,4 +1,4 @@
-package es.uca.iw.Usuario.views.controlacceso;
+package es.uca.iw.usuario.views.controlacceso;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.login.LoginI18n;
@@ -10,7 +10,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.router.internal.RouteUtil;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import es.uca.iw.Usuario.UsuarioService;
+import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.security.AuthenticatedUser;
 
 @PageTitle("Inicio Sesión")

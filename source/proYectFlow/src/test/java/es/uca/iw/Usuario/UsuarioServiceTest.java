@@ -1,4 +1,4 @@
-package es.uca.iw.Usuario;
+package es.uca.iw.usuario;
 
 import es.uca.iw.email.EmailService;
 import es.uca.iw.global.Roles;

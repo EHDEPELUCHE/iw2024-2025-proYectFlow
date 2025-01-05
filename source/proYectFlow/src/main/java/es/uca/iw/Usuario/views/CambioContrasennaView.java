@@ -1,4 +1,4 @@
-package es.uca.iw.Usuario.views;
+package es.uca.iw.usuario.views;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.Key;
@@ -16,8 +16,8 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import es.uca.iw.Usuario.Usuario;
-import es.uca.iw.Usuario.UsuarioService;
+import es.uca.iw.usuario.Usuario;
+import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.security.crypto.password.PasswordEncoder;

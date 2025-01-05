@@ -1,4 +1,4 @@
-package es.uca.iw.Proyecto.views;
+package es.uca.iw.proyecto.views;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.Key;
@@ -22,10 +22,10 @@ import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import es.uca.iw.Proyecto.Proyecto;
-import es.uca.iw.Proyecto.ProyectoService;
-import es.uca.iw.Usuario.Usuario;
-import es.uca.iw.Usuario.UsuarioService;
+import es.uca.iw.proyecto.Proyecto;
+import es.uca.iw.proyecto.ProyectoService;
+import es.uca.iw.usuario.Usuario;
+import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.global.DownloadPdfComponent;
 import es.uca.iw.global.Roles;
 import es.uca.iw.security.AuthenticatedUser;

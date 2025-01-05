@@ -1,4 +1,4 @@
-package es.uca.iw.Proyecto.views;
+package es.uca.iw.proyecto.views;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -22,8 +22,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import es.uca.iw.Proyecto.Proyecto;
-import es.uca.iw.Proyecto.ProyectoService;
+import es.uca.iw.proyecto.Proyecto;
+import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.global.DownloadPdfComponent;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.persistence.criteria.CriteriaBuilder;

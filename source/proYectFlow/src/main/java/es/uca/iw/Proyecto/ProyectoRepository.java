@@ -1,6 +1,6 @@
-package es.uca.iw.Proyecto;
+package es.uca.iw.proyecto;
 
-import es.uca.iw.Usuario.Usuario;
+import es.uca.iw.usuario.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

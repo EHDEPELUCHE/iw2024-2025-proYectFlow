@@ -1,4 +1,4 @@
-package es.uca.iw.Proyecto;
+package es.uca.iw.proyecto;
 
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;

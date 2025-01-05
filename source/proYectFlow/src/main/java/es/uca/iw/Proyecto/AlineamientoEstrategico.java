@@ -1,4 +1,4 @@
-package es.uca.iw.Proyecto;
+package es.uca.iw.proyecto;
 
 import es.uca.iw.global.AbstractEntity;
 import jakarta.persistence.Column;

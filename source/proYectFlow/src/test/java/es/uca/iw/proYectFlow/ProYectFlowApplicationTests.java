@@ -1,7 +1,7 @@
 package es.uca.iw.proYectFlow;
 
-import es.uca.iw.Usuario.Usuario;
-import es.uca.iw.Usuario.UsuarioService;
+import es.uca.iw.usuario.Usuario;
+import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.global.Roles;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

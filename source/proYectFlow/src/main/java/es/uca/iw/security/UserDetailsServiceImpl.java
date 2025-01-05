@@ -1,7 +1,7 @@
 package es.uca.iw.security;
 
-import es.uca.iw.Usuario.Usuario;
-import es.uca.iw.Usuario.UsuarioRepository;
+import es.uca.iw.usuario.Usuario;
+import es.uca.iw.usuario.UsuarioRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

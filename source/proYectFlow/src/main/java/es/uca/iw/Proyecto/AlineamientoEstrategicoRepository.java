@@ -1,4 +1,4 @@
-package es.uca.iw.Proyecto;
+package es.uca.iw.proyecto;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,4 +1,4 @@
-package es.uca.iw.Usuario;
+package es.uca.iw.usuario;
 
 import es.uca.iw.email.EmailService;
 import es.uca.iw.global.Roles;
@@ -38,8 +38,8 @@ public class UsuarioService {
         return Optional.of(repository.findByUsername(nombre));
     }
 
-    public Usuario update(Usuario entity) {
-        return repository.save(entity);
+    public void update(Usuario entity) {
+        repository.save(entity);
     }
 
     @Transactional
@@ -124,13 +124,13 @@ public class UsuarioService {
         try {
             Usuario existingUser = repository.findByCorreo(promotor.getCorreo());
             if (existingUser != null) {
-                Usuario u = existingUser;
-                u.setTipo(Roles.PROMOTOR);
-                repository.save(u);
+                existingUser.setTipo(Roles.PROMOTOR);
+                existingUser.setActivo(true);
+                repository.save(existingUser);
             } else {
-                Usuario u = new Usuario(promotor.getNombre(),
-                        promotor.getNombre(), promotor.getApellido(),
+                Usuario u = new Usuario(promotor.getNombre(), promotor.getNombre(), promotor.getApellido(),
                         promotor.getCorreo(), "CAMBIARPORFAVOR", Roles.PROMOTOR);
+                u.setActivo(true);
                 try {
                     registerUserAdmin(u);
                 } catch (Exception e) {

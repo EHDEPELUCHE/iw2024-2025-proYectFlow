@@ -1,4 +1,4 @@
-package es.uca.iw.Proyecto;
+package es.uca.iw.proyecto;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;

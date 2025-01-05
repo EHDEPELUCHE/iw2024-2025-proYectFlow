@@ -1,4 +1,4 @@
-package es.uca.iw.Proyecto.views;
+package es.uca.iw.proyecto.views;
 
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.router.Menu;
@@ -7,9 +7,9 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.convocatoria.Convocatoria;
 import es.uca.iw.convocatoria.ConvocatoriaService;
-import es.uca.iw.Proyecto.Proyecto;
-import es.uca.iw.Proyecto.ProyectoService;
-import es.uca.iw.Proyecto.VisualizarProyectos;
+import es.uca.iw.proyecto.Proyecto;
+import es.uca.iw.proyecto.ProyectoService;
+import es.uca.iw.proyecto.VisualizarProyectos;
 import org.springframework.data.jpa.domain.Specification;
 
 @PageTitle("Proyectos en Desarrollo")

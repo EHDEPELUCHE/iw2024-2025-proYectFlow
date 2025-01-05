@@ -20,9 +20,9 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import es.uca.iw.Usuario.Usuario;
-import es.uca.iw.Usuario.views.MenuUsuarioView;
-import es.uca.iw.Usuario.views.MisDatosView;
+import es.uca.iw.usuario.Usuario;
+import es.uca.iw.usuario.views.MenuUsuarioView;
+import es.uca.iw.usuario.views.MisDatosView;
 import es.uca.iw.security.AuthenticatedUser;
 
 import java.util.List;

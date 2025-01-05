@@ -1,8 +1,8 @@
-package es.uca.iw.Proyecto;
+package es.uca.iw.proyecto;
 
 import es.uca.iw.convocatoria.Convocatoria;
 import es.uca.iw.convocatoria.ConvocatoriaService;
-import es.uca.iw.Usuario.Usuario;
+import es.uca.iw.usuario.Usuario;
 import es.uca.iw.email.EmailSender;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -114,11 +114,11 @@ public class ProyectoService {
     }
 
     public byte[] getPdf(UUID id) throws IOException {
-        if(repository.findById(id).isPresent()) {
-            Proyecto proyecto = repository.findById(id).get();
-            return proyecto.getPdf().readAllBytes();
+        Optional<Proyecto> optionalProyecto = repository.findById(id);
+        if (optionalProyecto.isEmpty()) {
+            return null;
         }
-        return null;
+        return optionalProyecto.get().getPdf().readAllBytes();
     }
 
     public void setValoracionPromotor(BigDecimal prioridad, Boolean avalado, Proyecto proyectoAux) {

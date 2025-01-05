@@ -1,4 +1,4 @@
-package es.uca.iw.Proyecto.views.registrarproyecto;
+package es.uca.iw.proyecto.views.registrarproyecto;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.Key;
@@ -27,10 +27,10 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import es.uca.iw.convocatoria.ConvocatoriaService;
-import es.uca.iw.Proyecto.Proyecto;
-import es.uca.iw.Proyecto.ProyectoService;
-import es.uca.iw.Usuario.Usuario;
-import es.uca.iw.Usuario.UsuarioService;
+import es.uca.iw.proyecto.Proyecto;
+import es.uca.iw.proyecto.ProyectoService;
+import es.uca.iw.usuario.Usuario;
+import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.global.Roles;
 import es.uca.iw.global.views.PantallaInicioView;
 import es.uca.iw.security.AuthenticatedUser;
@@ -175,8 +175,10 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
     }
 
     public void OnRegistroProyecto() {
-        Optional<Usuario> este = Optional.of(usuarioService.getCorreo(emailField.getValue()));
-        if (este != null) {
+        Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioService.getCorreo(emailField.getValue()));
+
+        if (usuarioOptional.isPresent()) {
+
             Blob pdfBlob = null;
             try {
                 pdfBlob = new javax.sql.rowset.serial.SerialBlob(buffer.getInputStream().readAllBytes());

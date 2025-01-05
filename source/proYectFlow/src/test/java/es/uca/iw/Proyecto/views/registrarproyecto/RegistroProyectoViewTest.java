@@ -1,4 +1,4 @@
-package es.uca.iw.Proyecto.views.registrarproyecto;
+package es.uca.iw.proyecto.views.registrarproyecto;
 
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.component.textfield.TextField;
@@ -9,10 +9,10 @@ import com.vaadin.flow.component.upload.Upload;
 
 import com.vaadin.flow.data.binder.Binder;
 import es.uca.iw.convocatoria.ConvocatoriaService;
-import es.uca.iw.Proyecto.ProyectoService;
-import es.uca.iw.Usuario.Usuario;
-import es.uca.iw.Proyecto.Proyecto;
-import es.uca.iw.Usuario.UsuarioService;
+import es.uca.iw.proyecto.ProyectoService;
+import es.uca.iw.usuario.Usuario;
+import es.uca.iw.proyecto.Proyecto;
+import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.global.Roles;
 import es.uca.iw.security.AuthenticatedUser;
 import org.junit.jupiter.api.BeforeEach;

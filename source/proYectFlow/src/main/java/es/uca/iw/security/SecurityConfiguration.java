@@ -1,7 +1,7 @@
 package es.uca.iw.security;
 
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
-import es.uca.iw.Usuario.views.controlacceso.InicioSesionView;
+import es.uca.iw.usuario.views.controlacceso.InicioSesionView;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

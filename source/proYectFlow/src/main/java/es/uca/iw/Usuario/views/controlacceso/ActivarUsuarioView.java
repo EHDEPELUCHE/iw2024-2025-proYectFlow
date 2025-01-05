@@ -1,4 +1,4 @@
-package es.uca.iw.Usuario.views.controlacceso;
+package es.uca.iw.usuario.views.controlacceso;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -11,7 +11,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import es.uca.iw.Usuario.UsuarioService;
+import es.uca.iw.usuario.UsuarioService;
 
 @PageTitle("Activación de usuario")
 @Route("ActivarUsuario")

@@ -1,4 +1,4 @@
-package es.uca.iw.Proyecto.views;
+package es.uca.iw.proyecto.views;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
@@ -21,9 +21,9 @@ import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.convocatoria.Convocatoria;
 import es.uca.iw.convocatoria.ConvocatoriaService;
-import es.uca.iw.Proyecto.Proyecto;
-import es.uca.iw.Proyecto.ProyectoService;
-import es.uca.iw.Usuario.Usuario;
+import es.uca.iw.proyecto.Proyecto;
+import es.uca.iw.proyecto.ProyectoService;
+import es.uca.iw.usuario.Usuario;
 import es.uca.iw.global.DownloadPdfComponent;
 import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;

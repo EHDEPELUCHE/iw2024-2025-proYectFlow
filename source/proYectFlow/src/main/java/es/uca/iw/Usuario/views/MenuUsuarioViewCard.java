@@ -1,4 +1,4 @@
-package es.uca.iw.Usuario.views;
+package es.uca.iw.usuario.views;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;

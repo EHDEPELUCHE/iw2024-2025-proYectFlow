@@ -1,4 +1,4 @@
-package es.uca.iw.Usuario.views.controlacceso;
+package es.uca.iw.usuario.views.controlacceso;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.Key;
@@ -21,8 +21,8 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
-import es.uca.iw.Usuario.Usuario;
-import es.uca.iw.Usuario.UsuarioService;
+import es.uca.iw.usuario.Usuario;
+import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.global.Roles;
 import jakarta.annotation.security.RolesAllowed;
 
