@@ -1,14 +1,18 @@
 package es.uca.iw.email;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class EmailSender implements EmailService {
     private final JavaMailSender correo;
- 
+    private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
+
     public EmailSender(JavaMailSender emailSender) {
         this.correo = emailSender;
     }
@@ -40,7 +44,7 @@ public class EmailSender implements EmailService {
             message.setText(body);
             correo.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al enviar el email", e);
         }
     }
 }
