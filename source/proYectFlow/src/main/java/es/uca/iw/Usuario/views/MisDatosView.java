@@ -51,7 +51,6 @@ public class MisDatosView extends Composite<VerticalLayout> {
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
 
-        // PasswordField passwordField2 = new PasswordField();
         HorizontalLayout layoutRow = new HorizontalLayout();
         Button buttonPrimary = new Button();
         Button buttonSecondary = new Button();
@@ -117,8 +116,11 @@ public class MisDatosView extends Composite<VerticalLayout> {
         layoutColumn2.add(cambiocontrasenna, layoutRow);
         layoutRow.add(buttonPrimary, btncancelar);
         getContent().add(Borrar);
-        Usuario aux = user.get();
-        binder.bindInstanceFields(this);
-        binder.setBean(aux);
+        if(user.isPresent()) {
+            Usuario aux = user.get();
+            binder.bindInstanceFields(this);
+            binder.setBean(aux);
+        }
+       
     }
 }

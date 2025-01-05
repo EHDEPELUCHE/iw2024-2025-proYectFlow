@@ -108,7 +108,8 @@ public class EditarProyectosAdmin extends Composite<VerticalLayout> implements H
             h3.setWidth("100%");
             formLayout2Col.setWidth("100%");
             emailField.setLabel("Solicitante");
-            emailField.setValue(solicitante.get().getCorreo());
+            if (solicitante.isPresent()) emailField.setValue(solicitante.get().getCorreo());
+            else emailField.setValue("No se ha encontrado el solicitante");
             emailField.setWidth("min-content");
             promotor.setLabel("Promotor");
             promotor.setWidth("min-content");

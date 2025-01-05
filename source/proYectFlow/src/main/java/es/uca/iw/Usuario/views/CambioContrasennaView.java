@@ -35,14 +35,18 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
     private final PasswordField contrasenna2 = new PasswordField();
     private final PasswordField password1 = new PasswordField();
     private final PasswordField password2 = new PasswordField();
-
+    private Usuario usuario = new Usuario();
     public CambioContrasennaView(AuthenticatedUser authenticatedUser, UsuarioService uservice, PasswordEncoder passwordEncoder) {
         this.authenticatedUser = authenticatedUser;
         this.uservice = uservice;
         this.passwordEncoder = passwordEncoder;
 
         Optional<Usuario> user = authenticatedUser.get();
-        Usuario usuario = user.get();
+        
+        if(user.isPresent()) {
+            usuario = user.get();
+            binder.setBean(usuario);
+        }
 
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H1 h1 = new H1("Cambio de contraseña");

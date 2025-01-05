@@ -89,7 +89,8 @@ public class MainLayout extends AppLayout {
         Avatar avatarBasic = new Avatar();
         if (user.get().isPresent()) {
             Optional<Usuario> usuario = user.get();
-            avatarBasic.setName(usuario.get().getNombre());
+            if(usuario.isPresent()) avatarBasic.setName(usuario.get().getNombre());
+            else avatarBasic.setName("Usuario");
             avatarBasic.setWidth("40px");
             avatarBasic.setHeight("40px");
             avatarBasic.addClassNames(LumoUtility.AlignSelf.END, "fondoAvatar");
