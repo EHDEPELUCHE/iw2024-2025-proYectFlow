@@ -1,4 +1,4 @@
-package es.uca.iw.Valoracion.views;
+package es.uca.iw.valoracion.views;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
