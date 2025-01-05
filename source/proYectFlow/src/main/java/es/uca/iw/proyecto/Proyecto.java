@@ -1,8 +1,8 @@
 package es.uca.iw.proyecto;
 
 import es.uca.iw.convocatoria.Convocatoria;
-import es.uca.iw.usuario.Usuario;
 import es.uca.iw.global.AbstractEntity;
+import es.uca.iw.usuario.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -55,7 +55,7 @@ public class Proyecto extends AbstractEntity {
     Estado estado;
 
     @ManyToMany
-    List<AlineamientoEstrategico> ObjEstrategicos;
+    List<AlineamientoEstrategico> objEstrategicos;
 
     @ManyToOne
     @JoinColumn(name = "convocatoria_id", nullable = false)
@@ -69,8 +69,7 @@ public class Proyecto extends AbstractEntity {
         this.alcance = alcance;
         this.coste = coste;
         this.aportacionInicial = aportacionInicial;
-        // Estos valores a -1 para indicar que no se han asignado aun
-        this.puntuacionEstrategica = -1;
+        this.puntuacionEstrategica = -1; // -1 indica que no se ha evaluado
         this.puntuacionTecnica = -1;
         this.puntuacionAval = -1;
         this.promotor = aval;
@@ -78,29 +77,28 @@ public class Proyecto extends AbstractEntity {
         this.solicitante = solicitante;
         this.fechaLimite = fechaLimite;
         this.fechaSolicitud = new Date();
-        this.memoria = (Blob) memoria;
-        //this.ObjEstrategicos = ObjEstrategicos; CAMBIAR
+        this.memoria = memoria;
     }
 
-    // Constructor vacio, CAMBIAR
     public Proyecto() {
+        // Empty constructor
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    //CAMBIAR
-    public List<AlineamientoEstrategico> getObjEstrategicos() {
-        return ObjEstrategicos;
-    }
-
-    public void setObjEstrategicos(List<AlineamientoEstrategico> ObjEstrategicos) {
-        this.ObjEstrategicos = ObjEstrategicos;
-    }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    //CAMBIAR
+    public List<AlineamientoEstrategico> getObjEstrategicos() {
+        return objEstrategicos;
+    }
+
+    public void setObjEstrategicos(List<AlineamientoEstrategico> objEstrategicos) {
+        this.objEstrategicos = objEstrategicos;
     }
 
     public String getDescripcion() {
@@ -250,6 +248,18 @@ public class Proyecto extends AbstractEntity {
 
     public void setConvocatoria(Convocatoria convocatoria) {
         this.convocatoria = convocatoria;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof Proyecto)) return false;
+        return getId() != null && getId().equals(((Proyecto) other).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
     }
 
     public enum Estado {solicitado, avalado, evaluadoTecnicamente, evaluadoEstrategicamente, noenDesarrollo, enDesarrollo, denegado}

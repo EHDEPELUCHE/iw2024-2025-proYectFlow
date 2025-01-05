@@ -13,7 +13,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @Route("Ayuda")
 @AnonymousAllowed
 public class AyudaView extends Composite<VerticalLayout> {
-    final String arialabel = "aria-label";
+    static final String arialabel = "aria-label";
 
     public AyudaView() {
         H1 title = new H1("Ayuda y preguntas frecuentes");

@@ -16,11 +16,11 @@ import org.springframework.data.jpa.domain.Specification;
 import java.io.IOException;
 
 public abstract class VisualizarProyectos extends Div {
-    protected Grid<Proyecto> grid;
     protected final ProyectoService proyectoService;
     private final boolean mostrarColumnaAcciones;
+    protected Grid<Proyecto> grid;
 
-    public VisualizarProyectos(ProyectoService proyectoService, boolean mostrarColumnaAcciones) {
+    protected VisualizarProyectos(ProyectoService proyectoService, boolean mostrarColumnaAcciones) {
         this.proyectoService = proyectoService;
         this.mostrarColumnaAcciones = mostrarColumnaAcciones;
         setSizeFull();
@@ -47,12 +47,12 @@ public abstract class VisualizarProyectos extends Div {
         grid.addColumn("interesados").setHeader("Interesados").setAutoWidth(true);
         grid.addColumn("alcance").setHeader("Alcance").setAutoWidth(true);
         grid.addColumn(proyecto -> {
-            if (proyecto.getPromotor() != null) {
-                return proyecto.getPromotor().getNombre() + " " + proyecto.getPromotor().getApellido();
-            } else {
-                return "Sin promotor";
-            }
-        }).setHeader("Promotor").setAutoWidth(true)
+                    if (proyecto.getPromotor() != null) {
+                        return proyecto.getPromotor().getNombre() + " " + proyecto.getPromotor().getApellido();
+                    } else {
+                        return "Sin promotor";
+                    }
+                }).setHeader("Promotor").setAutoWidth(true)
                 .setSortable(true);
         grid.addColumn("coste").setHeader("Coste").setAutoWidth(true);
         grid.addColumn("aportacionInicial").setHeader("Aportación Inicial").setAutoWidth(true);
@@ -94,7 +94,6 @@ public abstract class VisualizarProyectos extends Div {
     protected Component crearBotonesAcciones(Proyecto proyecto) {
         Button cambiarButton = new Button("Editar");
         cambiarButton.addClickListener(e -> {
-            //getUI().ifPresent(ui -> ui.navigate("menuUsuarioView/"));
             getUI().ifPresent(ui -> ui.navigate("EditarProyectoSolicitante/" + proyecto.getId().toString()));
 
         });

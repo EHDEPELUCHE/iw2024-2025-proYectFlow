@@ -16,9 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-
 import com.vaadin.flow.theme.lumo.LumoUtility;
-
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.domain.PageRequest;
 
@@ -87,13 +85,12 @@ public class GestionarConvocatoriasView extends Div {
         Button editarButton = new Button("Editar");
         editarButton.addClickListener(e -> {
             getUI().ifPresent(ui -> ui.navigate("EditarConvocatoria/" + convocatoria.getId()));
-
         });
         return editarButton;
     }
 
     protected Component estadoConvocatoria(Convocatoria convocatoria) {
-        if (convocatoria.getActiva() == false) {
+        if (!convocatoria.getActiva()) {
             Button activarButton = new Button("Activar");
             activarButton.addClickListener(e -> {
                 try {

@@ -23,13 +23,13 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.iw.global.DownloadPdfComponent;
+import es.uca.iw.global.Roles;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
-import es.uca.iw.global.DownloadPdfComponent;
+import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.usuario.Usuario;
 import es.uca.iw.usuario.UsuarioService;
-import es.uca.iw.global.Roles;
-import es.uca.iw.security.AuthenticatedUser;
 
 import java.io.IOException;
 import java.time.ZoneId;
@@ -37,10 +37,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class EditarProyectosBaseView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
-    Optional<Proyecto> proyecto;
+    static final String mincontent = "min-content";
     final ProyectoService proyectoService;
-    private final BeanValidationBinder<Proyecto> binder = new BeanValidationBinder<>(Proyecto.class);
-    UUID uuid;
     final UsuarioService usuarioService;
     final AuthenticatedUser authenticatedUser;
     final EmailField emailField = new EmailField();
@@ -54,7 +52,9 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
     final BigDecimalField coste = new BigDecimalField();
     final MemoryBuffer buffer = new MemoryBuffer();
     final Upload upload = new Upload(buffer);
-    final String mincontent = "min-content";
+    private final BeanValidationBinder<Proyecto> binder = new BeanValidationBinder<>(Proyecto.class);
+    Optional<Proyecto> proyecto;
+    UUID uuid;
 
     public EditarProyectosBaseView(ProyectoService proyectoService, UsuarioService usuarioService, AuthenticatedUser authenticatedUser) {
         this.proyectoService = proyectoService;
@@ -147,8 +147,6 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
     }
 
     void setupFields(Proyecto proyectoAux) {
-        Optional<Usuario> solicitante = authenticatedUser.get();
-
         emailField.setLabel("Solicitante");
         emailField.setValue(proyectoAux.getSolicitante().getCorreo());
         emailField.setWidth(mincontent);

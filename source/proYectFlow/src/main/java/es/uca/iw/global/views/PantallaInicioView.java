@@ -19,7 +19,7 @@ import es.uca.iw.proyecto.views.ProyectosEnDesarrolloView;
 @Menu(order = 0, icon = "line-awesome/svg/globe-solid.svg")
 public class PantallaInicioView extends VerticalLayout {
 
-    private final Button CrearProyecto;
+    private final Button crearProyecto;
 
     public PantallaInicioView() {
         Image imagenfondo = new Image("img/fondo_uca.jpg", "fondouca");
@@ -30,28 +30,28 @@ public class PantallaInicioView extends VerticalLayout {
         titulo.getElement().setAttribute("role", "heading");
         titulo.getElement().setAttribute("aria-level", "2");
 
-        CrearProyecto = new Button("Propón un proyecto");
-        CrearProyecto.addClickListener(e -> {
-            CrearProyecto.getUI().ifPresent(ui -> ui.navigate("registro-proyecto"));
+        crearProyecto = new Button("Propón un proyecto");
+        crearProyecto.addClickListener(e -> {
+            crearProyecto.getUI().ifPresent(ui -> ui.navigate("registro-proyecto"));
         });
-        CrearProyecto.addClickShortcut(Key.ENTER);
-        CrearProyecto.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        CrearProyecto.getElement().setAttribute("aria-label", "Propón un proyecto");
+        crearProyecto.addClickShortcut(Key.ENTER);
+        crearProyecto.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        crearProyecto.getElement().setAttribute("aria-label", "Propón un proyecto");
 
         H2 texto2 = new H2("Para consultar los proyectos que se están desarrollando actualmente pulse el siguiente botón:");
         texto2.getElement().setAttribute("role", "heading");
         texto2.getElement().setAttribute("aria-level", "2");
 
-        Button VerProyectos = new Button("Ver Proyectos en desarrollo");
-        VerProyectos.addClickListener(e -> {
+        Button verProyectos = new Button("Ver Proyectos en desarrollo");
+        verProyectos.addClickListener(e -> {
             new RouterLink("Ver proyectos en desarrollo", ProyectosEnDesarrolloView.class);
-            VerProyectos.getUI().ifPresent(ui -> ui.navigate("ProyectosDesarrollo"));
+            verProyectos.getUI().ifPresent(ui -> ui.navigate("ProyectosDesarrollo"));
         });
-        VerProyectos.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        VerProyectos.getElement().setAttribute("aria-label", "Ver Proyectos en desarrollo");
+        verProyectos.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        verProyectos.getElement().setAttribute("aria-label", "Ver Proyectos en desarrollo");
 
-        setHorizontalComponentAlignment(Alignment.CENTER, imagenfondo, titulo, CrearProyecto, texto2, VerProyectos);
+        setHorizontalComponentAlignment(Alignment.CENTER, imagenfondo, titulo, crearProyecto, texto2, verProyectos);
 
-        add(imagenfondo, titulo, CrearProyecto, texto2, VerProyectos);
+        add(imagenfondo, titulo, crearProyecto, texto2, verProyectos);
     }
 }

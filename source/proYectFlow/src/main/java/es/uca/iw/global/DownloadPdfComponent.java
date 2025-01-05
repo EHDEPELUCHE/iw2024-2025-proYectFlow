@@ -8,7 +8,9 @@ import java.io.ByteArrayInputStream;
 import java.util.function.Supplier;
 
 public class DownloadPdfComponent {
-    public DownloadPdfComponent() {}
+    public DownloadPdfComponent() {
+        // Empty constructor
+    }
 
     public static Button createDownloadButton(String buttonLabel, Supplier<byte[]> pdfSupplier) {
         Button downloadButton = new Button(buttonLabel);
