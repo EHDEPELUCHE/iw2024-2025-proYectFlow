@@ -16,7 +16,6 @@ import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.Date;
 
 @PageTitle("Evaluar Proyectos CIO")
 @Route("proyectosCIO")
@@ -29,7 +28,6 @@ public class ProyectosCIOView extends VisualizarProyectos {
     public ProyectosCIOView(ProyectoService proyectoService, AuthenticatedUser user, ConvocatoriaService convocatoriaService) {
         super(proyectoService, true);
 
-        Date hoy = new Date();
         if (!convocatoriaService.ConvocatoriaActual().EnPlazo()) {
             Specification<Proyecto> filtroEvaluados = (root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.evaluadoTecnicamente);

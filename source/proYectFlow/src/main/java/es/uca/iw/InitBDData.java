@@ -27,18 +27,18 @@ public class InitBDData {
                 List<Usuario> usuarios = List.of(
                         new Usuario("Juan", "juan1", "Pérez", "juan.perez@example.com",
                                 passwordEncoder.encode("pppppP1@"), Roles.ADMIN),
-                        new Usuario("Maria", "maria1", "López", "maria.lopez@example.com",
-                                passwordEncoder.encode("pppppP1@"), Roles.PROMOTOR),
-                        new Usuario("Carlos", "carlos1", "García", "carlos.garcia@example.com",
-                                passwordEncoder.encode("pppppP1@"), Roles.PROMOTOR),
-                        new Usuario("Lucia", "lucia1", "Pérez", "lucia.perez@example.com",
-                                passwordEncoder.encode("pppppP1@"), Roles.SOLICITANTE),
-                        new Usuario("Pedro", "pedro1", "Pérez", "pedro.perez@example.com",
-                                passwordEncoder.encode("pppppP1@"), Roles.SOLICITANTE),
-                        new Usuario("Sara", "sara1", "Santos", "sara.santos@example.com",
-                                passwordEncoder.encode("pppppP1@"), Roles.CIO),
-                        new Usuario("Pablo", "pablo1", "Pérez", "pablo.perez@example.com",
-                                passwordEncoder.encode("pppppP1@"), Roles.OTP)
+                        new Usuario("Maria", "maria2", "López", "maria.lopez@example.com",
+                                passwordEncoder.encode("pppppP2@"), Roles.PROMOTOR),
+                        new Usuario("Carlos", "carlos3", "García", "carlos.garcia@example.com",
+                                passwordEncoder.encode("pppppP3@"), Roles.PROMOTOR),
+                        new Usuario("Lucia", "lucia4", "González", "lucia.perez@example.com",
+                                passwordEncoder.encode("pppppP4@"), Roles.SOLICITANTE),
+                        new Usuario("Pedro", "pedro5", "Ramos", "pedro.perez@example.com",
+                                passwordEncoder.encode("pppppP5@"), Roles.SOLICITANTE),
+                        new Usuario("Sara", "sara6", "Santos", "sara.santos@example.com",
+                                passwordEncoder.encode("pppppP6@"), Roles.CIO),
+                        new Usuario("Pablo", "pablo7", "Palacios", "pablo.perez@example.com",
+                                passwordEncoder.encode("pppppP7@"), Roles.OTP)
                 );
                 usuarios.forEach(usuario -> usuario.setActivo(true));
                 usuarioRepository.saveAll(usuarios);

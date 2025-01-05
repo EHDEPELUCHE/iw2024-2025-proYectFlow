@@ -51,8 +51,8 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
 
         // Autenticación y redirección
         loginOverlay.addLoginListener(event -> {
-            String username = event.getUsername();
-            String password = event.getPassword();
+            event.getUsername();
+            event.getPassword();
         });
 
         HorizontalLayout layoutRow = new HorizontalLayout();

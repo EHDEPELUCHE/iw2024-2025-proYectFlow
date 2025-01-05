@@ -8,7 +8,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
@@ -23,7 +22,6 @@ import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.*;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
@@ -34,7 +32,6 @@ import es.uca.iw.global.Roles;
 import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.util.Optional;
@@ -62,6 +59,7 @@ public class EditarProyectoSolicitanteView extends Composite<VerticalLayout> imp
     final BigDecimalField coste = new BigDecimalField();
     final MemoryBuffer buffer = new MemoryBuffer();
     final Upload upload = new Upload(buffer);
+    private final String mincontent = "min-content";
 
     public EditarProyectoSolicitanteView(ProyectoService proyectoService, UsuarioService usuarioService, AuthenticatedUser authenticatedUser) {
         this.proyectoService = proyectoService;
@@ -108,17 +106,17 @@ public class EditarProyectoSolicitanteView extends Composite<VerticalLayout> imp
                 getContent().setAlignItems(FlexComponent.Alignment.CENTER);
                 layoutColumn2.setWidth("100%");
                 layoutColumn2.setMaxWidth("800px");
-                layoutColumn2.setHeight("min-content");
+                layoutColumn2.setHeight(mincontent);
                 h3.setText("Registro de proyecto");
                 h3.setWidth("100%");
                 formLayout2Col.setWidth("100%");
                 emailField.setLabel("Solicitante");
                 if (solicitante.isPresent()) emailField.setValue(solicitante.get().getCorreo());
                 else emailField.setValue("No se ha podido obtener el solicitante");
-                emailField.setWidth("min-content");
+                emailField.setWidth(mincontent);
                 emailField.setReadOnly(true);
                 promotor.setLabel("Promotor");
-                promotor.setWidth("min-content");
+                promotor.setWidth(mincontent);
 
                 promotor.setItems(usuarioService.get(Roles.PROMOTOR));
                 promotor.setItemLabelGenerator(Usuario::getNombre);
@@ -132,27 +130,27 @@ public class EditarProyectoSolicitanteView extends Composite<VerticalLayout> imp
                 }
 
                 nombre.setLabel("Nombre del proyecto");
-                nombre.setWidth("min-content");
+                nombre.setWidth(mincontent);
                 nombre.setValue(proyectoAux.getNombre());
 
                 alcance.setLabel("Alcance");
-                alcance.setWidth("min-content");
+                alcance.setWidth(mincontent);
                 alcance.setValue(proyectoAux.getAlcance());
 
                 descripcion.setLabel("Descripción");
-                descripcion.setWidth("min-content");
+                descripcion.setWidth(mincontent);
                 descripcion.setValue(proyectoAux.getDescripcion());
 
                 interesados.setLabel("Interesados");
-                interesados.setWidth("min-content");
+                interesados.setWidth(mincontent);
                 interesados.setValue(proyectoAux.getInteresados());
 
                 aportacionInicial.setLabel("Financiación aportada en €");
-                aportacionInicial.setWidth("min-content");
+                aportacionInicial.setWidth(mincontent);
                 aportacionInicial.setValue(proyectoAux.getAportacionInicial());
 
                 coste.setLabel("Coste Total en €");
-                coste.setWidth("min-content");
+                coste.setWidth(mincontent);
                 coste.setValue(proyectoAux.getCoste());
 
                 fechaLimite.setPlaceholder("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entrar en vigor");
@@ -193,11 +191,11 @@ public class EditarProyectoSolicitanteView extends Composite<VerticalLayout> imp
                 buttonGuardar.setText("Guardar");
                 buttonGuardar.addClickShortcut(Key.ENTER);
                 buttonGuardar.addClickListener(e -> ActualizarProyecto(proyectoAux));
-                buttonGuardar.setWidth("min-content");
+                buttonGuardar.setWidth(mincontent);
                 buttonGuardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
                 buttonSecondary.setText("Cancelar");
                 layoutRow.setAlignSelf(FlexComponent.Alignment.START, btncancelar);
-                buttonSecondary.setWidth("min-content");
+                buttonSecondary.setWidth(mincontent);
                 getContent().add(layoutColumn2);
                 layoutColumn2.add(h3);
                 layoutColumn2.add(formLayout2Col);

@@ -31,6 +31,7 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
     private final AuthenticatedUser authenticatedUser;
     private final PasswordEncoder passwordEncoder;
+    private final String mincontent = "min-content";
     final UsuarioService uservice;
     private final PasswordField contrasenna2 = new PasswordField();
     private final PasswordField password1 = new PasswordField();
@@ -62,16 +63,16 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
         getContent().setAlignItems(FlexComponent.Alignment.CENTER);
         layoutColumn2.setWidth("100%");
         layoutColumn2.setMaxWidth("800px");
-        layoutColumn2.setHeight("min-content");
+        layoutColumn2.setHeight(mincontent);
         h1.setWidth("100%");
 
         formLayout2Col.setWidth("100%");
         contrasenna2.setLabel("Contraseña actual");
-        contrasenna2.setWidth("min-content");
+        contrasenna2.setWidth(mincontent);
         password1.setLabel("Nueva contraseña");
-        password1.setWidth("min-content");
+        password1.setWidth(mincontent);
         password2.setLabel("Vuelva a escribir su nueva contraseña");
-        password2.setWidth("min-content");
+        password2.setWidth(mincontent);
 
         layoutRow.addClassName(LumoUtility.Gap.MEDIUM);
         layoutRow.setWidth("100%");
@@ -81,10 +82,10 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
         Button cancelarcambio = new Button("Volver", event -> UI.getCurrent().navigate(MisDatosView.class));
         cancelarcambio.addClassName("buttonSecondary");
 
-        buttonPrimary.setWidth("min-content");
+        buttonPrimary.setWidth(mincontent);
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonPrimary.addClickShortcut(Key.ENTER);
-        buttonSecondary.setWidth("min-content");
+        buttonSecondary.setWidth(mincontent);
 
         getContent().add(layoutColumn2);
         layoutColumn2.add(h1, formLayout2Col, layoutRow);

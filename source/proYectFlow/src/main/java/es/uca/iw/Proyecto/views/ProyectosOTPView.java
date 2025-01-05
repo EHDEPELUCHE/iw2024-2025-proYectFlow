@@ -16,7 +16,6 @@ import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.Date;
 
 @PageTitle("Proyectos OTP")
 @Route("proyectosOTP")
@@ -28,7 +27,6 @@ public class ProyectosOTPView extends VisualizarProyectos {
     public ProyectosOTPView(ProyectoService proyectoService, AuthenticatedUser user, ConvocatoriaService convocatoriaService) {
         super(proyectoService, true);
 
-        Date hoy = new Date();
         if (!convocatoriaService.ConvocatoriaActual().EnPlazo()) {
             Specification<Proyecto> filters = (root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.avalado);

@@ -32,7 +32,6 @@ public class GestionarConvocatoriasView extends Div {
 
     public GestionarConvocatoriasView(ConvocatoriaService convocatoriaService) {
         this.convocatoriaService = convocatoriaService;
-        Convocatoria convocatoriaActual = convocatoriaService.ConvocatoriaActual();
 
         setSizeFull();
         addClassNames("convocatorias-view");

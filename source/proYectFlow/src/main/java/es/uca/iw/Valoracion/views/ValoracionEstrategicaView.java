@@ -2,7 +2,6 @@ package es.uca.iw.Valoracion.views;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.*;
@@ -12,7 +11,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.router.*;
-import com.vaadin.flow.server.StreamResource;
 
 import es.uca.iw.Proyecto.AlineamientoEstrategico;
 import es.uca.iw.Proyecto.AlineamientoEstrategicoService;
@@ -21,7 +19,6 @@ import es.uca.iw.Proyecto.ProyectoService;
 import es.uca.iw.global.DownloadPdfComponent;
 import jakarta.annotation.security.RolesAllowed;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -32,7 +29,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.aspectj.weaver.ast.Not;
 
 @PageTitle("Valoración CIO")
 @Route("ValoracionEstrategica")

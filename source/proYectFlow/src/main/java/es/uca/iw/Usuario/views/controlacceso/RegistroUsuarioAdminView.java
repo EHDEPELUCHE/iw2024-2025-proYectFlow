@@ -40,6 +40,7 @@ public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
     final PasswordField contrasenna = new PasswordField();
     final ComboBox<Roles> Tipo = new ComboBox<>();
     final UsuarioService servicio;
+    final String mincontent = "min-content";
 
     public RegistroUsuarioAdminView(UsuarioService usuarioService) {
         PasswordField passwordField2 = new PasswordField();
@@ -57,7 +58,7 @@ public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
         getContent().setAlignItems(Alignment.CENTER);
         layoutColumn2.setWidth("100%");
         layoutColumn2.setMaxWidth("800px");
-        layoutColumn2.setHeight("min-content");
+        layoutColumn2.setHeight(mincontent);
         h3.setText("Registro de usuario");
         h3.setWidth("100%");
         formLayout2Col.setWidth("100%");
@@ -66,13 +67,13 @@ public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
         apellido.setLabel("apellidos");
         correo.setLabel("email");
         contrasenna.setLabel("contraseña");
-        contrasenna.setWidth("min-content");
+        contrasenna.setWidth(mincontent);
         Tipo.setLabel("Rol");
-        Tipo.setWidth("min-content");
+        Tipo.setWidth(mincontent);
         Tipo.setItems(Roles.values());
 
         passwordField2.setLabel("Repetir contraseña");
-        passwordField2.setWidth("min-content");
+        passwordField2.setWidth(mincontent);
         layoutRow.addClassName(Gap.MEDIUM);
         layoutRow.setWidth("100%");
         layoutRow.getStyle().set("flex-grow", "1");
@@ -80,10 +81,10 @@ public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
         buttonPrimary.addClickListener(e -> onRegisterButtonClick(passwordField2));
         buttonPrimary.addClickShortcut(Key.ENTER);
 
-        buttonPrimary.setWidth("min-content");
+        buttonPrimary.setWidth(mincontent);
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonSecondary.setText("Cancelar");
-        buttonSecondary.setWidth("min-content");
+        buttonSecondary.setWidth(mincontent);
         getContent().add(layoutColumn2);
         layoutColumn2.add(h3);
         layoutColumn2.add(formLayout2Col);

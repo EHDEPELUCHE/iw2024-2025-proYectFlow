@@ -1,12 +1,9 @@
 package es.uca.iw.Convocatoria;
 
-import es.uca.iw.Proyecto.Proyecto;
-import es.uca.iw.Usuario.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

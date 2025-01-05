@@ -12,7 +12,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -27,7 +26,6 @@ import java.util.Date;
 @Uses(Icon.class)
 @RolesAllowed("ROLE_ADMIN")
 public class CrearConvocatoriaView extends Composite<VerticalLayout> {
-    private final BeanValidationBinder<Convocatoria> binder = new BeanValidationBinder<>(Convocatoria.class);
     final ConvocatoriaService convocatoriaservice;
     final BigDecimalField presupuestototal = new BigDecimalField("Presupuesto");
     final DatePicker fecha_inicio = new DatePicker();

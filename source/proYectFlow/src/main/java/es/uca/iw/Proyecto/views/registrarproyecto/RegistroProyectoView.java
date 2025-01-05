@@ -8,7 +8,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.notification.Notification;
@@ -49,6 +48,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
     final UsuarioService usuarioService;
     final AuthenticatedUser authenticatedUser;
     final ProyectoService proyectoService;
+    final String mincontent = "min-content";
     EmailField emailField = new EmailField();
     ComboBox<Usuario> promotor = new ComboBox<>();
     TextField nombre = new TextField();
@@ -56,7 +56,6 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
     TextField alcance = new TextField();
     final DatePicker fechaLimite = new DatePicker("fecha límite");
     TextField interesados = new TextField("Interesados");
-    //NumberField numberField = new NumberField();
     BigDecimalField aportacionInicial = new BigDecimalField();
     BigDecimalField coste = new BigDecimalField();
     final MemoryBuffer buffer = new MemoryBuffer();
@@ -85,38 +84,38 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             getContent().setAlignItems(Alignment.CENTER);
             layoutColumn2.setWidth("100%");
             layoutColumn2.setMaxWidth("800px");
-            layoutColumn2.setHeight("min-content");
+            layoutColumn2.setHeight(mincontent);
             h3.setText("Registro de proyecto");
             h3.setWidth("100%");
             formLayout2Col.setWidth("100%");
             emailField.setLabel("Solicitante");
             if (solicitante.isPresent()) emailField.setValue(solicitante.get().getCorreo());
             else emailField.setValue("No hay solicitante");
-            emailField.setWidth("min-content");
+            emailField.setWidth(mincontent);
             promotor.setLabel("Promotor");
-            promotor.setWidth("min-content");
+            promotor.setWidth(mincontent);
 
             promotor.setItems(usuarioService.get(Roles.PROMOTOR));
             promotor.setItemLabelGenerator(Usuario::getNombre);
 
             nombre.setLabel("Nombre del proyecto");
-            nombre.setWidth("min-content");
+            nombre.setWidth(mincontent);
 
             alcance.setLabel("Alcance");
-            alcance.setWidth("min-content");
+            alcance.setWidth(mincontent);
 
             descripcion.setLabel("Descripción");
-            descripcion.setWidth("min-content");
+            descripcion.setWidth(mincontent);
 
             interesados.setLabel("Interesados");
-            interesados.setWidth("min-content");
+            interesados.setWidth(mincontent);
             interesados.setAriaLabel("Añadir interesados");
 
             aportacionInicial.setLabel("Financiación aportada en €");
-            aportacionInicial.setWidth("min-content");
+            aportacionInicial.setWidth(mincontent);
 
             coste.setLabel("Coste Total en €");
-            coste.setWidth("min-content");
+            coste.setWidth(mincontent);
             fechaLimite.setPlaceholder("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entrar en vigor");
             fechaLimite.setAriaLabel("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entrar en vigor");
 
@@ -145,11 +144,11 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             buttonPrimary.setText("Continuar");
             buttonPrimary.addClickShortcut(Key.ENTER);
             buttonPrimary.addClickListener(e -> OnRegistroProyecto());
-            buttonPrimary.setWidth("min-content");
+            buttonPrimary.setWidth(mincontent);
             buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             buttonSecondary.setText("Cancelar");
             layoutRow.setAlignSelf(FlexComponent.Alignment.START, btncancelar);
-            buttonSecondary.setWidth("min-content");
+            buttonSecondary.setWidth(mincontent);
             getContent().add(layoutColumn2);
             layoutColumn2.add(h3);
             layoutColumn2.add(formLayout2Col);

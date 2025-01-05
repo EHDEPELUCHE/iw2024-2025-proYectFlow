@@ -17,14 +17,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.Convocatoria.Convocatoria;
 import es.uca.iw.Convocatoria.ConvocatoriaService;
 import es.uca.iw.Proyecto.Proyecto;
 import es.uca.iw.Proyecto.ProyectoService;
-import es.uca.iw.Proyecto.VisualizarProyectos;
 import es.uca.iw.Usuario.Usuario;
 import es.uca.iw.global.DownloadPdfComponent;
 import es.uca.iw.security.AuthenticatedUser;
@@ -36,7 +34,6 @@ import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
@@ -68,7 +65,6 @@ public class PriorizarProyectos extends Div {
                 LumoUtility.FontSize.MEDIUM, LumoUtility.Margin.Left.LARGE);
         setSizeFull();
         addClassNames("proyectos-view");
-        Date hoy = new Date();
         boolean hasInvalidStateProjects = proyectoService.list(PageRequest.of(0, Integer.MAX_VALUE)).stream()
             .anyMatch(proyecto -> proyecto.getEstado() == Proyecto.Estado.avalado || proyecto.getEstado() == Proyecto.Estado.evaluadoTecnicamente);
 

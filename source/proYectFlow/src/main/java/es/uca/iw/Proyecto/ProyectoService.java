@@ -4,7 +4,7 @@ import es.uca.iw.Convocatoria.Convocatoria;
 import es.uca.iw.Convocatoria.ConvocatoriaService;
 import es.uca.iw.Usuario.Usuario;
 import es.uca.iw.email.EmailSender;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -23,6 +23,7 @@ public class ProyectoService {
     private final ProyectoRepository repository;
     private final EmailSender mailSender;
     private final ConvocatoriaService convocatoriaService;
+    private final String NoPasaTecnica = "Su proyecto NO ha pasado la valoración técnica";
 
     public ProyectoService(ProyectoRepository repository, EmailSender mailSender, ConvocatoriaService convocatoriaService) {
         this.repository = repository;
@@ -81,11 +82,11 @@ public class ProyectoService {
                 proyecto.setEstado(Proyecto.Estado.denegado);
                 proyecto.setPuntuacionTecnica(0);
                 if (proyecto.getSolicitante() != null) {
-                    mailSender.sendEmail(proyecto.getSolicitante().getCorreo(), "Su proyecto NO ha pasado la valoración técnica",
+                    mailSender.sendEmail(proyecto.getSolicitante().getCorreo(), NoPasaTecnica,
                             "Lo lamentamos, su propuesta:\"" + proyecto.getNombre() + "\" no cumple el mínimo requerido en aspectos técnicos.");
                 }
                 if (proyecto.getPromotor() != null) {
-                    mailSender.sendEmail(proyecto.getPromotor().getCorreo(), "Su proyecto NO ha pasado la valoración técnica",
+                    mailSender.sendEmail(proyecto.getPromotor().getCorreo(), NoPasaTecnica,
                             "Lo lamentamos, su propuesta avalada:\"" + proyecto.getNombre() + "\" no cumple el mínimo requerido en aspectos técnicos.");
                 }
                 repository.save(proyecto);
@@ -98,11 +99,11 @@ public class ProyectoService {
                     repository.save(proyecto);
                 } else {
                     if (proyecto.getSolicitante() != null) {
-                        mailSender.sendEmail(proyecto.getSolicitante().getCorreo(), "Su proyecto NO ha pasado la valoración técnica",
+                        mailSender.sendEmail(proyecto.getSolicitante().getCorreo(), NoPasaTecnica,
                                 "Lo lamentamos, su propuesta:\"" + proyecto.getNombre() + "\" no cumple el mínimo requerido en aspectos técnicos.");
                     }
                     if (proyecto.getPromotor() != null) {
-                        mailSender.sendEmail(proyecto.getPromotor().getCorreo(), "Su proyecto NO ha pasado la valoración técnica",
+                        mailSender.sendEmail(proyecto.getPromotor().getCorreo(), NoPasaTecnica,
                                 "Lo lamentamos, su propuesta avalada:\"" + proyecto.getNombre() + "\" no cumple el mínimo requerido en aspectos técnicos.");
                     }
                     proyecto.setEstado(Proyecto.Estado.denegado);

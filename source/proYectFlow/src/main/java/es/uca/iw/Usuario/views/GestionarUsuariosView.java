@@ -12,12 +12,10 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -27,7 +25,6 @@ import es.uca.iw.Usuario.UsuarioService;
 import es.uca.iw.global.Roles;
 import es.uca.iw.rest.Promotor;
 import es.uca.iw.rest.Respuesta;
-import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +42,6 @@ import java.util.logging.Logger;
 @RolesAllowed("ROLE_ADMIN")
 public class GestionarUsuariosView extends Composite<VerticalLayout> {
     private static final Logger logger = Logger.getLogger(GestionarUsuariosView.class.getName());
-    private final BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
     private final RestTemplate restTemplate;
     private final UsuarioService usuarioService;
     private final ProyectoService proyectoService;

@@ -11,8 +11,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import org.springframework.data.domain.Page;
-import com.vaadin.hilla.mappedtypes.Pageable;
 
 import java.util.Optional;
 import java.util.UUID;
