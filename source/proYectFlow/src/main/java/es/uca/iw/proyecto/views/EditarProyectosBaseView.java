@@ -117,7 +117,13 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
             layoutColumn2.add(formLayout2Col);
             formLayout2Col.add(emailField, promotor, nombre, descripcion, interesados, alcance, aportacionInicial, coste, fechaLimite, upload);
 
-            Button cancelarButton = new Button("Volver", eventy -> UI.getCurrent().navigate(ProyectosView.class));
+            Button cancelarButton = new Button("Volver");
+            if (authenticatedUser.get().isPresent() && authenticatedUser.get().get().getTipo() == Roles.ADMIN) {
+                cancelarButton.addClickListener(e -> UI.getCurrent().navigate(ProyectosView.class));
+            } else {
+                cancelarButton.addClickListener(e -> UI.getCurrent().navigate(EstadoProyectosView.class));
+            }
+
             layoutRow.setAlignSelf(FlexComponent.Alignment.START, cancelarButton);
 
             Button borrarProyectoButton = new Button("Borrar Proyecto", eventy -> {

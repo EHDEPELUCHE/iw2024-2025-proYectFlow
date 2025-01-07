@@ -1,6 +1,7 @@
 package es.uca.iw.usuario.views.controlacceso;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
@@ -26,6 +27,7 @@ public class ActivarUsuarioView extends Composite<VerticalLayout> {
         EmailField email = new EmailField("Tu email");
         TextField codigo = new TextField("Codigo enviado");
         Button Guardar = new Button("Guardar");
+        Guardar.addClickShortcut(Key.ENTER);
         Guardar.addClickListener(e -> {
             if (usuarioService.activateUser(email.getValue(), codigo.getValue())) {
                 Notification.show("Usuario activado con exito");
