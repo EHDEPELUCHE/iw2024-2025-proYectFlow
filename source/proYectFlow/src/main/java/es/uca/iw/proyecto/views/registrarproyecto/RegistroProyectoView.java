@@ -49,7 +49,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
     final UsuarioService usuarioService;
     final AuthenticatedUser authenticatedUser;
     final ProyectoService proyectoService;
-    final String mincontent = "min-content";
+    static final String MIN_CONTENT = "min-content";
     EmailField emailField = new EmailField();
     ComboBox<Usuario> promotor = new ComboBox<>();
     TextField nombre = new TextField();
@@ -85,38 +85,38 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             getContent().setAlignItems(Alignment.CENTER);
             layoutColumn2.setWidth("100%");
             layoutColumn2.setMaxWidth("800px");
-            layoutColumn2.setHeight(mincontent);
+            layoutColumn2.setHeight(MIN_CONTENT);
             h3.setText("Registro de proyecto");
             h3.setWidth("100%");
             formLayout2Col.setWidth("100%");
             emailField.setLabel("Solicitante");
             if (solicitante.isPresent()) emailField.setValue(solicitante.get().getCorreo());
             else emailField.setValue("No hay solicitante");
-            emailField.setWidth(mincontent);
+            emailField.setWidth(MIN_CONTENT);
             promotor.setLabel("Promotor");
-            promotor.setWidth(mincontent);
+            promotor.setWidth(MIN_CONTENT);
 
             promotor.setItems(usuarioService.get(Roles.PROMOTOR));
             promotor.setItemLabelGenerator(Usuario::getNombre);
 
             nombre.setLabel("Nombre del proyecto");
-            nombre.setWidth(mincontent);
+            nombre.setWidth(MIN_CONTENT);
 
             alcance.setLabel("Alcance");
-            alcance.setWidth(mincontent);
+            alcance.setWidth(MIN_CONTENT);
 
             descripcion.setLabel("Descripción");
-            descripcion.setWidth(mincontent);
+            descripcion.setWidth(MIN_CONTENT);
 
             interesados.setLabel("Interesados");
-            interesados.setWidth(mincontent);
+            interesados.setWidth(MIN_CONTENT);
             interesados.setAriaLabel("Añadir interesados");
 
             aportacionInicial.setLabel("Financiación aportada en €");
-            aportacionInicial.setWidth(mincontent);
+            aportacionInicial.setWidth(MIN_CONTENT);
 
             coste.setLabel("Coste Total en €");
-            coste.setWidth(mincontent);
+            coste.setWidth(MIN_CONTENT);
             fechaLimite.setPlaceholder("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entrar en vigor");
             fechaLimite.setAriaLabel("Añadir solo si el proyecto se realiza para cumplimentar alguna ley próxima a entrar en vigor");
 
@@ -151,12 +151,12 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             layoutRow.setJustifyContentMode(JustifyContentMode.END);
             buttonPrimary.setText("Continuar");
             buttonPrimary.addClickShortcut(Key.ENTER);
-            buttonPrimary.addClickListener(e -> OnRegistroProyecto());
-            buttonPrimary.setWidth(mincontent);
+            buttonPrimary.addClickListener(e -> onRegistroProyecto());
+            buttonPrimary.setWidth(MIN_CONTENT);
             buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             buttonSecondary.setText("Cancelar");
             layoutRow.setAlignSelf(FlexComponent.Alignment.START, btncancelar);
-            buttonSecondary.setWidth(mincontent);
+            buttonSecondary.setWidth(MIN_CONTENT);
             getContent().add(layoutColumn2);
             layoutColumn2.add(h3);
             layoutColumn2.add(formLayout2Col);
@@ -182,7 +182,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         }
     }
 
-    public void OnRegistroProyecto() {
+    public void onRegistroProyecto() {
         Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioService.getCorreo(emailField.getValue()));
 
         if (usuarioOptional.isPresent()) {

@@ -30,7 +30,6 @@ import jakarta.annotation.security.RolesAllowed;
 @Route("registro-usuario-admin")
 @Menu(order = 2, icon = "line-awesome/svg/user.svg")
 @RolesAllowed("ROLE_ADMIN")
-//@AnonymousAllowed
 public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
     private final BeanValidationBinder<Usuario> binder;
     final TextField username = new TextField();
@@ -38,9 +37,9 @@ public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
     final TextField apellido = new TextField();
     final EmailField correo = new EmailField();
     final PasswordField contrasenna = new PasswordField();
-    final ComboBox<Roles> Tipo = new ComboBox<>();
+    final ComboBox<Roles> tipo = new ComboBox<>();
     final UsuarioService servicio;
-    final String mincontent = "min-content";
+    static final String MIN_CONTENT = "min-content";
 
     public RegistroUsuarioAdminView(UsuarioService usuarioService) {
         PasswordField passwordField2 = new PasswordField();
@@ -58,7 +57,7 @@ public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
         getContent().setAlignItems(Alignment.CENTER);
         layoutColumn2.setWidth("100%");
         layoutColumn2.setMaxWidth("800px");
-        layoutColumn2.setHeight(mincontent);
+        layoutColumn2.setHeight(MIN_CONTENT);
         h3.setText("Registro de usuario");
         h3.setWidth("100%");
         formLayout2Col.setWidth("100%");
@@ -67,13 +66,13 @@ public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
         apellido.setLabel("apellidos");
         correo.setLabel("email");
         contrasenna.setLabel("contraseña");
-        contrasenna.setWidth(mincontent);
-        Tipo.setLabel("Rol");
-        Tipo.setWidth(mincontent);
-        Tipo.setItems(Roles.values());
+        contrasenna.setWidth(MIN_CONTENT);
+        tipo.setLabel("Rol");
+        tipo.setWidth(MIN_CONTENT);
+        tipo.setItems(Roles.values());
 
         passwordField2.setLabel("Repetir contraseña");
-        passwordField2.setWidth(mincontent);
+        passwordField2.setWidth(MIN_CONTENT);
         layoutRow.addClassName(Gap.MEDIUM);
         layoutRow.setWidth("100%");
         layoutRow.getStyle().set("flex-grow", "1");
@@ -81,10 +80,10 @@ public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
         buttonPrimary.addClickListener(e -> onRegisterButtonClick(passwordField2));
         buttonPrimary.addClickShortcut(Key.ENTER);
 
-        buttonPrimary.setWidth(mincontent);
+        buttonPrimary.setWidth(MIN_CONTENT);
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonSecondary.setText("Cancelar");
-        buttonSecondary.setWidth(mincontent);
+        buttonSecondary.setWidth(MIN_CONTENT);
         getContent().add(layoutColumn2);
         layoutColumn2.add(h3);
         layoutColumn2.add(formLayout2Col);
@@ -92,10 +91,9 @@ public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
         formLayout2Col.add(nombre);
         formLayout2Col.add(apellido);
         formLayout2Col.add(correo);
-        //formLayout2Col.add(textField3);
         formLayout2Col.add(contrasenna);
         formLayout2Col.add(passwordField2);
-        formLayout2Col.add(Tipo);
+        formLayout2Col.add(tipo);
         layoutColumn2.add(layoutRow);
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
@@ -107,7 +105,7 @@ public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
         H4 status = new H4();
         Usuario usuarioRegistro = new Usuario(nombre.getValue(),
                 username.getValue(), apellido.getValue(),
-                correo.getValue(), contrasenna.getValue(), Tipo.getValue());
+                correo.getValue(), contrasenna.getValue(), tipo.getValue());
         binder.setBean(usuarioRegistro);
 
         if (!contrasenna.getValue().equals(passwordField2.getValue())) {
@@ -116,7 +114,6 @@ public class RegistroUsuarioAdminView extends Composite<VerticalLayout> {
         }
 
         if (binder.validate().isOk()) {
-
             if (servicio.registerUserAdmin(binder.getBean())) {
                 status.setText("Excelente. ¡Por favor mira tu bandeja de entrada de correo!");
                 status.setVisible(true);

@@ -59,8 +59,8 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.activo = false;
     }
 
-    // Constructor vacio CAMBIAR
     public Usuario() {
+        //Empty constructor
     }
 
     public Usuario(String nombre, String username, String apellido, String correo, String contrasenna, Roles tipo) {
@@ -149,10 +149,42 @@ public class Usuario extends AbstractEntity implements UserDetails {
 
     @Override
     public String getPassword() {
-        return contrasenna;
+        return getContrasenna();
     }
 
     public String getHashedPassword() {
-        return contrasenna;
+        return getPassword();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Usuario)) return false;
+        if (!super.equals(o)) return false;
+
+        Usuario usuario = (Usuario) o;
+
+        if (activo != usuario.activo) return false;
+        if (username != null ? !username.equals(usuario.username) : usuario.username != null) return false;
+        if (nombre != null ? !nombre.equals(usuario.nombre) : usuario.nombre != null) return false;
+        if (apellido != null ? !apellido.equals(usuario.apellido) : usuario.apellido != null) return false;
+        if (correo != null ? !correo.equals(usuario.correo) : usuario.correo != null) return false;
+        if (contrasenna != null ? !contrasenna.equals(usuario.contrasenna) : usuario.contrasenna != null) return false;
+        if (tipo != usuario.tipo) return false;
+        return codigo != null ? codigo.equals(usuario.codigo) : usuario.codigo == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (nombre != null ? nombre.hashCode() : 0);
+        result = 31 * result + (apellido != null ? apellido.hashCode() : 0);
+        result = 31 * result + (correo != null ? correo.hashCode() : 0);
+        result = 31 * result + (contrasenna != null ? contrasenna.hashCode() : 0);
+        result = 31 * result + (tipo != null ? tipo.hashCode() : 0);
+        result = 31 * result + (activo ? 1 : 0);
+        result = 31 * result + (codigo != null ? codigo.hashCode() : 0);
+        return result;
     }
 }

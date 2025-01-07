@@ -47,7 +47,6 @@ class ProyectoServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        // convocatoriaService = mock(ConvocatoriaService.class);
         convocatoriaService = mock(ConvocatoriaService.class);
         when(convocatoriaService.convocatoriaActual()).thenReturn(new Convocatoria());
     }
@@ -98,12 +97,12 @@ class ProyectoServiceTest {
     @Test
     void setValoracionTecnica() {
         Proyecto proyecto = new Proyecto();
-        proyecto.setEstado(Proyecto.Estado.enDesarrollo);
+        proyecto.setEstado(Proyecto.Estado.EN_DESARROLLO);
         when(repository.save(proyecto)).thenReturn(proyecto);
 
         proyectoService.setValoracionTecnica(BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(100), proyecto);
 
-        assertEquals(Proyecto.Estado.evaluadoTecnicamente, proyecto.getEstado());
+        assertEquals(Proyecto.Estado.EVALUADO_TECNICAMENTE, proyecto.getEstado());
         verify(repository, times(1)).save(proyecto);
     }
 
@@ -117,7 +116,7 @@ class ProyectoServiceTest {
 
         proyectoService.setValoracionPromotor(BigDecimal.valueOf(10), true, proyecto);
 
-        assertEquals(Proyecto.Estado.avalado, proyecto.getEstado());
+        assertEquals(Proyecto.Estado.AVALADO, proyecto.getEstado());
         verify(repository, times(1)).save(proyecto);
     }
 
@@ -125,24 +124,24 @@ class ProyectoServiceTest {
     void setValoracionEstrategica() {
         Proyecto proyecto = new Proyecto();
         proyecto.setPuntuacionTecnica(7);
-        proyecto.setEstado(Proyecto.Estado.evaluadoTecnicamente);
+        proyecto.setEstado(Proyecto.Estado.EVALUADO_TECNICAMENTE);
         when(repository.save(proyecto)).thenReturn(proyecto);
 
         proyectoService.setValoracionEstrategica(BigDecimal.valueOf(10), proyecto);
 
-        assertEquals(Proyecto.Estado.evaluadoEstrategicamente, proyecto.getEstado());
+        assertEquals(Proyecto.Estado.EVALUADO_ESTRATEGICAMENTE, proyecto.getEstado());
         verify(repository, times(1)).save(proyecto);
     }
 
     @Test
     void desarrollar() {
         Proyecto proyecto = new Proyecto();
-        proyecto.setEstado(Proyecto.Estado.enDesarrollo);
+        proyecto.setEstado(Proyecto.Estado.EN_DESARROLLO);
         when(repository.save(proyecto)).thenReturn(proyecto);
 
         proyectoService.desarrollar(proyecto, true);
 
-        assertEquals(Proyecto.Estado.enDesarrollo, proyecto.getEstado());
+        assertEquals(Proyecto.Estado.EN_DESARROLLO, proyecto.getEstado());
         verify(repository, times(1)).save(proyecto);
     }
 }

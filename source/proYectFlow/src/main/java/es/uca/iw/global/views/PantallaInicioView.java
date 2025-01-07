@@ -31,9 +31,7 @@ public class PantallaInicioView extends VerticalLayout {
         titulo.getElement().setAttribute("aria-level", "2");
 
         crearProyecto = new Button("Propón un proyecto");
-        crearProyecto.addClickListener(e -> {
-            crearProyecto.getUI().ifPresent(ui -> ui.navigate("registro-proyecto"));
-        });
+        crearProyecto.addClickListener(e -> crearProyecto.getUI().ifPresent(ui -> ui.navigate("registro-proyecto")));
         crearProyecto.addClickShortcut(Key.ENTER);
         crearProyecto.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         crearProyecto.getElement().setAttribute("aria-label", "Propón un proyecto");

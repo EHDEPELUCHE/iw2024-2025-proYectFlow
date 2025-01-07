@@ -19,6 +19,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
 import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.usuario.Usuario;
 import es.uca.iw.usuario.UsuarioService;
@@ -170,9 +171,9 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
 
     @Transactional
     public void guardarPromotores() {
-        String API_URL = "https://e608f590-1a0b-43c5-b363-e5a883961765.mock.pstmn.io/sponsors";
+        String apiUrl = "https://e608f590-1a0b-43c5-b363-e5a883961765.mock.pstmn.io/sponsors";
         try {
-            ResponseEntity<Respuesta> response = restTemplate.getForEntity(API_URL, Respuesta.class);
+            ResponseEntity<Respuesta> response = restTemplate.getForEntity(apiUrl, Respuesta.class);
             if (response.getStatusCode().is2xxSuccessful()) {
                 try {
                     usuarioService.destituyePromotores();
@@ -202,6 +203,7 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
         } catch (Exception e) {
             logger.severe("Error al obtener los promotores: " + e.getMessage());
             Notification.show("Error al obtener los promotores");
+            e.printStackTrace();
         }
     }
 }

@@ -39,7 +39,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class EditarProyectosBaseView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
-    static final String mincontent = "min-content";
+    static final String MIN_CONTENT = "min-content";
     final ProyectoService proyectoService;
     final UsuarioService usuarioService;
     final AuthenticatedUser authenticatedUser;
@@ -96,7 +96,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
             getContent().setAlignItems(FlexComponent.Alignment.CENTER);
             layoutColumn2.setWidth("100%");
             layoutColumn2.setMaxWidth("800px");
-            layoutColumn2.setHeight(mincontent);
+            layoutColumn2.setHeight(MIN_CONTENT);
             h3.setText("Editar datos del proyecto");
             h3.setWidth("100%");
             formLayout2Col.setWidth("100%");
@@ -111,8 +111,8 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
 
             guardarButton.setText("Guardar");
             guardarButton.addClickShortcut(Key.ENTER);
-            guardarButton.addClickListener(e -> ActualizarProyecto(proyectoAux));
-            guardarButton.setWidth(mincontent);
+            guardarButton.addClickListener(e -> actualizarProyecto(proyectoAux));
+            guardarButton.setWidth(MIN_CONTENT);
             guardarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
             layoutColumn2.add(h3);
@@ -120,21 +120,21 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
             formLayout2Col.add(emailField, promotor, nombre, descripcion, interesados, alcance, aportacionInicial, coste, fechaLimite, upload);
 
             Button cancelarButton = new Button("Volver");
-            if (authenticatedUser.get().isPresent() && authenticatedUser.get().get().getTipo() == Roles.ADMIN) {
-                cancelarButton.addClickListener(e -> UI.getCurrent().navigate(ProyectosView.class));
-            } else {
-                cancelarButton.addClickListener(e -> UI.getCurrent().navigate(EstadoProyectosView.class));
+            if(authenticatedUser.get().isPresent()){
+                if (authenticatedUser.get().get().getTipo() == Roles.ADMIN) 
+                    cancelarButton.addClickListener(e -> UI.getCurrent().navigate(ProyectosView.class));
+                else 
+                    cancelarButton.addClickListener(e -> UI.getCurrent().navigate(EstadoProyectosView.class));
             }
-
+            
             layoutRow.setAlignSelf(FlexComponent.Alignment.START, cancelarButton);
 
             Button borrarProyectoButton = new Button("Borrar Proyecto", eventy -> {
-                if (proyectoAux.getEstado() == Proyecto.Estado.denegado) {
+                if (proyectoAux.getEstado() == Proyecto.Estado.DENEGADO) {
                     proyectoService.delete(proyectoAux.getId());
                     UI.getCurrent().navigate(ProyectosView.class);
-                } else {
+                } else
                     Notification.show("Este proyecto aún no se puede eliminar");
-                }
             });
             borrarProyectoButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
@@ -157,37 +157,37 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
     void setupFields(Proyecto proyectoAux) {
         emailField.setLabel("Solicitante");
         emailField.setValue(proyectoAux.getSolicitante().getCorreo());
-        emailField.setWidth(mincontent);
+        emailField.setWidth(MIN_CONTENT);
         emailField.setReadOnly(true);
 
         promotor.setLabel("Promotor");
-        promotor.setWidth(mincontent);
+        promotor.setWidth(MIN_CONTENT);
         promotor.setItems(usuarioService.get(Roles.PROMOTOR));
         promotor.setItemLabelGenerator(Usuario::getNombre);
         promotor.setValue(proyectoAux.getPromotor());
 
         nombre.setLabel("Nombre del proyecto");
-        nombre.setWidth(mincontent);
+        nombre.setWidth(MIN_CONTENT);
         nombre.setValue(proyectoAux.getNombre());
 
         alcance.setLabel("Alcance");
-        alcance.setWidth(mincontent);
+        alcance.setWidth(MIN_CONTENT);
         alcance.setValue(proyectoAux.getAlcance());
 
         descripcion.setLabel("Descripción");
-        descripcion.setWidth(mincontent);
+        descripcion.setWidth(MIN_CONTENT);
         descripcion.setValue(proyectoAux.getDescripcion());
 
         interesados.setLabel("Interesados");
-        interesados.setWidth(mincontent);
+        interesados.setWidth(MIN_CONTENT);
         interesados.setValue(proyectoAux.getInteresados());
 
         aportacionInicial.setLabel("Financiación aportada en €");
-        aportacionInicial.setWidth(mincontent);
+        aportacionInicial.setWidth(MIN_CONTENT);
         aportacionInicial.setValue(proyectoAux.getAportacionInicial());
 
         coste.setLabel("Coste Total en €");
-        coste.setWidth(mincontent);
+        coste.setWidth(MIN_CONTENT);
         coste.setValue(proyectoAux.getCoste());
 
         fechaLimite.setPlaceholder("Añadir solo si el proyecto se realiza para cumplir con alguna ley próxima a entrar en vigor");
@@ -217,7 +217,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
         
     }
 
-    private void ActualizarProyecto(Proyecto proyectoAux) {
+    private void actualizarProyecto(Proyecto proyectoAux) {
         proyectoService.update(proyectoAux);
         Notification.show("Proyecto actualizado");
     }

@@ -93,10 +93,7 @@ public abstract class VisualizarProyectos extends Div {
 
     protected Component crearBotonesAcciones(Proyecto proyecto) {
         Button cambiarButton = new Button("Editar");
-        cambiarButton.addClickListener(e -> {
-            getUI().ifPresent(ui -> ui.navigate("EditarProyectoSolicitante/" + proyecto.getId().toString()));
-
-        });
+        cambiarButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("EditarProyectoSolicitante/" + proyecto.getId().toString())));
         return cambiarButton;
     }
 }

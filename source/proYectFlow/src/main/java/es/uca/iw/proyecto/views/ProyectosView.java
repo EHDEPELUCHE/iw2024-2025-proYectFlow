@@ -46,6 +46,10 @@ public class ProyectosView extends Div {
     private final ProyectoService proyectoService;
     private Grid<Proyecto> grid;
     private Filters filters;
+    static final String VISIBLE = "visible";
+    static final String ARIALABEL = "aria-label";
+    static final String NOMBRE = "nombre";
+    static final String FECHA_SOLICITUD = "fechaSolicitud";
 
     public ProyectosView(ProyectoService proyectoService) {
         this.proyectoService = proyectoService;
@@ -66,7 +70,7 @@ public class ProyectosView extends Div {
         H1 h1Titulo = new H1("Proyectos");
         h1Titulo.addClassNames(LumoUtility.Margin.Bottom.NONE, LumoUtility.Margin.Top.XLARGE,
                 LumoUtility.FontSize.XXXLARGE, LumoUtility.Margin.Left.LARGE);
-        h1Titulo.getElement().setAttribute("aria-label", "Título de la página");
+        h1Titulo.getElement().setAttribute("ARIALABEL", "Título de la página");
         return h1Titulo;
     }
 
@@ -77,19 +81,19 @@ public class ProyectosView extends Div {
                 Predicate predicate = criteriaBuilder.conjunction();
                 if (!nombre.getValue().trim().isEmpty()) {
                     predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(
-                            criteriaBuilder.lower(root.get("nombre")), "%" + nombre.getValue().toLowerCase() + "%"));
+                            criteriaBuilder.lower(root.get(NOMBRE)), "%" + nombre.getValue().toLowerCase() + "%"));
                 }
                 if (!promotor.getValue().trim().isEmpty()) {
                     predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(
-                            criteriaBuilder.lower(root.get("promotor").get("nombre")), "%" + promotor.getValue().toLowerCase() + "%"));
+                            criteriaBuilder.lower(root.get("promotor").get(NOMBRE)), "%" + promotor.getValue().toLowerCase() + "%"));
                 }
                 if (startDate.getValue() != null) {
                     predicate = criteriaBuilder.and(predicate, criteriaBuilder.greaterThanOrEqualTo(
-                            root.get("fechaSolicitud"), Timestamp.valueOf(startDate.getValue().atStartOfDay())));
+                            root.get(FECHA_SOLICITUD), Timestamp.valueOf(startDate.getValue().atStartOfDay())));
                 }
                 if (endDate.getValue() != null) {
                     predicate = criteriaBuilder.and(predicate, criteriaBuilder.lessThanOrEqualTo(
-                            root.get("fechaSolicitud"), Timestamp.valueOf(endDate.getValue().atStartOfDay())));
+                            root.get(FECHA_SOLICITUD), Timestamp.valueOf(endDate.getValue().atStartOfDay())));
                 }
                 if (!estado.isEmpty()) {
                     predicate = criteriaBuilder.and(predicate, root.get("estado").in(
@@ -109,7 +113,7 @@ public class ProyectosView extends Div {
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.addClassNames(LumoUtility.Border.TOP, LumoUtility.BorderColor.CONTRAST_10);
         grid.setAllRowsVisible(true);
-        grid.getElement().setAttribute("aria-label", "Tabla de proyectos");
+        grid.getElement().setAttribute("ARIALABEL", "Tabla de proyectos");
         return grid;
     }
 
@@ -117,7 +121,7 @@ public class ProyectosView extends Div {
         grid.addColumn(proyecto -> proyecto.getSolicitante() != null ?
                 proyecto.getSolicitante().getNombre() + " " + proyecto.getSolicitante().getApellido() :
                 "Usuario no disponible").setHeader("Solicitante").setAutoWidth(true);
-        grid.addColumn("nombre").setAutoWidth(true);
+        grid.addColumn(NOMBRE).setAutoWidth(true);
         grid.addColumn("descripcion").setAutoWidth(true);
         grid.addColumn("interesados").setAutoWidth(true);
         grid.addColumn("alcance").setAutoWidth(true);
@@ -126,7 +130,7 @@ public class ProyectosView extends Div {
                 "Sin promotor").setHeader("Promotor").setAutoWidth(true);
         grid.addColumn("coste").setAutoWidth(true);
         grid.addColumn("aportacionInicial").setAutoWidth(true);
-        grid.addColumn("fechaSolicitud").setAutoWidth(true);
+        grid.addColumn(FECHA_SOLICITUD).setAutoWidth(true);
         grid.addColumn("estado").setAutoWidth(true);
         grid.addComponentColumn(this::createDownloadButton).setHeader("PDF").setAutoWidth(true);
         grid.addComponentColumn(this::createEditButton).setHeader("Acciones").setAutoWidth(true);
@@ -144,10 +148,8 @@ public class ProyectosView extends Div {
 
     private Button createEditButton(Proyecto proyecto) {
         Button evaluarButton = new Button("Editar");
-        evaluarButton.addClickListener(e -> {
-            getUI().ifPresent(ui -> ui.navigate("EditarProyecto/" + (proyecto.getId()).toString()));
-        });
-        evaluarButton.getElement().setAttribute("aria-label", "Editar proyecto");
+        evaluarButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("EditarProyecto/" + (proyecto.getId()).toString())));
+        evaluarButton.getElement().setAttribute("ARIALABEL", "Editar proyecto");
         return evaluarButton;
     }
 
@@ -155,14 +157,14 @@ public class ProyectosView extends Div {
         grid.getDataProvider().refreshAll();
     }
 
-    public static abstract class Filters extends Div implements Specification<Proyecto> {
+    public abstract static class Filters extends Div implements Specification<Proyecto> {
         protected final TextField nombre = new TextField("Nombre");
         protected final TextField promotor = new TextField("Promotor");
         protected final DatePicker startDate = new DatePicker("Fecha solicitud");
         protected final DatePicker endDate = new DatePicker();
         protected final MultiSelectComboBox<String> estado = new MultiSelectComboBox<>("Estado del proyecto");
 
-        public Filters(Runnable onSearch) {
+        protected Filters(Runnable onSearch) {
             setWidthFull();
             addClassName("filter-layout");
             addClassNames(LumoUtility.Padding.Horizontal.LARGE, LumoUtility.Padding.Vertical.MEDIUM,
@@ -198,7 +200,7 @@ public class ProyectosView extends Div {
                 estado.clear();
                 onSearch.run();
             });
-            resetBtn.getElement().setAttribute("aria-label", "Borrar filtros");
+            resetBtn.getElement().setAttribute("ARIALABEL", "Borrar filtros");
             return resetBtn;
         }
 
@@ -206,7 +208,7 @@ public class ProyectosView extends Div {
             Button searchBtn = new Button("Buscar");
             searchBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             searchBtn.addClickListener(e -> onSearch.run());
-            searchBtn.getElement().setAttribute("aria-label", "Buscar proyectos");
+            searchBtn.getElement().setAttribute("ARIALABEL", "Buscar proyectos");
             return searchBtn;
         }
 

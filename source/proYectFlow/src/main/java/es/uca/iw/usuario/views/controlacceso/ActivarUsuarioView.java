@@ -26,9 +26,9 @@ public class ActivarUsuarioView extends Composite<VerticalLayout> {
         H1 titulo = new H1("Activar Usuario");
         EmailField email = new EmailField("Tu email");
         TextField codigo = new TextField("Codigo enviado");
-        Button Guardar = new Button("Guardar");
-        Guardar.addClickShortcut(Key.ENTER);
-        Guardar.addClickListener(e -> {
+        Button guardar = new Button("Guardar");
+        guardar.addClickShortcut(Key.ENTER);
+        guardar.addClickListener(e -> {
             if (usuarioService.activateUser(email.getValue(), codigo.getValue())) {
                 Notification.show("Usuario activado con exito");
             } else {
@@ -37,6 +37,6 @@ public class ActivarUsuarioView extends Composite<VerticalLayout> {
         });
         getContent().add(titulo);
         horizontalLayout.add(email, codigo);
-        getContent().add(horizontalLayout, Guardar);
+        getContent().add(horizontalLayout, guardar);
     }
 }

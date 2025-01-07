@@ -138,13 +138,13 @@ public class InitBDData {
                 );
 
                 List<Proyecto.Estado> estados = List.of(
-                        Proyecto.Estado.solicitado, Proyecto.Estado.solicitado,
-                        Proyecto.Estado.avalado, Proyecto.Estado.avalado,
-                        Proyecto.Estado.evaluadoTecnicamente, Proyecto.Estado.evaluadoTecnicamente,
-                        Proyecto.Estado.evaluadoEstrategicamente, Proyecto.Estado.evaluadoEstrategicamente,
-                        Proyecto.Estado.noenDesarrollo, Proyecto.Estado.noenDesarrollo,
-                        Proyecto.Estado.enDesarrollo, Proyecto.Estado.enDesarrollo,
-                        Proyecto.Estado.denegado, Proyecto.Estado.denegado
+                        Proyecto.Estado.SOLICITADO, Proyecto.Estado.SOLICITADO,
+                        Proyecto.Estado.AVALADO, Proyecto.Estado.AVALADO,
+                        Proyecto.Estado.EVALUADO_TECNICAMENTE, Proyecto.Estado.EVALUADO_TECNICAMENTE,
+                        Proyecto.Estado.EVALUADO_ESTRATEGICAMENTE, Proyecto.Estado.EVALUADO_ESTRATEGICAMENTE,
+                        Proyecto.Estado.NO_EN_DESARROLLO, Proyecto.Estado.NO_EN_DESARROLLO,
+                        Proyecto.Estado.EN_DESARROLLO, Proyecto.Estado.EN_DESARROLLO,
+                        Proyecto.Estado.DENEGADO, Proyecto.Estado.DENEGADO
                 );
 
                 for (int i = 0; i < proyectos.size(); i++) {

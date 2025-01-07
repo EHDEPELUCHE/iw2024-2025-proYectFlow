@@ -26,11 +26,11 @@ public class ProyectosPromotorView extends VisualizarProyectos {
 
     public ProyectosPromotorView(ProyectoService proyectoService, AuthenticatedUser user) {
         super(proyectoService, true);
-        this.user = user;
+        ProyectosPromotorView.user = user;
         Specification<Proyecto> filters = (root, query, criteriaBuilder) -> {
             return criteriaBuilder.and(
                     criteriaBuilder.equal(root.get("promotor"), user.get().orElse(null)),
-                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.solicitado)
+                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.SOLICITADO)
             );
         };
 
@@ -40,9 +40,7 @@ public class ProyectosPromotorView extends VisualizarProyectos {
     @Override
     protected Component crearBotonesAcciones(Proyecto proyecto) {
         Button evaluarButton = new Button("Avalar");
-        evaluarButton.addClickListener(e -> {
-            getUI().ifPresent(ui -> ui.navigate("ValoracionPromotor/" + proyecto.getId().toString()));
-        });
+        evaluarButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("ValoracionPromotor/" + proyecto.getId().toString())));
         return evaluarButton;
     }
 }

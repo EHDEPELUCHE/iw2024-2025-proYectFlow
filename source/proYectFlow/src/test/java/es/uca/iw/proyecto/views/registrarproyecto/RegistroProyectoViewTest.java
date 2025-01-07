@@ -100,7 +100,7 @@ class RegistroProyectoViewTest {
             try {
                 pdfBlob = new javax.sql.rowset.serial.SerialBlob(registroProyectoView.buffer.getInputStream().readAllBytes());
             } catch (Exception ex) {
-
+                ex.printStackTrace();
             }
 
             java.sql.Date fechaSql = null;
@@ -117,9 +117,7 @@ class RegistroProyectoViewTest {
                 if (proyectoService.registerProyecto(binder.getBean())) {
                     binder.setBean(new Proyecto());
                 }
-            } else {
-
-            }
+            } 
         }
     }
 }

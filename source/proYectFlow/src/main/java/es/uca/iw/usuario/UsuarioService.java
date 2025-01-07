@@ -66,25 +66,20 @@ public class UsuarioService {
 
     public boolean authenticate(String username, String password) {
         Usuario u = repository.findByUsername(username);
-        if (u != null) {
-            if (passwordEncoder.matches(password, u.getPassword())) {
-                return true;
-            }
-        }
+        if (u != null && passwordEncoder.matches(password, u.getPassword()))  
+            return true;
         return false;
     }
 
-    //HACER
+    
     public boolean registerUser(Usuario user) {
         user.setContrasenna(passwordEncoder.encode(user.getPassword()));
         user.setTipo(Roles.SOLICITANTE);
         user.setCodigo(UUID.randomUUID().toString().substring(0, 5));
         try {
             repository.save(user);
-            //Aun no tenemos emailService
             emailService.sendEmail(user.getCorreo(), "Registro exitoso", "Bienvenido a proYectFlow. Inicie sesión en nuestra web y propón sus proyectos para mejorar nuestra universidad." +
                     "\n Antes de empezar active su cuenta en la siguiente url: " + emailService.getServerUrl() + "ActivarUsuario e introduzca el siguiente código de activación para poder empezar: " + user.getCodigo());
-            //emailService.sendRegistrationEmail(user);
             return true;
         } catch (DataIntegrityViolationException e) {
             return false;
@@ -97,10 +92,8 @@ public class UsuarioService {
         user.setCodigo(UUID.randomUUID().toString().substring(0, 5));
         try {
             repository.save(user);
-            //Aun no tenemos emailService
             emailService.sendEmail(user.getCorreo(), "Registro exitoso", "Bienvenido a proYectFlow. Inicie sesión en nuestra web y propón sus proyectos para mejorar nuestra universidad." +
                     "\n Antes de empezar active su cuenta en la siguiente url: " + emailService.getServerUrl() + "ActivarUsuario e introduzca el siguiente código de activación para poder empezar: " + user.getCodigo());
-            //emailService.sendRegistrationEmail(user);
             return true;
         } catch (DataIntegrityViolationException e) {
             return false;
@@ -134,12 +127,10 @@ public class UsuarioService {
                 try {
                     registerUserAdmin(u);
                 } catch (Exception e) {
-                    // logger.severe("Error registering user admin: " + e.getMessage());
                     repository.save(u);
                 }
             }
         } catch (Exception e) {
-            // logger.severe("Error creating promotor: " + e.getMessage());
             throw new RuntimeException("Error creating promotor", e);
         }
     }

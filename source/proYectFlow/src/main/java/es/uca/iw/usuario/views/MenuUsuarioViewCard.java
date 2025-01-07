@@ -56,9 +56,7 @@ public class MenuUsuarioViewCard extends ListItem {
         //BOTON DE REDIRECCION
         String finalButtonText = (buttonText != null) ? buttonText : "Administrar"; // Valor por defecto
         Button buttonLink = new Button(finalButtonText);
-        buttonLink.addClickListener(e -> {
-            UI.getCurrent().navigate(navigationTarget);
-        });
+        buttonLink.addClickListener(e -> UI.getCurrent().navigate(navigationTarget));
         add(buttonLink);
 
         // Lógica para roles (solo para referencia, no afecta diseño)

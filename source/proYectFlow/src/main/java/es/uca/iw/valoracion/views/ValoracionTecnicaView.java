@@ -30,6 +30,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
     Optional<Proyecto> proyecto;
     final ProyectoService proyectoService;
     UUID uuid;
+    static final String PX = "300px";
 
     public ValoracionTecnicaView(ProyectoService proyectoService) {
         this.proyectoService = proyectoService;
@@ -59,10 +60,10 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             Grid<Proyecto> grid = new Grid<>(Proyecto.class);
             grid.setItems(List.of(proyectoAux));
             grid.setColumns("nombre", "descripcion", "fechaSolicitud", "coste", "aportacionInicial");
-            grid.addComponentColumn(proyecto ->
+            grid.addComponentColumn(proyecto1 ->
                 DownloadPdfComponent.createDownloadButton("Memoria", () -> {
                     try {
-                        return proyectoService.getPdf(proyecto.getId());
+                        return proyectoService.getPdf(proyecto1.getId());
                     } catch (IOException ex) {
                         throw new RuntimeException("Error al obtener el PDF", ex);
                     }
@@ -81,35 +82,35 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             BigDecimalField precio = new BigDecimalField("Precio total");
             precio.setLabel("Precio restante");
             precio.setValue(proyectoAux.getCoste().subtract(proyectoAux.getAportacionInicial()));
-            precio.setWidth("300px"); // Set the width of the field
+            precio.setWidth(PX); // Set the width of the field
             horlayout.add(precio);
 
             //Dejamos que rellene las horas que estima que tardará y recursos
-            BigDecimalField Horas = new BigDecimalField("Horas total");
-            Horas.setLabel("Esfuerzo necesario de nuestros empleados");
-            Horas.setWidth("300px"); // Set the width of the field
-            horlayout.add(Horas);
+            BigDecimalField horas = new BigDecimalField("Horas total");
+            horas.setLabel("Esfuerzo necesario de nuestros empleados");
+            horas.setWidth(PX); // Set the width of the field
+            horlayout.add(horas);
 
             //Idoneidad técnica
-            BigDecimalField Idoneidadtecnica = new BigDecimalField("Idoneidad total");
-            Idoneidadtecnica.setLabel("Idoneidad total");
-            Idoneidadtecnica.setWidth("300px"); // Set the width of the field
-            horlayout.add(Idoneidadtecnica);
+            BigDecimalField idoneidadtecnica = new BigDecimalField("Idoneidad total");
+            idoneidadtecnica.setLabel("Idoneidad total");
+            idoneidadtecnica.setWidth(PX); // Set the width of the field
+            horlayout.add(idoneidadtecnica);
 
             getContent().add(horlayout);
 
-            Button Guardar = new Button("Guardar");
-            Guardar.addClickListener(e -> {
+            Button guardar = new Button("Guardar");
+            guardar.addClickListener(e -> {
                 if (precio.getValue().compareTo(BigDecimal.TEN) > 0 || precio.getValue().compareTo(BigDecimal.ZERO) < 0
-                        || Horas.getValue().compareTo(BigDecimal.TEN) > 0 || Horas.getValue().compareTo(BigDecimal.ZERO) < 0
-                        || Idoneidadtecnica.getValue().compareTo(BigDecimal.TEN) > 0 || Idoneidadtecnica.getValue().compareTo(BigDecimal.ZERO) < 0) {
+                        || horas.getValue().compareTo(BigDecimal.TEN) > 0 || horas.getValue().compareTo(BigDecimal.ZERO) < 0
+                        || idoneidadtecnica.getValue().compareTo(BigDecimal.TEN) > 0 || idoneidadtecnica.getValue().compareTo(BigDecimal.ZERO) < 0) {
                     Notification.show("Las notas tienen que estar entre 0 y 10");
                 } else {
-                    proyectoService.setValoracionTecnica(precio.getValue(), Horas.getValue(), Idoneidadtecnica.getValue(), proyectoAux);
+                    proyectoService.setValoracionTecnica(precio.getValue(), horas.getValue(), idoneidadtecnica.getValue(), proyectoAux);
                 }
             });
 
-            HorizontalLayout buttonLayout = new HorizontalLayout(Guardar);
+            HorizontalLayout buttonLayout = new HorizontalLayout(guardar);
             buttonLayout.setWidthFull();
             buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
             getContent().add(buttonLayout);

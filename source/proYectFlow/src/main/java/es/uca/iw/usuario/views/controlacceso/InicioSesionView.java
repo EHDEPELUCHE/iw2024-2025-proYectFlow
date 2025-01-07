@@ -10,7 +10,6 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.router.internal.RouteUtil;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.security.AuthenticatedUser;
 
 @PageTitle("Inicio Sesión")
@@ -20,7 +19,7 @@ public class InicioSesionView extends Composite<VerticalLayout> implements Befor
     private final LoginOverlay loginOverlay;
     private final AuthenticatedUser authenticatedUser;
 
-    public InicioSesionView(AuthenticatedUser authenticatedUser, UsuarioService usuarioService) {
+    public InicioSesionView(AuthenticatedUser authenticatedUser) {
         this.authenticatedUser = authenticatedUser;
         this.loginOverlay = new LoginOverlay();
 

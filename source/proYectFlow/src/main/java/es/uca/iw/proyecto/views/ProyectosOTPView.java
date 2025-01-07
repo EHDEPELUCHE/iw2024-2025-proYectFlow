@@ -12,7 +12,6 @@ import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.proyecto.VisualizarProyectos;
-import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -24,12 +23,12 @@ import org.springframework.data.jpa.domain.Specification;
 @RolesAllowed("ROLE_OTP")
 public class ProyectosOTPView extends VisualizarProyectos {
 
-    public ProyectosOTPView(ProyectoService proyectoService, AuthenticatedUser user, ConvocatoriaService convocatoriaService) {
+    public ProyectosOTPView(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
         super(proyectoService, true);
 
         if (!convocatoriaService.convocatoriaActual().enPlazo()) {
             Specification<Proyecto> filters = (root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.avalado);
+                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.AVALADO);
 
             inicializarVistaProyectos("Proyectos por evaluar", filters);
         } else {
@@ -40,9 +39,7 @@ public class ProyectosOTPView extends VisualizarProyectos {
     @Override
     protected Component crearBotonesAcciones(Proyecto proyecto) {
         Button evaluarButton = new Button("Evaluar");
-        evaluarButton.addClickListener(e -> {
-            getUI().ifPresent(ui -> ui.navigate("ValoracionTecnica/" + proyecto.getId().toString()));
-        });
+        evaluarButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("ValoracionTecnica/" + proyecto.getId().toString())));
         return evaluarButton;
     }
 }

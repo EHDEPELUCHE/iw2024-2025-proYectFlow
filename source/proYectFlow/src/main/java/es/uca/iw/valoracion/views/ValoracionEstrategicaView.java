@@ -102,14 +102,13 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
 
             //CheckBox
             getContent().add(new H2("Alineamientos estratégicos a contemplar"));
-            CheckboxGroup<AlineamientoEstrategico> Objetivos = new CheckboxGroup<>();
-            Objetivos.setLabel("Alineamientos estratégicos");
+            CheckboxGroup<AlineamientoEstrategico> objetivos = new CheckboxGroup<>();
+            objetivos.setLabel("Alineamientos estratégicos");
 
-            Objetivos.setItems(alineamientoEstrategicoService.findAll());
-            Objetivos.setItemLabelGenerator(AlineamientoEstrategico::getObjetivo);
+            objetivos.setItems(alineamientoEstrategicoService.findAll());
+            objetivos.setItemLabelGenerator(AlineamientoEstrategico::getObjetivo);
 
-
-            getContent().add(Objetivos);
+            getContent().add(objetivos);
 
             //Valoracion
             getContent().add(new H3("Añade una valoración estratégica al proyecto según su criterio:"));
@@ -132,12 +131,11 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
                     Notification.show("Por favor, selecciona una valoración válida entre 0 y 10.");
                 } else {
                     Notification.show("Valoración seleccionada: " + valorSeleccionado);
-                    List<AlineamientoEstrategico> alineamientos = new ArrayList<>(Objetivos.getValue());
+                    List<AlineamientoEstrategico> alineamientos = new ArrayList<>(objetivos.getValue());
                     
                     // Ensure all AlineamientoEstrategico objects have valid IDs
                     boolean allValid = alineamientos.stream().allMatch(ae -> ae.getId() != null && alineamientoEstrategicoService.findById(ae.getId())!=null);
                     if (allValid) {
-                       // proyectoAux.setObjEstrategicos(alineamientos);
                         proyectoService.setValoracionEstrategica(BigDecimal.valueOf(valorSeleccionado), proyectoAux);
                         Notification.show("Valoración guardada con éxito.");
                     } else {

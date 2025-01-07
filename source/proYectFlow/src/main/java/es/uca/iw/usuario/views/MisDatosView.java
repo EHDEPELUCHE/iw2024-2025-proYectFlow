@@ -41,6 +41,7 @@ public class MisDatosView extends Composite<VerticalLayout> {
     final TextField nombre = new TextField();
     final TextField apellido = new TextField();
     final EmailField correo = new EmailField();
+    static final String MIN_CONTENT = "min_content";
 
     public MisDatosView(AuthenticatedUser authenticatedUser, UsuarioService uservice, ProyectoService proyectoservice) {
         this.uservice = uservice;
@@ -60,7 +61,7 @@ public class MisDatosView extends Composite<VerticalLayout> {
         getContent().setAlignItems(FlexComponent.Alignment.CENTER);
         layoutColumn2.setWidth("100%");
         layoutColumn2.setMaxWidth("800px");
-        layoutColumn2.setHeight("min-content");
+        layoutColumn2.setHeight(MIN_CONTENT);
         h3.setText("Datos personales");
         h3.setWidth("100%");
         formLayout2Col.setWidth("100%");
@@ -87,11 +88,11 @@ public class MisDatosView extends Composite<VerticalLayout> {
                 Notification.show("Por favor, verifique los datos de entrada");
             }
         });
-        buttonPrimary.setWidth("min-content");
+        buttonPrimary.setWidth(MIN_CONTENT);
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonPrimary.addClickShortcut(Key.ENTER);
         buttonSecondary.setText("Cancelar");
-        buttonSecondary.setWidth("min-content");
+        buttonSecondary.setWidth(MIN_CONTENT);
 
         getContent().add(layoutColumn2);
         layoutColumn2.add(h3);
@@ -105,17 +106,17 @@ public class MisDatosView extends Composite<VerticalLayout> {
         Button btncancelar = new Button("Volver", event -> UI.getCurrent().navigate(PantallaInicioView.class));
         btncancelar.addClassName("buttonSecondary");
 
-        Button Borrar = new Button("Borrar Mis datos", event -> {
+        Button borrar = new Button("Borrar Mis datos", event -> {
             proyectoservice.desligarUsuario(user.get());
             uservice.delete(user.get().getId());
             authenticatedUser.logout();
             UI.getCurrent().navigate(PantallaInicioView.class);
         });
-        Borrar.addClassName("button-danger");
-        Borrar.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        borrar.addClassName("button-danger");
+        borrar.addThemeVariants(ButtonVariant.LUMO_ERROR);
         layoutColumn2.add(cambiocontrasenna, layoutRow);
         layoutRow.add(buttonPrimary, btncancelar);
-        getContent().add(Borrar);
+        getContent().add(borrar);
         if(user.isPresent()) {
             Usuario aux = user.get();
             binder.bindInstanceFields(this);

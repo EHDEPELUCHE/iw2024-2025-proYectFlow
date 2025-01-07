@@ -19,8 +19,8 @@ import java.util.UUID;
 
 @Service
 public class ProyectoService {
-    static final String lamentamosPropuesta = "Lo lamentamos, su propuesta: ";
-    static final String lamentamosPropuestaAvalada = "Lo lamentamos, su propuesta avalada: ";
+    static final String LAMENTAMOS_PROPUESTA = "Lo lamentamos, su propuesta: ";
+    static final String LAMENTAMOS_PROPUESTA_AVALADA = "Lo lamentamos, su propuesta avalada: ";
     private final ProyectoRepository repository;
     private final EmailSender mailSender;
     private final ConvocatoriaService convocatoriaService;
@@ -77,38 +77,38 @@ public class ProyectoService {
     }
 
     public void setValoracionTecnica(BigDecimal precio, BigDecimal horas, BigDecimal idoneidad, Proyecto proyecto) {
-        if (proyecto.getEstado() != Proyecto.Estado.denegado) {
+        if (proyecto.getEstado() != Proyecto.Estado.DENEGADO) {
             String nopasaTecnica = "Su proyecto NO ha pasado la valoración técnica";
             String nocumpleMinimo = " no cumple el mínimo requerido en aspectos técnicos.";
             if (idoneidad.doubleValue() == 0) {
-                proyecto.setEstado(Proyecto.Estado.denegado);
+                proyecto.setEstado(Proyecto.Estado.DENEGADO);
                 proyecto.setPuntuacionTecnica(0);
                 if (proyecto.getSolicitante() != null) {
                     mailSender.sendEmail(proyecto.getSolicitante().getCorreo(), nopasaTecnica,
-                            lamentamosPropuesta + "\"" + proyecto.getNombre() + "\"" + nocumpleMinimo);
+                            LAMENTAMOS_PROPUESTA + "\"" + proyecto.getNombre() + "\"" + nocumpleMinimo);
                 }
                 if (proyecto.getPromotor() != null) {
                     mailSender.sendEmail(proyecto.getPromotor().getCorreo(), nopasaTecnica,
-                            lamentamosPropuestaAvalada + "\"" + proyecto.getNombre() + "\"" + nocumpleMinimo);
+                            LAMENTAMOS_PROPUESTA_AVALADA + "\"" + proyecto.getNombre() + "\"" + nocumpleMinimo);
                 }
                 repository.save(proyecto);
             } else {
                 //30% idoneidad técnica + 30% costes económicos + 40% recursos humanos.
                 Double aux = 0.3 * idoneidad.doubleValue() + 0.3 * precio.doubleValue() + 0.4 * horas.doubleValue();
                 proyecto.setPuntuacionTecnica(aux);
-                proyecto.setEstado(Proyecto.Estado.evaluadoTecnicamente);
+                proyecto.setEstado(Proyecto.Estado.EVALUADO_TECNICAMENTE);
                 if (proyecto.getPuntuacionTecnica() >= 5) {
                     repository.save(proyecto);
                 } else {
                     if (proyecto.getSolicitante() != null) {
                         mailSender.sendEmail(proyecto.getSolicitante().getCorreo(), nopasaTecnica,
-                                lamentamosPropuesta + "\"" + proyecto.getNombre() + "\"" + nocumpleMinimo);
+                                LAMENTAMOS_PROPUESTA + "\"" + proyecto.getNombre() + "\"" + nocumpleMinimo);
                     }
                     if (proyecto.getPromotor() != null) {
                         mailSender.sendEmail(proyecto.getPromotor().getCorreo(), nopasaTecnica,
-                                lamentamosPropuestaAvalada + "\"" + proyecto.getNombre() + "\"" + nocumpleMinimo);
+                                LAMENTAMOS_PROPUESTA_AVALADA + "\"" + proyecto.getNombre() + "\"" + nocumpleMinimo);
                     }
-                    proyecto.setEstado(Proyecto.Estado.denegado);
+                    proyecto.setEstado(Proyecto.Estado.DENEGADO);
                     repository.save(proyecto);
                 }
             }
@@ -125,7 +125,7 @@ public class ProyectoService {
 
     public void setValoracionPromotor(BigDecimal prioridad, Boolean avalado, Proyecto proyectoAux) {
         if (Boolean.TRUE.equals(avalado)) {
-            proyectoAux.setEstado(Proyecto.Estado.avalado);
+            proyectoAux.setEstado(Proyecto.Estado.AVALADO);
             proyectoAux.setPuntuacionAval(prioridad.doubleValue());
             //MANDAR CORREO
             if (proyectoAux.getSolicitante() != null) {
@@ -155,38 +155,38 @@ public class ProyectoService {
 
     public void setValoracionEstrategica(BigDecimal valoracionE, Proyecto proyectoAux) {
         //En puntuacionEstrategica guardaremos la valoración final
-        if (proyectoAux.getEstado() != Proyecto.Estado.denegado) {
+        if (proyectoAux.getEstado() != Proyecto.Estado.DENEGADO) {
             String nopasaEstrategica = "Su proyecto NO ha pasado la valoración estratégica";
             String nocumpleObjetivos = " no cumple los objetivos que buscamos.";
             if (valoracionE.doubleValue() == 0) {
-                proyectoAux.setEstado(Proyecto.Estado.denegado);
+                proyectoAux.setEstado(Proyecto.Estado.DENEGADO);
                 proyectoAux.setPuntuacionEstrategica(0);
                 if (proyectoAux.getSolicitante() != null) {
                     mailSender.sendEmail(proyectoAux.getSolicitante().getCorreo(), nopasaEstrategica,
-                            lamentamosPropuesta + "\"" + proyectoAux.getNombre() + "\"" + nocumpleObjetivos);
+                            LAMENTAMOS_PROPUESTA + "\"" + proyectoAux.getNombre() + "\"" + nocumpleObjetivos);
                 }
                 if (proyectoAux.getPromotor() != null) {
                     mailSender.sendEmail(proyectoAux.getPromotor().getCorreo(), nopasaEstrategica,
-                            lamentamosPropuestaAvalada + "\"" + proyectoAux.getNombre() + "\"" + nocumpleObjetivos);
+                            LAMENTAMOS_PROPUESTA_AVALADA + "\"" + proyectoAux.getNombre() + "\"" + nocumpleObjetivos);
                 }
                 repository.save(proyectoAux);
             } else {
                 //70% valoración OTP + 30% valoración CIO.
                 Double aux = 0.7 * proyectoAux.getPuntuacionTecnica() + 0.3 * valoracionE.doubleValue();
                 proyectoAux.setPuntuacionEstrategica(aux);
-                proyectoAux.setEstado(Proyecto.Estado.evaluadoEstrategicamente);
+                proyectoAux.setEstado(Proyecto.Estado.EVALUADO_ESTRATEGICAMENTE);
                 if (proyectoAux.getPuntuacionEstrategica() >= 5) {
                     repository.save(proyectoAux);
                 } else {
                     if (proyectoAux.getSolicitante() != null) {
                         mailSender.sendEmail(proyectoAux.getSolicitante().getCorreo(), nopasaEstrategica,
-                                lamentamosPropuesta + "\"" + proyectoAux.getNombre() + "\"" + nocumpleObjetivos);
+                                LAMENTAMOS_PROPUESTA + "\"" + proyectoAux.getNombre() + "\"" + nocumpleObjetivos);
                     }
                     if (proyectoAux.getPromotor() != null) {
                         mailSender.sendEmail(proyectoAux.getPromotor().getCorreo(), nopasaEstrategica,
-                                lamentamosPropuestaAvalada + "\"" + proyectoAux.getNombre() + "\"" + nocumpleObjetivos);
+                                LAMENTAMOS_PROPUESTA_AVALADA + "\"" + proyectoAux.getNombre() + "\"" + nocumpleObjetivos);
                     }
-                    proyectoAux.setEstado(Proyecto.Estado.denegado);
+                    proyectoAux.setEstado(Proyecto.Estado.DENEGADO);
                     repository.save(proyectoAux);
                 }
             }
@@ -195,7 +195,7 @@ public class ProyectoService {
 
     public void desarrollar(Proyecto proyecto, Boolean sedesarrolla) {
         if (Boolean.TRUE.equals(sedesarrolla)) {
-            proyecto.setEstado(Proyecto.Estado.enDesarrollo);
+            proyecto.setEstado(Proyecto.Estado.EN_DESARROLLO);
             if (proyecto.getSolicitante() != null) {
                 mailSender.sendEmail(proyecto.getSolicitante().getCorreo(), "Su proyecto se va a realizar",
                         "Felicidades, su propuesta:\"" + proyecto.getNombre() + "\" va a realizarse.");
@@ -205,15 +205,15 @@ public class ProyectoService {
                         "Felicidades, su propuesta avalada:\"" + proyecto.getNombre() + "\" será realizada.");
             }
         } else {
-            proyecto.setEstado(Proyecto.Estado.noenDesarrollo);
+            proyecto.setEstado(Proyecto.Estado.NO_EN_DESARROLLO);
             if (proyecto.getSolicitante() != null) {
                 mailSender.sendEmail(proyecto.getSolicitante().getCorreo(), "Su proyecto NO se va a realizar",
-                        lamentamosPropuesta + "\"" + proyecto.getNombre() + "\" no va a realizarse por falta de presupuesto." +
+                        LAMENTAMOS_PROPUESTA + "\"" + proyecto.getNombre() + "\" no va a realizarse por falta de presupuesto." +
                                 " Inténtelo el próximo año, apreciamos mucho sus propuestas");
             }
             if (proyecto.getPromotor() != null) {
                 mailSender.sendEmail(proyecto.getPromotor().getCorreo(), "Su proyecto avalado NO se va a realizar",
-                        lamentamosPropuestaAvalada + "\"" + proyecto.getNombre() + "\" no será realizada por falta de presupuesto.");
+                        LAMENTAMOS_PROPUESTA_AVALADA + "\"" + proyecto.getNombre() + "\" no será realizada por falta de presupuesto.");
             }
         }
         repository.save(proyecto);

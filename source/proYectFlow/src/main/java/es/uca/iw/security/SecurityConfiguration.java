@@ -20,7 +20,6 @@ public class SecurityConfiguration extends VaadinWebSecurity {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //https.requiresChannel().anyRequest().requiresSecure();
         http.authorizeHttpRequests(
                 authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/img/*.png")).permitAll());
         http.authorizeHttpRequests(

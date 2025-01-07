@@ -73,7 +73,7 @@ public class Proyecto extends AbstractEntity {
         this.puntuacionTecnica = -1;
         this.puntuacionAval = -1;
         this.promotor = aval;
-        this.estado = Estado.solicitado;
+        this.estado = Estado.SOLICITADO;
         this.solicitante = solicitante;
         this.fechaLimite = fechaLimite;
         this.fechaSolicitud = new Date();
@@ -262,5 +262,5 @@ public class Proyecto extends AbstractEntity {
         return 31;
     }
 
-    public enum Estado {solicitado, avalado, evaluadoTecnicamente, evaluadoEstrategicamente, noenDesarrollo, enDesarrollo, denegado}
+    public enum Estado {SOLICITADO, AVALADO, EVALUADO_TECNICAMENTE, EVALUADO_ESTRATEGICAMENTE, NO_EN_DESARROLLO, EN_DESARROLLO, DENEGADO}
 }

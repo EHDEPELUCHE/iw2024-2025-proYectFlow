@@ -8,7 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.util.function.Supplier;
 
 public class DownloadPdfComponent {
-    public DownloadPdfComponent() {
+    private DownloadPdfComponent() {
         // Empty constructor
     }
 

@@ -35,10 +35,6 @@ class ProYectFlowApplicationTests {
         usuarioAdmin.setActivo(true);
         usuarioService.registerUserAdmin(usuarioAdmin);
 
-
-        // Assuming contextLoads method does not take parameters
-        // Assuming contextLoads method does not take parameters
-        // proYectFlowApplicationTests.contextLoads();
         verify(usuarioService, times(1)).registerUserAdmin(usuarioAdmin);
         assertTrue(usuarioAdmin.getActivo());
     }

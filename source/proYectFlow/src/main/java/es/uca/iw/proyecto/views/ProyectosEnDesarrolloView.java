@@ -22,7 +22,7 @@ public class ProyectosEnDesarrolloView extends VisualizarProyectos {
         Convocatoria convocatoriaActual = convocatoriaService.convocatoriaActual();
         if (convocatoriaActual != null) {
             Specification<Proyecto> filters = (root, query, criteriaBuilder) -> criteriaBuilder.and(
-                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.enDesarrollo),
+                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.EN_DESARROLLO),
                     criteriaBuilder.equal(root.get("convocatoria"), convocatoriaActual)
             );
             inicializarVistaProyectos("Proyectos que se están desarrollando actualmente", filters);

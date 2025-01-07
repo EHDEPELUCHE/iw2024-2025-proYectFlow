@@ -13,21 +13,21 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @Route("Ayuda")
 @AnonymousAllowed
 public class AyudaView extends Composite<VerticalLayout> {
-    static final String arialabel = "aria-label";
+    static final String ariaLabel = "aria-label";
 
     public AyudaView() {
         H1 title = new H1("Ayuda y preguntas frecuentes");
-        title.getElement().setAttribute(arialabel, "Título de la página de ayuda");
+        title.getElement().setAttribute(ariaLabel, "Título de la página de ayuda");
 
         Accordion acordeon = new Accordion();
-        acordeon.getElement().setAttribute(arialabel, "Secciones de ayuda");
+        acordeon.getElement().setAttribute(ariaLabel, "Secciones de ayuda");
 
         Span pasoIniciosesion1 = new Span("Mire si al registrarse escribió bien su correo y recibió el código");
         Span pasoIniciosesion2 = new Span("Acceda a /ActivarUsuario y escriba su correo y el código que se le envió");
         Span pasoIniciosesion3 = new Span("Si ni con la cuenta activa y usando su USUARIO y CONTRASEÑA puede iniciar sesión, pruebe a crear otra cuenta con otro nombre de usuario y mismo correo. Si no lo consigue póngase en contacto con: iwproyectflow@gmail.com");
 
         VerticalLayout problema1Layout = new VerticalLayout(pasoIniciosesion1, pasoIniciosesion2, pasoIniciosesion3);
-        problema1Layout.getElement().setAttribute(arialabel, "Pasos para resolver problemas al iniciar sesión");
+        problema1Layout.getElement().setAttribute(ariaLabel, "Pasos para resolver problemas al iniciar sesión");
 
         acordeon.add("Problemas al iniciar sesión", problema1Layout);
 

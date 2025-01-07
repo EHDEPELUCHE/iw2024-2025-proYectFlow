@@ -12,7 +12,6 @@ import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.proyecto.VisualizarProyectos;
-import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -25,12 +24,12 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ProyectosCIOView extends VisualizarProyectos {
 
-    public ProyectosCIOView(ProyectoService proyectoService, AuthenticatedUser user, ConvocatoriaService convocatoriaService) {
+    public ProyectosCIOView(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
         super(proyectoService, true);
 
         if (!convocatoriaService.convocatoriaActual().enPlazo()) {
             Specification<Proyecto> filtroEvaluados = (root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.evaluadoTecnicamente);
+                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.EVALUADO_TECNICAMENTE);
             inicializarVistaProyectos("Proyectos por evaluar", filtroEvaluados);
 
         } else {
@@ -41,9 +40,7 @@ public class ProyectosCIOView extends VisualizarProyectos {
     @Override
     protected Component crearBotonesAcciones(Proyecto proyecto) {
         Button evaluarButton = new Button("Evaluar");
-        evaluarButton.addClickListener(e -> {
-            getUI().ifPresent(ui -> ui.navigate("ValoracionEstrategica/" + proyecto.getId().toString()));
-        });
+        evaluarButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("ValoracionEstrategica/" + proyecto.getId().toString())));
         return evaluarButton;
     }
 }

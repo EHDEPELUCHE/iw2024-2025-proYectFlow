@@ -11,6 +11,7 @@ public class Promotor {
     private String cargo;
 
     public Promotor() {
+        //Empty constructor
     }
 
     public String getId() {

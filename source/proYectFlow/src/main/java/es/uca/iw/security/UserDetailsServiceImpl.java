@@ -2,8 +2,6 @@ package es.uca.iw.security;
 
 import es.uca.iw.usuario.Usuario;
 import es.uca.iw.usuario.UsuarioRepository;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,10 +14,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetailsServiceImpl(UsuarioRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    private static GrantedAuthority getAuthorities(Usuario user) {
-        return new SimpleGrantedAuthority("ROLE_" + user.getTipo());
     }
 
     @Override

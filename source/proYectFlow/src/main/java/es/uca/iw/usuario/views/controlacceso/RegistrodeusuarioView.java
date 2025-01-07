@@ -37,7 +37,7 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
     final PasswordField contrasenna = new PasswordField();
 
     final UsuarioService servicio;
-    final String mincontent = "min-content";
+    static final String MIN_CONTENT = "min-content";
 
     public RegistrodeusuarioView(UsuarioService usuarioService) {
         PasswordField passwordField2 = new PasswordField();
@@ -55,7 +55,7 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         getContent().setAlignItems(Alignment.CENTER);
         layoutColumn2.setWidth("100%");
         layoutColumn2.setMaxWidth("800px");
-        layoutColumn2.setHeight(mincontent);
+        layoutColumn2.setHeight(MIN_CONTENT);
         h3.setText("Registro de usuario");
         h3.setWidth("100%");
         formLayout2Col.setWidth("100%");
@@ -64,9 +64,9 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         apellido.setLabel("apellidos");
         correo.setLabel("email");
         contrasenna.setLabel("contraseña");
-        contrasenna.setWidth(mincontent);
+        contrasenna.setWidth(MIN_CONTENT);
         passwordField2.setLabel("Repetir contraseña");
-        passwordField2.setWidth(mincontent);
+        passwordField2.setWidth(MIN_CONTENT);
         layoutRow.addClassName(Gap.MEDIUM);
         layoutRow.setWidth("100%");
         layoutRow.getStyle().set("flex-grow", "1");
@@ -74,10 +74,10 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         buttonPrimary.addClickListener(e -> onRegisterButtonClick(passwordField2));
         buttonPrimary.addClickShortcut(Key.ENTER);
 
-        buttonPrimary.setWidth(mincontent);
+        buttonPrimary.setWidth(MIN_CONTENT);
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonSecondary.setText("Cancelar");
-        buttonSecondary.setWidth(mincontent);
+        buttonSecondary.setWidth(MIN_CONTENT);
         getContent().add(layoutColumn2);
         layoutColumn2.add(h3);
         layoutColumn2.add(formLayout2Col);
@@ -94,7 +94,6 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
         binder = new BeanValidationBinder<>(Usuario.class);
         binder.bindInstanceFields(this);
 
-        //CAMBIAR PRUEBAS CONTRASEÑA
         binder.forField(contrasenna)
                 .asRequired("La contraseña es obligatoria")
                 .withValidator(password -> password != null && password.length() >= 8,

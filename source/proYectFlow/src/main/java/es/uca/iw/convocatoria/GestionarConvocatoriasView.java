@@ -83,14 +83,12 @@ public class GestionarConvocatoriasView extends Div {
 
     protected Component editarConvocatoria(Convocatoria convocatoria) {
         Button editarButton = new Button("Editar");
-        editarButton.addClickListener(e -> {
-            getUI().ifPresent(ui -> ui.navigate("EditarConvocatoria/" + convocatoria.getId()));
-        });
+        editarButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("EditarConvocatoria/" + convocatoria.getId())));
         return editarButton;
     }
 
     protected Component estadoConvocatoria(Convocatoria convocatoria) {
-        if (!convocatoria.getActiva()) {
+        if (Boolean.FALSE.equals(convocatoria.getActiva())) {
             Button activarButton = new Button("Activar");
             activarButton.addClickListener(e -> {
                 try {

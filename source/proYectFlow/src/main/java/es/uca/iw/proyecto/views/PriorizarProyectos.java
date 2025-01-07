@@ -12,7 +12,6 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
@@ -23,7 +22,6 @@ import es.uca.iw.convocatoria.Convocatoria;
 import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
-import es.uca.iw.usuario.Usuario;
 import es.uca.iw.global.DownloadPdfComponent;
 import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
@@ -35,8 +33,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.io.IOException;
-import java.util.Optional;
-
 @PageTitle("Priorizar Proyectos ")
 @Route("priorizarproyectos")
 @Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg")
@@ -49,9 +45,10 @@ public class PriorizarProyectos extends Div {
     private Filters filters;
     private final ConvocatoriaService convocatoriaService;
     final Convocatoria convocatoria;
+    static final String VISIBLE = "visible";
 
     public PriorizarProyectos(ProyectoService proyectoService, AuthenticatedUser user, ConvocatoriaService convocatoriaService) {
-        this.user = user;
+        PriorizarProyectos.user = user;
         this.proyectoService = proyectoService;
         this.convocatoriaService = convocatoriaService;
         convocatoria = convocatoriaService.convocatoriaActual();
@@ -65,17 +62,16 @@ public class PriorizarProyectos extends Div {
         setSizeFull();
         addClassNames("proyectos-view");
         boolean hasInvalidStateProjects = proyectoService.list(PageRequest.of(0, Integer.MAX_VALUE)).stream()
-            .anyMatch(proyecto -> proyecto.getEstado() == Proyecto.Estado.avalado || proyecto.getEstado() == Proyecto.Estado.evaluadoTecnicamente);
+            .anyMatch(proyecto -> proyecto.getEstado() == Proyecto.Estado.AVALADO || proyecto.getEstado() == Proyecto.Estado.EVALUADO_TECNICAMENTE);
 
         if (!convocatoriaService.convocatoriaActual().enPlazo()) {
-            if (hasInvalidStateProjects) {
+            if (hasInvalidStateProjects)
                 add(new H1("Existen proyectos en estado avalado o evaluado técnicamente"));
-                return;
-            }else{
+            else{
                 filters = new Filters() {
                     @Override
                     public Predicate toPredicate(Root<Proyecto> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                        Predicate estadoPredicate = criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.evaluadoEstrategicamente);
+                        Predicate estadoPredicate = criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.EVALUADO_ESTRATEGICAMENTE);
                         query.orderBy(criteriaBuilder.desc(root.get("puntuacionEstrategica")));
                         return criteriaBuilder.and(estadoPredicate);
                     }
@@ -89,29 +85,6 @@ public class PriorizarProyectos extends Div {
         } else {
             add(new H1("Aún no se puede realizar la evaluación"));
         }
-    }
-
-    private HorizontalLayout createMobileFilters() {
-        // Mobile version
-        HorizontalLayout mobileFilters = new HorizontalLayout();
-        mobileFilters.setWidthFull();
-        mobileFilters.addClassNames(LumoUtility.Padding.MEDIUM, LumoUtility.BoxSizing.BORDER,
-                LumoUtility.AlignItems.CENTER);
-        mobileFilters.addClassName("mobile-filters");
-        Icon mobileIcon = new Icon("lumo", "plus");
-        Span filtersHeading = new Span("Filters");
-        mobileFilters.add(mobileIcon, filtersHeading);
-        mobileFilters.setFlexGrow(1, filtersHeading);
-        mobileFilters.addClickListener(e -> {
-            if (filters.getClassNames().contains("visible")) {
-                filters.removeClassName("visible");
-                mobileIcon.getElement().setAttribute("icon", "lumo:plus");
-            } else {
-                filters.addClassName("visible");
-                mobileIcon.getElement().setAttribute("icon", "lumo:minus");
-            }
-        });
-        return mobileFilters;
     }
 
     private Component createGrid() {
@@ -151,12 +124,12 @@ public class PriorizarProyectos extends Div {
                 dialog.setHeaderTitle("¿Desarrollar este proyecto?");
                 H2 mostrarPresupuesto = new H2("Presupuesto restante: " + convocatoria.getPresupuestorestante());
                 Checkbox realizar = new Checkbox("Realizar proyecto");
-                Button Confirmar = new Button("Confirmar");
-                Confirmar.setClassName("buttonPrimary");
-                Confirmar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-                Confirmar.addClickShortcut(Key.ENTER);
-                Confirmar.addClickListener(event -> {
-                    if (realizar.getValue()) {
+                Button confirmar = new Button("Confirmar");
+                confirmar.setClassName("buttonPrimary");
+                confirmar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                confirmar.addClickShortcut(Key.ENTER);
+                confirmar.addClickListener(event -> {
+                    if (Boolean.TRUE.equals(realizar.getValue())){
                         //Si da el dinero
                         if (convocatoria.getPresupuestorestante().compareTo(proyecto.getCoste().subtract(proyecto.getAportacionInicial()))>=0){
                             convocatoria.setPresupuestorestante(convocatoria.getPresupuestorestante().subtract(proyecto.getCoste().subtract(proyecto.getAportacionInicial())));
@@ -164,23 +137,22 @@ public class PriorizarProyectos extends Div {
                             proyectoService.desarrollar(proyecto, realizar.getValue());
                             dialog.close();
                             Notification.show("Este proyecto se realizará");
-                        }else{
+                        }else
                             Notification.show("El presupuesto disponible es insuficiente para desarrollar este proyecto");
-                        }
                     }
                 });
                 Button cancelar = new Button("Cancelar");
                 cancelar.setClassName("buttonSecondary");
 
-                cancelar.addClickListener(event -> {dialog.close();});
-                Button NoDesarrollar = new Button("No desarrollar");
-                NoDesarrollar.addClassName("button-danger");
-                NoDesarrollar.addThemeVariants(ButtonVariant.LUMO_ERROR);
-                NoDesarrollar.addClickListener(event -> {
+                cancelar.addClickListener(event -> dialog.close());
+                Button noDesarrollar = new Button("No desarrollar");
+                noDesarrollar.addClassName("button-danger");
+                noDesarrollar.addThemeVariants(ButtonVariant.LUMO_ERROR);
+                noDesarrollar.addClickListener(event -> {
                     proyectoService.desarrollar(proyecto, false);
                     dialog.close();});
                 dialog.add(mostrarPresupuesto, realizar);
-                dialog.getFooter().add(NoDesarrollar, Confirmar, cancelar);
+                dialog.getFooter().add(noDesarrollar, confirmar, cancelar);
             });
             return evaluarButton;
         }).setHeader("Acciones").setAutoWidth(true);
@@ -194,9 +166,8 @@ public class PriorizarProyectos extends Div {
         return grid;
     }
 
-    public static abstract class Filters extends Div implements Specification<Proyecto> {
-        private final Optional<Usuario> promotor = user.get();
-        private final Proyecto.Estado estado = Proyecto.Estado.evaluadoEstrategicamente;
+    public abstract static class Filters extends Div implements Specification<Proyecto> {
+        //Empty class
     }
 }
 

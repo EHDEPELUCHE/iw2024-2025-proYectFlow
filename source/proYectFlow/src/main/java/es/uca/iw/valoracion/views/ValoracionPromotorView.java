@@ -34,6 +34,7 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
     Optional<Proyecto> proyecto;
     final ProyectoService proyectoService;
     UUID uuid;
+    static final String SI_AVALO = "Sí, avalo este proyecto";
 
     public ValoracionPromotorView(ProyectoService proyectoService) {
         this.proyectoService = proyectoService;
@@ -100,8 +101,7 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
 
             RadioButtonGroup<String> eleccionValorarGroup = new RadioButtonGroup<>();
             eleccionValorarGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-            //eleccionValorarGroup.setLabel("Eleccion Valorar");
-            eleccionValorarGroup.setItems("Sí, avalo este proyecto", "No, rechazo avalar este proyecto");
+            eleccionValorarGroup.setItems(SI_AVALO, "No, rechazo avalar este proyecto");
             getContent().add(eleccionValorarGroup);
 
             //Valoracion
@@ -119,7 +119,7 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
             getContent().add(valoracionLayout);
 
             eleccionValorarGroup.addValueChangeListener(eventval -> {
-                if ("Sí, avalo este proyecto".equals(eventval.getValue())) {
+                if (SI_AVALO.equals(eventval.getValue())) {
                     valoracionGroup.setEnabled(true);
                 } else {
                     valoracionGroup.setEnabled(false);
@@ -137,7 +137,7 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
                 } else {
                     Notification notification;
 
-                    if ("Sí, avalo este proyecto".equals(valorarOk)) {
+                    if (SI_AVALO.equals(valorarOk)) {
                         proyectoService.setValoracionPromotor(BigDecimal.valueOf(valorSeleccionado), true, proyectoAux);
                         notification = Notification.show("Valoración guardada con éxito.");
                         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
@@ -148,9 +148,7 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
                     }
                     //Redireccion
                     notification.setDuration(2000);
-                    notification.addDetachListener(detachEvent -> {
-                        UI.getCurrent().navigate("proyectosPromotor");
-                    });
+                    notification.addDetachListener(detachEvent -> UI.getCurrent().navigate("proyectosPromotor"));
                 }
             });
 
