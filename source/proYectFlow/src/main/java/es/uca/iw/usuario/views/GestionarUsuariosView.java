@@ -203,7 +203,6 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
         } catch (Exception e) {
             logger.severe("Error al obtener los promotores: " + e.getMessage());
             Notification.show("Error al obtener los promotores");
-            e.printStackTrace();
         }
     }
 }

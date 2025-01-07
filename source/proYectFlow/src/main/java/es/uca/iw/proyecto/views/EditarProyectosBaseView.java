@@ -120,13 +120,14 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
             formLayout2Col.add(emailField, promotor, nombre, descripcion, interesados, alcance, aportacionInicial, coste, fechaLimite, upload);
 
             Button cancelarButton = new Button("Volver");
-            if(authenticatedUser.get().isPresent()){
-                if (authenticatedUser.get().get().getTipo() == Roles.ADMIN) 
+            authenticatedUser.get().ifPresent(user -> {
+                if (user.getTipo() == Roles.ADMIN)
                     cancelarButton.addClickListener(e -> UI.getCurrent().navigate(ProyectosView.class));
-                else 
+                else
                     cancelarButton.addClickListener(e -> UI.getCurrent().navigate(EstadoProyectosView.class));
-            }
-            
+            });
+
+
             layoutRow.setAlignSelf(FlexComponent.Alignment.START, cancelarButton);
 
             Button borrarProyectoButton = new Button("Borrar Proyecto", eventy -> {
@@ -136,6 +137,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
                 } else
                     Notification.show("Este proyecto aún no se puede eliminar");
             });
+
             borrarProyectoButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
             Button downloadButton = DownloadPdfComponent.createDownloadButton("Memoria", () -> {
@@ -197,6 +199,8 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
         }
 
         upload.setAcceptedFileTypes("application/pdf", ".pdf");
+        upload.setMaxFileSize(10 * 1024 * 1024);
+
         Button uploadButton = new Button("Añadir memoria");
         uploadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         upload.setUploadButton(uploadButton);
@@ -206,7 +210,11 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
                 
                 Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
                 proyectoAux.setMemoria(blob);
-                Notification.show("Archivo subido: " + event.getFileName());
+                if (proyectoAux.getMemoria() != null) {
+                    Notification.show("Archivo subido correctamente: " + event.getFileName());
+                } else {
+                    Notification.show("Error: No se pudo guardar el archivo.");
+                }
             } catch (Exception ex) {
                 Notification.show("Error al subir el archivo: " + ex.getMessage());
             }
