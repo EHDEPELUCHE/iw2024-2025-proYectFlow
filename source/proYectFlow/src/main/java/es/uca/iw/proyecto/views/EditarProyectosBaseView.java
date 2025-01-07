@@ -32,6 +32,7 @@ import es.uca.iw.usuario.Usuario;
 import es.uca.iw.usuario.UsuarioService;
 
 import java.io.IOException;
+import java.sql.Blob;
 import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
@@ -198,6 +199,16 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
         Button uploadButton = new Button("Añadir memoria");
         uploadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         upload.setUploadButton(uploadButton);
+        upload.addSucceededListener(event -> {
+            try {
+                byte[] bytes = buffer.getInputStream().readAllBytes();
+                Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
+                proyectoAux.setMemoria(blob);
+                Notification.show("Archivo subido: " + event.getFileName());
+            } catch (Exception ex) {
+                Notification.show("Error al subir el archivo: " + ex.getMessage());
+            }
+        });
     }
 
     private void ActualizarProyecto(Proyecto proyectoAux) {
