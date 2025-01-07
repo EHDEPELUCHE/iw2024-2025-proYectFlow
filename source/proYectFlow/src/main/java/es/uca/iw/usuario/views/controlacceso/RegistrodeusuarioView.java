@@ -120,7 +120,7 @@ public class RegistrodeusuarioView extends Composite<VerticalLayout> {
                 status.setText("Excelente. ¡Por favor mira tu bandeja de entrada de correo!");
                 status.setVisible(true);
                 binder.setBean(new Usuario());
-                Notification.show("Usuario registrado con éxito");
+                Notification.show("Registrado con éxito, comprueba tu email para activar tu usuario");
                 passwordField2.setValue("");
             } else {
                 Notification.show("El nombre de usuario o el email ya está en uso");
