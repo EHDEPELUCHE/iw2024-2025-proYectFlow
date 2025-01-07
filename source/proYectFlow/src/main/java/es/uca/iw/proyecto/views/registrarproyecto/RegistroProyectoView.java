@@ -131,7 +131,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
                     Notification.show("El tamaño máximo del archivo es de 20MB");
                 }
             });
-             Paragraph hint = new Paragraph("Maximum file size: 1 MB");
+             Paragraph hint = new Paragraph("Maximum file size: 10 MB");
             hint.getStyle().set("color", "var(--lumo-secondary-text-color)");
             upload.setDropLabel(hint);
             upload.getElement()

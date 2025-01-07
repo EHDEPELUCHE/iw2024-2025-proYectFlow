@@ -219,7 +219,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
                 Notification.show("Error al subir el archivo: " + ex.getMessage());
             }
         });
-        Paragraph hint = new Paragraph("Maximum file size: 1 MB");
+        Paragraph hint = new Paragraph("Maximum file size: 10 MB");
         hint.getStyle().set("color", "var(--lumo-secondary-text-color)");
         upload.setDropLabel(hint);
         
