@@ -10,6 +10,7 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -202,6 +203,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
         upload.addSucceededListener(event -> {
             try {
                 byte[] bytes = buffer.getInputStream().readAllBytes();
+                
                 Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
                 proyectoAux.setMemoria(blob);
                 Notification.show("Archivo subido: " + event.getFileName());
@@ -209,6 +211,10 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
                 Notification.show("Error al subir el archivo: " + ex.getMessage());
             }
         });
+        Paragraph hint = new Paragraph("Maximum file size: 1 MB");
+        hint.getStyle().set("color", "var(--lumo-secondary-text-color)");
+        upload.setDropLabel(hint);
+        
     }
 
     private void ActualizarProyecto(Proyecto proyectoAux) {

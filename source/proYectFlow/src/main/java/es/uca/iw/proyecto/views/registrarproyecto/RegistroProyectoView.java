@@ -10,6 +10,7 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
@@ -125,7 +126,14 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             uploadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
             upload.setUploadButton(uploadButton);
-
+            upload.addFailedListener(event -> {
+                if (event.getReason().getMessage().contains("Maximum upload size exceeded")) {
+                    Notification.show("El tamaño máximo del archivo es de 20MB");
+                }
+            });
+             Paragraph hint = new Paragraph("Maximum file size: 1 MB");
+            hint.getStyle().set("color", "var(--lumo-secondary-text-color)");
+            upload.setDropLabel(hint);
             upload.getElement()
                     .addEventListener("max-files-reached-changed", event -> {
                         boolean maxFilesReached = event.getEventData()
