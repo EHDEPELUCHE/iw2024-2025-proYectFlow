@@ -1,20 +1,19 @@
 package es.uca.iw.proyecto.views.registrarproyecto;
 
-import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
-
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.binder.Binder;
 import es.uca.iw.convocatoria.ConvocatoriaService;
-import es.uca.iw.proyecto.ProyectoService;
-import es.uca.iw.usuario.Usuario;
-import es.uca.iw.proyecto.Proyecto;
-import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.global.Roles;
+import es.uca.iw.proyecto.Proyecto;
+import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.security.AuthenticatedUser;
+import es.uca.iw.usuario.Usuario;
+import es.uca.iw.usuario.UsuarioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +24,7 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
 class RegistroProyectoViewTest {
 
     private UsuarioService usuarioService;
@@ -50,7 +50,7 @@ class RegistroProyectoViewTest {
         registroProyectoView.promotor = new ComboBox<Usuario>();
         registroProyectoView.upload = new Upload();
     }
-    
+
     @Test
     void onRegistroProyectoTest() {
         registroProyectoView.nombre.setValue("Test Project");
@@ -113,11 +113,8 @@ class RegistroProyectoViewTest {
                     registroProyectoView.alcance.getValue(), registroProyectoView.coste.getValue(), registroProyectoView.aportacionInicial.getValue(),
                     registroProyectoView.promotor.getValue(), usuarioService.getCorreo(registroProyectoView.emailField.getValue()), fechaSql, pdfBlob));
 
-            if (binder.validate().isOk()) {
-                if (proyectoService.registerProyecto(binder.getBean())) {
-                    binder.setBean(new Proyecto());
-                }
-            } 
+            if (binder.validate().isOk() && proyectoService.registerProyecto(binder.getBean()))
+                binder.setBean(new Proyecto());
         }
     }
 }

@@ -22,9 +22,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.iw.global.DownloadPdfComponent;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
-import es.uca.iw.global.DownloadPdfComponent;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -43,13 +43,12 @@ import java.util.Arrays;
 @Uses(Icon.class)
 @RolesAllowed("ROLE_ADMIN")
 public class ProyectosView extends Div {
-    private final ProyectoService proyectoService;
-    private Grid<Proyecto> grid;
-    private Filters filters;
-    static final String VISIBLE = "visible";
     static final String ARIALABEL = "aria-label";
     static final String NOMBRE = "nombre";
     static final String FECHA_SOLICITUD = "fechaSolicitud";
+    private final ProyectoService proyectoService;
+    private Grid<Proyecto> grid;
+    private Filters filters;
 
     public ProyectosView(ProyectoService proyectoService) {
         this.proyectoService = proyectoService;
@@ -70,7 +69,7 @@ public class ProyectosView extends Div {
         H1 h1Titulo = new H1("Proyectos");
         h1Titulo.addClassNames(LumoUtility.Margin.Bottom.NONE, LumoUtility.Margin.Top.XLARGE,
                 LumoUtility.FontSize.XXXLARGE, LumoUtility.Margin.Left.LARGE);
-        h1Titulo.getElement().setAttribute("ARIALABEL", "Título de la página");
+        h1Titulo.getElement().setAttribute(ARIALABEL, "Título de la página");
         return h1Titulo;
     }
 
@@ -113,7 +112,7 @@ public class ProyectosView extends Div {
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.addClassNames(LumoUtility.Border.TOP, LumoUtility.BorderColor.CONTRAST_10);
         grid.setAllRowsVisible(true);
-        grid.getElement().setAttribute("ARIALABEL", "Tabla de proyectos");
+        grid.getElement().setAttribute(ARIALABEL, "Tabla de proyectos");
         return grid;
     }
 
@@ -149,7 +148,7 @@ public class ProyectosView extends Div {
     private Button createEditButton(Proyecto proyecto) {
         Button evaluarButton = new Button("Editar");
         evaluarButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("EditarProyecto/" + (proyecto.getId()).toString())));
-        evaluarButton.getElement().setAttribute("ARIALABEL", "Editar proyecto");
+        evaluarButton.getElement().setAttribute(ARIALABEL, "Editar proyecto");
         return evaluarButton;
     }
 
@@ -200,7 +199,7 @@ public class ProyectosView extends Div {
                 estado.clear();
                 onSearch.run();
             });
-            resetBtn.getElement().setAttribute("ARIALABEL", "Borrar filtros");
+            resetBtn.getElement().setAttribute(ARIALABEL, "Borrar filtros");
             return resetBtn;
         }
 
@@ -208,7 +207,7 @@ public class ProyectosView extends Div {
             Button searchBtn = new Button("Buscar");
             searchBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             searchBtn.addClickListener(e -> onSearch.run());
-            searchBtn.getElement().setAttribute("ARIALABEL", "Buscar proyectos");
+            searchBtn.getElement().setAttribute(ARIALABEL, "Buscar proyectos");
             return searchBtn;
         }
 

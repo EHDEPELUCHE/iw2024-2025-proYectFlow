@@ -1,7 +1,5 @@
 package es.uca.iw.usuario.views;
 
-import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.html.OrderedList;
@@ -24,7 +22,7 @@ import java.util.stream.Collectors;
 @Route("menuUsuarioView")
 @Menu(order = 8, icon = "line-awesome/svg/border-all-solid.svg")
 @PermitAll
-public class MenuUsuarioView extends Main implements HasComponents, HasStyle {
+public class MenuUsuarioView extends Main {
     private OrderedList imageContainer;
 
     public MenuUsuarioView() {

@@ -66,12 +66,10 @@ public class UsuarioService {
 
     public boolean authenticate(String username, String password) {
         Usuario u = repository.findByUsername(username);
-        if (u != null && passwordEncoder.matches(password, u.getPassword()))  
-            return true;
-        return false;
+        return u != null && passwordEncoder.matches(password, u.getPassword());
     }
 
-    
+
     public boolean registerUser(Usuario user) {
         user.setContrasenna(passwordEncoder.encode(user.getPassword()));
         user.setTipo(Roles.SOLICITANTE);
@@ -109,7 +107,6 @@ public class UsuarioService {
     public Usuario getCorreo(String value) {
         return repository.findByCorreo(value);
     }
-
 
 
     @Transactional

@@ -9,7 +9,9 @@ import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -20,10 +22,9 @@ import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.convocatoria.Convocatoria;
 import es.uca.iw.convocatoria.ConvocatoriaService;
+import es.uca.iw.global.DownloadPdfComponent;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
-import es.uca.iw.global.DownloadPdfComponent;
-import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -33,6 +34,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.io.IOException;
+
 @PageTitle("Priorizar Proyectos ")
 @Route("priorizarproyectos")
 @Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg")
@@ -40,15 +42,12 @@ import java.io.IOException;
 @RolesAllowed("ROLE_CIO")
 
 public class PriorizarProyectos extends Div {
-    static AuthenticatedUser user;
-    private final ProyectoService proyectoService;
-    private Filters filters;
-    private final ConvocatoriaService convocatoriaService;
     final Convocatoria convocatoria;
-    static final String VISIBLE = "visible";
+    private final ProyectoService proyectoService;
+    private final ConvocatoriaService convocatoriaService;
+    private Filters filters;
 
-    public PriorizarProyectos(ProyectoService proyectoService, AuthenticatedUser user, ConvocatoriaService convocatoriaService) {
-        PriorizarProyectos.user = user;
+    public PriorizarProyectos(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
         this.proyectoService = proyectoService;
         this.convocatoriaService = convocatoriaService;
         convocatoria = convocatoriaService.convocatoriaActual();
@@ -62,12 +61,12 @@ public class PriorizarProyectos extends Div {
         setSizeFull();
         addClassNames("proyectos-view");
         boolean hasInvalidStateProjects = proyectoService.list(PageRequest.of(0, Integer.MAX_VALUE)).stream()
-            .anyMatch(proyecto -> proyecto.getEstado() == Proyecto.Estado.AVALADO || proyecto.getEstado() == Proyecto.Estado.EVALUADO_TECNICAMENTE);
+                .anyMatch(proyecto -> proyecto.getEstado() == Proyecto.Estado.AVALADO || proyecto.getEstado() == Proyecto.Estado.EVALUADO_TECNICAMENTE);
 
         if (!convocatoriaService.convocatoriaActual().enPlazo()) {
             if (hasInvalidStateProjects)
                 add(new H1("Existen proyectos en estado avalado o evaluado técnicamente"));
-            else{
+            else {
                 filters = new Filters() {
                     @Override
                     public Predicate toPredicate(Root<Proyecto> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
@@ -76,7 +75,7 @@ public class PriorizarProyectos extends Div {
                         return criteriaBuilder.and(estadoPredicate);
                     }
                 };
-                VerticalLayout layout = new VerticalLayout(h1Titulo,h2Titulo, filters, createGrid());
+                VerticalLayout layout = new VerticalLayout(h1Titulo, h2Titulo, filters, createGrid());
                 layout.setSizeFull();
                 layout.setPadding(false);
                 layout.setSpacing(false);
@@ -104,15 +103,13 @@ public class PriorizarProyectos extends Div {
                 .setSortable(true);
         grid.addColumn("estado").setAutoWidth(true);
 
-        grid.addComponentColumn(proyecto -> {
-            return DownloadPdfComponent.createDownloadButton("Memoria", () -> {
-                try {
-                    return proyectoService.getPdf(proyecto.getId());
-                } catch (IOException ex) {
-                    throw new RuntimeException("Error al obtener el PDF", ex);
-                }
-            });
-        }).setHeader("PDF").setAutoWidth(true);
+        grid.addComponentColumn(proyecto -> DownloadPdfComponent.createDownloadButton("Memoria", () -> {
+            try {
+                return proyectoService.getPdf(proyecto.getId());
+            } catch (IOException ex) {
+                throw new RuntimeException("Error al obtener el PDF", ex);
+            }
+        })).setHeader("PDF").setAutoWidth(true);
 
         grid.addComponentColumn(proyecto -> {
             Button evaluarButton = new Button("Desarrollar");
@@ -129,15 +126,15 @@ public class PriorizarProyectos extends Div {
                 confirmar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
                 confirmar.addClickShortcut(Key.ENTER);
                 confirmar.addClickListener(event -> {
-                    if (Boolean.TRUE.equals(realizar.getValue())){
+                    if (Boolean.TRUE.equals(realizar.getValue())) {
                         //Si da el dinero
-                        if (convocatoria.getPresupuestorestante().compareTo(proyecto.getCoste().subtract(proyecto.getAportacionInicial()))>=0){
+                        if (convocatoria.getPresupuestorestante().compareTo(proyecto.getCoste().subtract(proyecto.getAportacionInicial())) >= 0) {
                             convocatoria.setPresupuestorestante(convocatoria.getPresupuestorestante().subtract(proyecto.getCoste().subtract(proyecto.getAportacionInicial())));
                             convocatoriaService.guardar(convocatoria);
                             proyectoService.desarrollar(proyecto, realizar.getValue());
                             dialog.close();
                             Notification.show("Este proyecto se realizará");
-                        }else
+                        } else
                             Notification.show("El presupuesto disponible es insuficiente para desarrollar este proyecto");
                     }
                 });
@@ -150,7 +147,8 @@ public class PriorizarProyectos extends Div {
                 noDesarrollar.addThemeVariants(ButtonVariant.LUMO_ERROR);
                 noDesarrollar.addClickListener(event -> {
                     proyectoService.desarrollar(proyecto, false);
-                    dialog.close();});
+                    dialog.close();
+                });
                 dialog.add(mostrarPresupuesto, realizar);
                 dialog.getFooter().add(noDesarrollar, confirmar, cancelar);
             });

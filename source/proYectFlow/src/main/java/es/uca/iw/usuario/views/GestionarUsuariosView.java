@@ -19,16 +19,14 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-
-import es.uca.iw.proyecto.ProyectoService;
-import es.uca.iw.usuario.Usuario;
-import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.global.Roles;
+import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.rest.Promotor;
 import es.uca.iw.rest.Respuesta;
+import es.uca.iw.usuario.Usuario;
+import es.uca.iw.usuario.UsuarioService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +46,6 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
     private final ProyectoService proyectoService;
     private final Grid<Usuario> grid;
 
-    @Autowired
     public GestionarUsuariosView(UsuarioService usuarioService, ProyectoService proyectoService) {
         this.restTemplate = new RestTemplate();
         this.usuarioService = usuarioService;
@@ -141,7 +138,8 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
                         user.setCorreo(correoNuevoField.getValue());
                         if (!Objects.equals(passwordField.getValue(), passwordField.getEmptyValue()))
                             user.setContrasenna(usuarioService.encriptar(passwordField.getValue()));
-                        if (tipoComboBox.getValue() != tipoComboBox.getEmptyValue()) user.setTipo(tipoComboBox.getValue());
+                        if (tipoComboBox.getValue() != tipoComboBox.getEmptyValue())
+                            user.setTipo(tipoComboBox.getValue());
                         user.setActivo(activoCheckbox.getValue());
                         usuarioService.update(user);
                         Notification.show("Usuario guardado correctamente");
@@ -179,7 +177,7 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
                     usuarioService.destituyePromotores();
                 } catch (Exception e) {
                     logger.severe("Error al destituir promotores: " + e.getMessage());
-                    throw new RuntimeException(e);
+                    throw e;
                 }
                 Respuesta apiResponse = response.getBody();
                 Notification.show("Respuesta de la API: " + response.getBody());

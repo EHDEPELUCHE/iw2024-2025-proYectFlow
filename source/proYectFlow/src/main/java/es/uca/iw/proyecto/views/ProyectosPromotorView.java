@@ -21,19 +21,12 @@ import org.springframework.data.jpa.domain.Specification;
 @Uses(Icon.class)
 @RolesAllowed("ROLE_PROMOTOR")
 public class ProyectosPromotorView extends VisualizarProyectos {
-
-    static AuthenticatedUser user;
-
     public ProyectosPromotorView(ProyectoService proyectoService, AuthenticatedUser user) {
         super(proyectoService, true);
-        ProyectosPromotorView.user = user;
-        Specification<Proyecto> filters = (root, query, criteriaBuilder) -> {
-            return criteriaBuilder.and(
-                    criteriaBuilder.equal(root.get("promotor"), user.get().orElse(null)),
-                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.SOLICITADO)
-            );
-        };
-
+        Specification<Proyecto> filters = (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                criteriaBuilder.equal(root.get("promotor"), user.get().orElse(null)),
+                criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.SOLICITADO)
+        );
         inicializarVistaProyectos("Proyectos pendientes de ser avalados", filters);
     }
 
