@@ -128,7 +128,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             upload.setUploadButton(uploadButton);
             upload.addFailedListener(event -> {
                 if (event.getReason().getMessage().contains("Maximum upload size exceeded")) {
-                    Notification.show("El tamaño máximo del archivo es de 20MB");
+                    Notification.show("El tamaño máximo del archivo es de 10MB");
                 }
             });
             Paragraph hint = new Paragraph("Tamaño máximo permitido: 10 MB \n" + //
