@@ -213,7 +213,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
                     Notification.show("El proyecto tiene datos incorrectos");
             } else if (aportacionInicial.getValue().compareTo(coste.getValue()) > 0)
                 Notification.show("La aportación inicial no puede ser mayor que el coste total");
-            else if (fechaLimite.getValue().isAfter(new java.util.Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()))
+            else if (fechaLimite.getValue().isBefore(new java.util.Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()))
                 Notification.show("La fecha límite no puede ser anterior a la fecha actual");
             else
                 Notification.show("Por favor, verifique los datos de entrada");
