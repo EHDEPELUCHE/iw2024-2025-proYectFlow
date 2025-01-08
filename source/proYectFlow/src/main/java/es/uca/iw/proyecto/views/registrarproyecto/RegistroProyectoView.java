@@ -36,7 +36,6 @@ import es.uca.iw.global.Roles;
 import es.uca.iw.global.views.PantallaInicioView;
 import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.PermitAll;
-
 import java.sql.Blob;
 import java.util.Optional;
 
@@ -204,7 +203,9 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
                     alcance.getValue(), coste.getValue(), aportacionInicial.getValue(),
                     promotor.getValue(), usuarioService.getCorreo(emailField.getValue()), fechaSql, pdfBlob));
 
-            if (binder.validate().isOk() && aportacionInicial.getValue().compareTo(coste.getValue()) <= 0) {
+            if (binder.validate().isOk() && aportacionInicial.getValue().compareTo(coste.getValue()) <= 0 
+                && fechaLimite.getValue().isAfter(new java.util.Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate())) 
+            {
                 if (proyectoService.registerProyecto(binder.getBean())) {
                     binder.setBean(new Proyecto());
                     Notification.show("Proyecto registrado correctamente.");
@@ -212,6 +213,8 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
                     Notification.show("El proyecto tiene datos incorrectos");
             } else if (aportacionInicial.getValue().compareTo(coste.getValue()) > 0)
                 Notification.show("La aportación inicial no puede ser mayor que el coste total");
+            else if (fechaLimite.getValue().isAfter(new java.util.Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()))
+                Notification.show("La fecha límite no puede ser anterior a la fecha actual");
             else
                 Notification.show("Por favor, verifique los datos de entrada");
         } else

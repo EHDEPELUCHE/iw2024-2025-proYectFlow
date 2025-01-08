@@ -12,7 +12,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.BigDecimalField;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.router.*;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
@@ -75,54 +75,65 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             grid.setAllRowsVisible(true);
             getContent().add(grid);
 
-            getContent().add(new H1("Añade una valoración de 1 a 10 en los siguientes campos: "));
-            HorizontalLayout horlayout = new HorizontalLayout();
-            horlayout.setWidthFull();
-            horlayout.setAlignItems(FlexComponent.Alignment.CENTER);
-            horlayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+            getContent().add(new H1("Valora de 1 a 10 la idoneidad del proyecto según su: "));
+            BigDecimal costeFinal = proyectoAux.getCoste().subtract(proyectoAux.getAportacionInicial());
+            getContent().add(new H4("Coste total del proyecto: " + costeFinal + " €"));
 
             //Mostramos el precio total menos la valoración inicial
-            BigDecimalField precio = new BigDecimalField("Valoración del precio total");
-            precio.setLabel("Valoración sobre el precio restante");
-            precio.setValue(proyectoAux.getCoste().subtract(proyectoAux.getAportacionInicial()));
-            precio.setWidth(PX); // Set the width of the field
-            horlayout.add(precio);
+            HorizontalLayout valoracionLayoutPrecio = new HorizontalLayout();
+            valoracionLayoutPrecio.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+
+            RadioButtonGroup<Integer> valoracionGroupPrecio = new RadioButtonGroup<>();
+            valoracionGroupPrecio.setLabel("Precio:");
+            valoracionGroupPrecio.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+            valoracionGroupPrecio.setValue(0); // Valor por defecto
+            valoracionGroupPrecio.setEnabled(false);
+
+            valoracionLayoutPrecio.add(valoracionGroupPrecio);
+            getContent().add(valoracionLayoutPrecio);
 
             //Dejamos que rellene las horas que estima que tardará y recursos
-            BigDecimalField horas = new BigDecimalField("Valoración de las horas totales necesarias");
-            horas.setLabel("Valoración del esfuerzo necesario de nuestros empleados");
-            horas.setWidth(PX); // Set the width of the field
-            horlayout.add(horas);
+            HorizontalLayout valoracionLayoutHoras = new HorizontalLayout();
+            valoracionLayoutHoras.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+
+            RadioButtonGroup<Integer> valoracionGroupHoras = new RadioButtonGroup<>();
+            valoracionGroupHoras.setLabel("Horas / Recursos necesarios:");
+            valoracionGroupHoras.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+            valoracionGroupHoras.setValue(0); // Valor por defecto
+            valoracionGroupHoras.setEnabled(false);
+
+            valoracionLayoutHoras.add(valoracionGroupHoras);
+            getContent().add(valoracionLayoutHoras);
 
             //Idoneidad técnica
-            BigDecimalField idoneidadtecnica = new BigDecimalField("Idoneidad técnica");
-            idoneidadtecnica.setLabel("Valoración sobre la idoneidad técnica del proyecto");
-            idoneidadtecnica.setWidth(PX); // Set the width of the field
-            horlayout.add(idoneidadtecnica);
+            HorizontalLayout valoracionLayoutIT = new HorizontalLayout();
+            valoracionLayoutIT.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
-            getContent().add(horlayout);
+            RadioButtonGroup<Integer> valoracionGroupIT = new RadioButtonGroup<>();
+            valoracionGroupIT.setLabel("Idoneidad técnica:");
+            valoracionGroupIT.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+            valoracionGroupIT.setValue(0); // Valor por defecto
+            valoracionGroupIT.setEnabled(false);
+
+            valoracionLayoutIT.add(valoracionGroupIT);
+            getContent().add(valoracionLayoutIT);
 
             Button guardar = new Button("Guardar");
             guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             guardar.addClickShortcut(Key.ENTER);
             guardar.addClickListener(e -> {
-                if (precio.getValue().compareTo(BigDecimal.TEN) > 0 || precio.getValue().compareTo(BigDecimal.ZERO) < 0
-                        || horas.getValue().compareTo(BigDecimal.TEN) > 0 || horas.getValue().compareTo(BigDecimal.ZERO) < 0
-                        || idoneidadtecnica.getValue().compareTo(BigDecimal.TEN) > 0 || idoneidadtecnica.getValue().compareTo(BigDecimal.ZERO) < 0) {
-                    Notification.show("Las notas tienen que estar entre 0 y 10");
-                } else {
-                    proyectoService.setValoracionTecnica(precio.getValue(), horas.getValue(), idoneidadtecnica.getValue(), proyectoAux);
-                    Notification notification = Notification.show("Valoración guardada con éxito.");
-                    notification.setDuration(2000);
-                    notification.addDetachListener(detachEvent -> UI.getCurrent().navigate("proyectosOTP"));
-                }
+                proyectoService.setValoracionTecnica(valoracionGroupPrecio.getValue(), valoracionGroupHoras.getValue(), valoracionGroupIT.getValue(), proyectoAux);
+                Notification notification = Notification.show("Valoración guardada con éxito.");
+                notification.setDuration(2000);
+                notification.addDetachListener(detachEvent -> UI.getCurrent().navigate("proyectosOTP"));
+                
             });
 
             HorizontalLayout buttonLayout = new HorizontalLayout(guardar);
             buttonLayout.setWidthFull();
             buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
             getContent().add(buttonLayout);
-            getContent().add(new H4("* Indique un 0 en idoneidad técnica si alguna ley no se cumple y hace imposible este proyecto"));
+            getContent().add(new H4("* Indique un 0 en idoneidad técnica si el proyecto viola alguna norma / ley."));
         }
     }
 }

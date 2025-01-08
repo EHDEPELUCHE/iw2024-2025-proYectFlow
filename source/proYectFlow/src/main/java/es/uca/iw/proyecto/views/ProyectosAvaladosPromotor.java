@@ -21,7 +21,8 @@ public class ProyectosAvaladosPromotor extends VisualizarProyectos {
     public ProyectosAvaladosPromotor(ProyectoService proyectoService, AuthenticatedUser user) {
         super(proyectoService, false);
         Specification<Proyecto> filters = (root, query, criteriaBuilder) -> criteriaBuilder.and(
-                criteriaBuilder.equal(root.get("promotor"), user.get().orElse(null))
+            criteriaBuilder.equal(root.get("promotor"), user.get().orElse(null)),
+            criteriaBuilder.notEqual(root.get("estado"), Proyecto.Estado.SOLICITADO)
         );
         inicializarVistaProyectos("Proyectos avalados", filters);
     }

@@ -100,7 +100,7 @@ class ProyectoServiceTest {
         proyecto.setEstado(Proyecto.Estado.EN_DESARROLLO);
         when(repository.save(proyecto)).thenReturn(proyecto);
 
-        proyectoService.setValoracionTecnica(BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(100), proyecto);
+        proyectoService.setValoracionTecnica(100, 100, 100, proyecto);
 
         assertEquals(Proyecto.Estado.EVALUADO_TECNICAMENTE, proyecto.getEstado());
         verify(repository, times(1)).save(proyecto);

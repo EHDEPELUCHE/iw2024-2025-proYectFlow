@@ -4,7 +4,6 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -32,7 +31,6 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-
 import java.io.IOException;
 
 @PageTitle("Priorizar Proyectos ")
@@ -40,7 +38,6 @@ import java.io.IOException;
 @Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg")
 @Uses(Icon.class)
 @RolesAllowed("ROLE_CIO")
-
 public class PriorizarProyectos extends Div {
     final Convocatoria convocatoria;
     private final ProyectoService proyectoService;
@@ -82,9 +79,8 @@ public class PriorizarProyectos extends Div {
                 layout.setSpacing(false);
                 add(layout);
             }
-        } else {
+        } else 
             add(new H1("Aún no se puede realizar la evaluación"));
-        }
     }
 
     private Component createGrid() {
@@ -121,23 +117,21 @@ public class PriorizarProyectos extends Div {
                 dialog.open();
                 dialog.setHeaderTitle("¿Desarrollar este proyecto?");
                 H2 mostrarPresupuesto = new H2("Presupuesto restante: " + convocatoria.getPresupuestorestante());
-                Checkbox realizar = new Checkbox("Realizar proyecto");
                 Button confirmar = new Button("Confirmar");
                 confirmar.setClassName("buttonPrimary");
                 confirmar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
                 confirmar.addClickShortcut(Key.ENTER);
                 confirmar.addClickListener(event -> {
-                    if (Boolean.TRUE.equals(realizar.getValue())) {
-                        //Si da el dinero
-                        if (convocatoria.getPresupuestorestante().compareTo(proyecto.getCoste().subtract(proyecto.getAportacionInicial())) >= 0) {
-                            convocatoria.setPresupuestorestante(convocatoria.getPresupuestorestante().subtract(proyecto.getCoste().subtract(proyecto.getAportacionInicial())));
-                            convocatoriaService.guardar(convocatoria);
-                            proyectoService.desarrollar(proyecto, realizar.getValue());
-                            dialog.close();
-                            Notification.show("Este proyecto se realizará");
-                        } else
-                            Notification.show("El presupuesto disponible es insuficiente para desarrollar este proyecto");
-                    }
+                    //Si da el dinero
+                    if (convocatoria.getPresupuestorestante().compareTo(proyecto.getCoste().subtract(proyecto.getAportacionInicial())) >= 0) {
+                        convocatoria.setPresupuestorestante(convocatoria.getPresupuestorestante().subtract(proyecto.getCoste().subtract(proyecto.getAportacionInicial())));
+                        convocatoriaService.guardar(convocatoria);
+                        proyectoService.desarrollar(proyecto, true);
+                        dialog.close();
+                        Notification.show("Este proyecto se realizará");
+                    } else
+                        Notification.show("El presupuesto disponible es insuficiente para desarrollar este proyecto");
+                    getUI().ifPresent(ui -> ui.getPage().reload());
                 });
                 Button cancelar = new Button("Cancelar");
                 cancelar.setClassName("buttonSecondary");
@@ -148,9 +142,10 @@ public class PriorizarProyectos extends Div {
                 noDesarrollar.addThemeVariants(ButtonVariant.LUMO_ERROR);
                 noDesarrollar.addClickListener(event -> {
                     proyectoService.desarrollar(proyecto, false);
+                    getUI().ifPresent(ui -> ui.getPage().reload());
                     dialog.close();
                 });
-                dialog.add(mostrarPresupuesto, realizar);
+                dialog.add(mostrarPresupuesto);
                 dialog.getFooter().add(noDesarrollar, confirmar, cancelar);
             });
             return evaluarButton;
@@ -169,4 +164,3 @@ public class PriorizarProyectos extends Div {
         //Empty class
     }
 }
-

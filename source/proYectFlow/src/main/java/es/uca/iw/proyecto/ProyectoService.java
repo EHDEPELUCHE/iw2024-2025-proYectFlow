@@ -76,11 +76,11 @@ public class ProyectoService {
         }
     }
 
-    public void setValoracionTecnica(BigDecimal precio, BigDecimal horas, BigDecimal idoneidad, Proyecto proyecto) {
+    public void setValoracionTecnica(int precio, int horas, int idoneidad, Proyecto proyecto) {
         if (proyecto.getEstado() != Proyecto.Estado.DENEGADO) {
             String nopasaTecnica = "Su proyecto NO ha pasado la valoración técnica";
             String nocumpleMinimo = " no cumple el mínimo requerido en aspectos técnicos.";
-            if (idoneidad.doubleValue() == 0) {
+            if (idoneidad == 0) {
                 proyecto.setEstado(Proyecto.Estado.DENEGADO);
                 proyecto.setPuntuacionTecnica(0);
                 if (proyecto.getSolicitante() != null) {
@@ -94,7 +94,7 @@ public class ProyectoService {
                 repository.save(proyecto);
             } else {
                 //30% idoneidad técnica + 30% costes económicos + 40% recursos humanos.
-                Double aux = 0.3 * idoneidad.doubleValue() + 0.3 * precio.doubleValue() + 0.4 * horas.doubleValue();
+                Double aux = 0.3 * idoneidad + 0.3 * precio + 0.4 * horas;
                 proyecto.setPuntuacionTecnica(aux);
                 proyecto.setEstado(Proyecto.Estado.EVALUADO_TECNICAMENTE);
                 if (proyecto.getPuntuacionTecnica() >= 5) {

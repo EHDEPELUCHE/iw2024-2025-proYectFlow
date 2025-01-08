@@ -132,7 +132,6 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
                 if (valorSeleccionado == null || valorSeleccionado < 0 || valorSeleccionado > 10)
                     Notification.show("Por favor, selecciona una valoración válida entre 0 y 10.");
                 else {
-                    Notification.show("Valoración seleccionada: " + valorSeleccionado);
                     List<AlineamientoEstrategico> alineamientos = new ArrayList<>(objetivos.getValue());
                     
                     // Ensure all AlineamientoEstrategico objects have valid IDs
