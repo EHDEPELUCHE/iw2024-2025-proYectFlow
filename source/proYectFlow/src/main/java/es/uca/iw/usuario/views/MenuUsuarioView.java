@@ -111,6 +111,12 @@ public class MenuUsuarioView extends Main {
                 "Priorizar", "priorizarproyectos",
                 List.of(CIO));
 
+        addCardIfRoleMatches("Añadir Alineamiento Estratégico",
+                "Aquí puedes añadir un nuevo alineamiento estratégico",
+                FOTO,
+                "Añadir", "añadiralineamiento",
+                List.of(CIO));
+
         addCardIfRoleMatches("Historial de proyectos",
                 "Aquí puedes consultar todos los proyectos",
                 "https://images.unsplash.com/photo-1569235186275-626cb53b83ce?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
