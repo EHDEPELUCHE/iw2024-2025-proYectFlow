@@ -57,26 +57,27 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
         guardarButton.addClickShortcut(Key.ENTER);
         guardarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         guardarButton.addClickListener(e -> {
-            Convocatoria convocatoria = new Convocatoria(
+            try{
+                Convocatoria convocatoria = new Convocatoria(
                     presupuestototal.getValue(),
                     Date.from(fechaLimite.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
                     Date.from(fechaInicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
                     Date.from(fechaFinal.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())
-            );
-            
-           
-            convocatoria.setActiva(false);
-            convocatoriaservice.guardar(convocatoria);
-            Notification.show("Convocatoria creada correctamente");
+                );
+                
+                convocatoria.setActiva(false);
+                convocatoriaservice.guardar(convocatoria);
+                Notification.show("Convocatoria creada correctamente");
+                presupuestototal.clear();
+                fechaInicio.clear();
+                fechaLimite.clear();
+                fechaFinal.clear();
+                getUI().ifPresent(ui -> ui.navigate("GestionarConvocatorias"));
+            } catch (Exception ex) {
+                Notification.show("Error al crear la convocatoria, revise las fechas");
 
-            Button vigenteButton = new Button("Hacerla vigente");
-            vigenteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-            vigenteButton.addClickListener(ev -> {
-                convocatoriaservice.hacerVigente(convocatoria);
-                GestionarUsuariosView gu = new GestionarUsuariosView(usuarioService, proyectoService);
-                gu.guardarPromotores();
-            });
-            getContent().add(vigenteButton);
+            }
+           
         });
 
         FormLayout formLayout = new FormLayout();
