@@ -1,8 +1,10 @@
 package es.uca.iw.valoracion.views;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
@@ -95,8 +97,6 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
             });
 
             getContent().add(formLayout, downloadButton);
-
-            //AVALAR?
             getContent().add(new H2("¿Quiere avalar esta propuesta?"));
 
             RadioButtonGroup<String> eleccionValorarGroup = new RadioButtonGroup<>();
@@ -129,7 +129,13 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
 
             // Botón guardar
             Button guardar = new Button("Guardar");
+            guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            guardar.addClickShortcut(Key.ENTER);
             guardar.addClickListener(e -> {
+                if(eleccionValorarGroup.getValue() == null) {
+                    Notification.show("Por favor, seleccione una opción.");
+                    return;
+                }
                 Integer valorSeleccionado = valoracionGroup.getValue();
                 String valorarOk = eleccionValorarGroup.getValue();
                 if (valorSeleccionado == null) {

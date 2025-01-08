@@ -6,13 +6,11 @@ import es.uca.iw.usuario.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,9 +52,6 @@ public class Proyecto extends AbstractEntity {
     @Enumerated(EnumType.ORDINAL)
     Estado estado;
 
-    @ManyToMany
-    List<AlineamientoEstrategico> objEstrategicos;
-
     @ManyToOne
     @JoinColumn(name = "convocatoria_id", nullable = false)
     private Convocatoria convocatoria;
@@ -90,15 +85,6 @@ public class Proyecto extends AbstractEntity {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    //CAMBIAR
-    public List<AlineamientoEstrategico> getObjEstrategicos() {
-        return objEstrategicos;
-    }
-
-    public void setObjEstrategicos(List<AlineamientoEstrategico> objEstrategicos) {
-        this.objEstrategicos = objEstrategicos;
     }
 
     public String getDescripcion() {

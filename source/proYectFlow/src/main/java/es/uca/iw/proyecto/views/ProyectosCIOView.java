@@ -8,6 +8,8 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import es.uca.iw.convocatoria.Convocatoria;
 import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
@@ -26,10 +28,12 @@ public class ProyectosCIOView extends VisualizarProyectos {
 
     public ProyectosCIOView(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
         super(proyectoService, true);
+        Convocatoria convocatoriaActual = convocatoriaService.convocatoriaActual();
 
         if (!convocatoriaService.convocatoriaActual().enPlazo()) {
-            Specification<Proyecto> filtroEvaluados = (root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.EVALUADO_TECNICAMENTE);
+            Specification<Proyecto> filtroEvaluados = (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.EVALUADO_TECNICAMENTE),
+                    criteriaBuilder.equal(root.get("convocatoria"), convocatoriaActual));
             inicializarVistaProyectos("Proyectos por evaluar", filtroEvaluados);
 
         } else {

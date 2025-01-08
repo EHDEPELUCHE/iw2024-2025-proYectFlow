@@ -1,8 +1,12 @@
 package es.uca.iw.valoracion.views;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
+import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
@@ -11,14 +15,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.router.*;
-
 import es.uca.iw.proyecto.AlineamientoEstrategico;
 import es.uca.iw.proyecto.AlineamientoEstrategicoService;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.global.DownloadPdfComponent;
 import jakarta.annotation.security.RolesAllowed;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 
 @PageTitle("Valoración CIO")
 @Route("ValoracionEstrategica")
@@ -54,9 +55,8 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
             } catch (IllegalArgumentException e) {
                 this.proyecto = Optional.empty();
             }
-        } else {
+        } else 
             this.proyecto = Optional.empty();
-        }
 
         if (proyecto.isEmpty()) {
             H1 title = new H1("Ha ocurrido un error, no se encuentra el proyecto :(");
@@ -69,9 +69,8 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
 
             FormLayout formLayout = new FormLayout();
             formLayout.setWidth("100%");
-            if(proyectoAux.getSolicitante()!=null) {
+            if(proyectoAux.getSolicitante()!=null)
                 formLayout.addFormItem(new Span(proyectoAux.getSolicitante().getNombre()), "Solicitante");
-            }
 
             LocalDate localDate = proyectoAux.getFechaSolicitud().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd MMMM yyyy");
@@ -85,11 +84,12 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
 
             formLayout.addFormItem(new Span(proyectoAux.getCoste() + "€"), "Coste");
             formLayout.addFormItem(new Span(proyectoAux.getAportacionInicial() + "€"), "Aportación Inicial");
-
-            LocalDate localDateL = proyectoAux.getFechaLimite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            DateTimeFormatter formatterDateL = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-            formLayout.addFormItem(new Span(localDateL.format(formatterDateL)), "Fecha Límite de puesta en marcha");
-
+            if(proyectoAux.getFechaLimite() != null) {     
+                LocalDate localDateL = proyectoAux.getFechaLimite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                DateTimeFormatter formatterDateL = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+                formLayout.addFormItem(new Span(localDateL.format(formatterDateL)), "Fecha Límite de puesta en marcha");
+            }
+            
             Button downloadButton = DownloadPdfComponent.createDownloadButton("Memoria", () -> {
                 try {
                     return proyectoService.getPdf(proyectoAux.getId());
@@ -104,9 +104,9 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
             getContent().add(new H2("Alineamientos estratégicos a contemplar"));
             CheckboxGroup<AlineamientoEstrategico> objetivos = new CheckboxGroup<>();
             objetivos.setLabel("Alineamientos estratégicos");
-
             objetivos.setItems(alineamientoEstrategicoService.findAll());
-            objetivos.setItemLabelGenerator(AlineamientoEstrategico::getObjetivo);
+            objetivos.setItemLabelGenerator(alineamientoEstrategico -> alineamientoEstrategico.getObjetivo());
+            objetivos.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
 
             getContent().add(objetivos);
 
@@ -122,14 +122,16 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
 
             valoracionLayout.add(valoracionGroup);
             getContent().add(valoracionLayout);
-
-            // Botón guardar
+            
+            // Boton guardar
             Button guardar = new Button("Guardar");
+            guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            guardar.addClickShortcut(Key.ENTER);
             guardar.addClickListener(e -> {
                 Integer valorSeleccionado = valoracionGroup.getValue();
-                if (valorSeleccionado == null || valorSeleccionado < 0 || valorSeleccionado > 10) {
+                if (valorSeleccionado == null || valorSeleccionado < 0 || valorSeleccionado > 10)
                     Notification.show("Por favor, selecciona una valoración válida entre 0 y 10.");
-                } else {
+                else {
                     Notification.show("Valoración seleccionada: " + valorSeleccionado);
                     List<AlineamientoEstrategico> alineamientos = new ArrayList<>(objetivos.getValue());
                     
@@ -137,10 +139,11 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
                     boolean allValid = alineamientos.stream().allMatch(ae -> ae.getId() != null && alineamientoEstrategicoService.findById(ae.getId())!=null);
                     if (allValid) {
                         proyectoService.setValoracionEstrategica(BigDecimal.valueOf(valorSeleccionado), proyectoAux);
-                        Notification.show("Valoración guardada con éxito.");
-                    } else {
+                        Notification notification = Notification.show("Valoración guardada con éxito.");
+                        notification.setDuration(2000);
+                    notification.addDetachListener(detachEvent -> UI.getCurrent().navigate("proyectosCIO"));
+                    } else
                         Notification.show("Error: Algunos alineamientos estratégicos no son válidos.");
-                    }
                 }
             });
 

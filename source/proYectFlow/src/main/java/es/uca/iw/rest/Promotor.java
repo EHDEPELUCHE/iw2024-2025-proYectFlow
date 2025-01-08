@@ -48,6 +48,6 @@ public class Promotor {
 
         return ((nombreSinTildes.substring(0, nombreSinTildes.lastIndexOf(" ")) + "." +
                 nombreSinTildes.substring(nombreSinTildes.lastIndexOf(" ") + 1) +
-                "@gmail.com").toLowerCase()).replace(" ", "");
+                "@example.com").toLowerCase()).replace(" ", "");
     }
 }

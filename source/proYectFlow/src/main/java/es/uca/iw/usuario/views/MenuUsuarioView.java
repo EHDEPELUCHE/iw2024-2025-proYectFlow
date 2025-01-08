@@ -84,7 +84,7 @@ public class MenuUsuarioView extends Main {
         addCardIfRoleMatches("Tus proyectos avalados",
                 "Aquí puedes ver los proyectos que has avalado",
                 "https://images.unsplash.com/photo-1542626991-cbc4e32524cc?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                CONSULTAR, "estadomisproyectos",
+                CONSULTAR, "proyectosAvaladosPromotor",
                 List.of(PROMOTOR));
 
         addCardIfRoleMatches("Proyectos en desarrollo",

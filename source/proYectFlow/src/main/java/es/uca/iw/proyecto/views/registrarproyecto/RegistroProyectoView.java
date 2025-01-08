@@ -97,7 +97,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             promotor.setWidth(MIN_CONTENT);
 
             promotor.setItems(usuarioService.get(Roles.PROMOTOR));
-            promotor.setItemLabelGenerator(Usuario::getNombre);
+            promotor.setItemLabelGenerator(usuario -> usuario.getNombre() + " " + usuario.getApellido());
 
             nombre.setLabel("Nombre del proyecto");
             nombre.setWidth(MIN_CONTENT);
@@ -204,18 +204,17 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
                     alcance.getValue(), coste.getValue(), aportacionInicial.getValue(),
                     promotor.getValue(), usuarioService.getCorreo(emailField.getValue()), fechaSql, pdfBlob));
 
-            if (binder.validate().isOk()) {
+            if (binder.validate().isOk() && aportacionInicial.getValue().compareTo(coste.getValue()) <= 0) {
                 if (proyectoService.registerProyecto(binder.getBean())) {
                     binder.setBean(new Proyecto());
                     Notification.show("Proyecto registrado correctamente.");
-                } else {
+                } else 
                     Notification.show("El proyecto tiene datos incorrectos");
-                }
-            } else {
+            } else if (aportacionInicial.getValue().compareTo(coste.getValue()) > 0)
+                Notification.show("La aportación inicial no puede ser mayor que el coste total");
+            else
                 Notification.show("Por favor, verifique los datos de entrada");
-            }
-        } else {
+        } else
             Notification.show("El usuario no existe");
-        }
     }
 }

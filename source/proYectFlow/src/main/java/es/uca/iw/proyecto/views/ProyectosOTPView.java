@@ -8,6 +8,8 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import es.uca.iw.convocatoria.Convocatoria;
 import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
@@ -25,10 +27,12 @@ public class ProyectosOTPView extends VisualizarProyectos {
 
     public ProyectosOTPView(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
         super(proyectoService, true);
+        Convocatoria convocatoriaActual = convocatoriaService.convocatoriaActual();
 
         if (!convocatoriaService.convocatoriaActual().enPlazo()) {
-            Specification<Proyecto> filters = (root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.AVALADO);
+            Specification<Proyecto> filters = (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.AVALADO),
+                    criteriaBuilder.equal(root.get("convocatoria"), convocatoriaActual));
 
             inicializarVistaProyectos("Proyectos por evaluar", filters);
         } else {

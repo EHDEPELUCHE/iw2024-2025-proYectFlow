@@ -1,7 +1,10 @@
 package es.uca.iw.valoracion.views;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H4;
@@ -79,27 +82,29 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             horlayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
             //Mostramos el precio total menos la valoración inicial
-            BigDecimalField precio = new BigDecimalField("Precio total");
-            precio.setLabel("Precio restante");
+            BigDecimalField precio = new BigDecimalField("Valoración del precio total");
+            precio.setLabel("Valoración sobre el precio restante");
             precio.setValue(proyectoAux.getCoste().subtract(proyectoAux.getAportacionInicial()));
             precio.setWidth(PX); // Set the width of the field
             horlayout.add(precio);
 
             //Dejamos que rellene las horas que estima que tardará y recursos
-            BigDecimalField horas = new BigDecimalField("Horas total");
-            horas.setLabel("Esfuerzo necesario de nuestros empleados");
+            BigDecimalField horas = new BigDecimalField("Valoración de las horas totales necesarias");
+            horas.setLabel("Valoración del esfuerzo necesario de nuestros empleados");
             horas.setWidth(PX); // Set the width of the field
             horlayout.add(horas);
 
             //Idoneidad técnica
-            BigDecimalField idoneidadtecnica = new BigDecimalField("Idoneidad total");
-            idoneidadtecnica.setLabel("Idoneidad total");
+            BigDecimalField idoneidadtecnica = new BigDecimalField("Idoneidad técnica");
+            idoneidadtecnica.setLabel("Valoración sobre la idoneidad técnica del proyecto");
             idoneidadtecnica.setWidth(PX); // Set the width of the field
             horlayout.add(idoneidadtecnica);
 
             getContent().add(horlayout);
 
             Button guardar = new Button("Guardar");
+            guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            guardar.addClickShortcut(Key.ENTER);
             guardar.addClickListener(e -> {
                 if (precio.getValue().compareTo(BigDecimal.TEN) > 0 || precio.getValue().compareTo(BigDecimal.ZERO) < 0
                         || horas.getValue().compareTo(BigDecimal.TEN) > 0 || horas.getValue().compareTo(BigDecimal.ZERO) < 0
@@ -107,6 +112,9 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
                     Notification.show("Las notas tienen que estar entre 0 y 10");
                 } else {
                     proyectoService.setValoracionTecnica(precio.getValue(), horas.getValue(), idoneidadtecnica.getValue(), proyectoAux);
+                    Notification notification = Notification.show("Valoración guardada con éxito.");
+                    notification.setDuration(2000);
+                    notification.addDetachListener(detachEvent -> UI.getCurrent().navigate("proyectosOTP"));
                 }
             });
 

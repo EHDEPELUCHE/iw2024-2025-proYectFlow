@@ -70,7 +70,8 @@ public class PriorizarProyectos extends Div {
                 filters = new Filters() {
                     @Override
                     public Predicate toPredicate(Root<Proyecto> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                        Predicate estadoPredicate = criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.EVALUADO_ESTRATEGICAMENTE);
+                        Predicate estadoPredicate = criteriaBuilder.and(criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.EVALUADO_ESTRATEGICAMENTE),
+                                criteriaBuilder.equal(root.get("convocatoria"), convocatoria));
                         query.orderBy(criteriaBuilder.desc(root.get("puntuacionEstrategica")));
                         return criteriaBuilder.and(estadoPredicate);
                     }

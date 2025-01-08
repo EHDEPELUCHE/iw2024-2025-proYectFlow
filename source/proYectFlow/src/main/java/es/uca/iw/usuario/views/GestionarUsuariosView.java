@@ -65,11 +65,11 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
         getContent().add(titulousuario, correoField, buscarButton);
 
         grid = new Grid<>(Usuario.class, false);
-        grid.addColumn(Usuario::getNombre).setHeader("Nombre");
-        grid.addColumn(Usuario::getApellido).setHeader("Apellido");
-        grid.addColumn(Usuario::getCorreo).setHeader("Correo");
-        grid.addColumn(Usuario::getTipo).setHeader("Rol");
-        grid.addColumn(Usuario::getActivo).setHeader("Activo");
+        grid.addColumn(Usuario::getNombre).setHeader("Nombre").setSortable(true);
+        grid.addColumn(Usuario::getApellido).setHeader("Apellido").setSortable(true);
+        grid.addColumn(Usuario::getCorreo).setHeader("Correo").setSortable(true);
+        grid.addColumn(Usuario::getTipo).setHeader("Rol").setSortable(true);
+        grid.addColumn(Usuario::getActivo).setHeader("Activo").setSortable(true);
 
         grid.addComponentColumn(usuario -> {
             Button modificarButton = new Button("Modificar");

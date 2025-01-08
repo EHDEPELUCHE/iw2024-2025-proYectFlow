@@ -18,7 +18,6 @@ import com.vaadin.flow.router.Route;
 
 import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.usuario.UsuarioService;
-import es.uca.iw.usuario.views.GestionarUsuariosView;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.time.ZoneId;

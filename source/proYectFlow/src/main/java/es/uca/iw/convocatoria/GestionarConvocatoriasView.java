@@ -57,7 +57,7 @@ public class GestionarConvocatoriasView extends Div {
     private Grid<Convocatoria> crearGridDatosConvocatoria() {
         Grid<Convocatoria> grid = new Grid<>(Convocatoria.class, false);
 
-        grid.addColumn("nombre").setHeader("Nombre").setAutoWidth(true);
+        grid.addColumn("nombre").setHeader("Nombre").setAutoWidth(true).setSortable(true);
 
         grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFechaInicio()))
                 .setHeader("Fecha inicio").setAutoWidth(true)
@@ -71,8 +71,8 @@ public class GestionarConvocatoriasView extends Div {
                 .setHeader("Fecha final").setAutoWidth(true)
                 .setSortable(true);
 
-        grid.addColumn("presupuestorestante").setHeader("Presupuesto restante").setAutoWidth(true);
-        grid.addColumn("presupuestototal").setHeader("Presupuesto total").setAutoWidth(true);
+        grid.addColumn("presupuestorestante").setHeader("Presupuesto restante").setAutoWidth(true).setSortable(true);
+        grid.addColumn("presupuestototal").setHeader("Presupuesto total").setAutoWidth(true).setSortable(true);
 
         grid.addComponentColumn(this::estadoConvocatoria)
                 .setHeader("Estado")

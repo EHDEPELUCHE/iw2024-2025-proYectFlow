@@ -31,7 +31,6 @@ import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.usuario.Usuario;
 import es.uca.iw.usuario.UsuarioService;
-
 import java.io.IOException;
 import java.sql.Blob;
 import java.time.ZoneId;
@@ -73,9 +72,8 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
             } catch (IllegalArgumentException e) {
                 this.proyecto = Optional.empty();
             }
-        } else {
+        } else 
             this.proyecto = Optional.empty();
-        }
 
         if (proyecto.isEmpty()) {
             H1 title = new H1("Ha ocurrido un error, no se encuentra el proyecto :(");
@@ -127,11 +125,12 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
                     cancelarButton.addClickListener(e -> UI.getCurrent().navigate(EstadoProyectosView.class));
             });
 
-
             layoutRow.setAlignSelf(FlexComponent.Alignment.START, cancelarButton);
 
             Button borrarProyectoButton = new Button("Borrar Proyecto", eventy -> {
-                if (proyectoAux.getEstado() == Proyecto.Estado.DENEGADO) {
+                if (proyectoAux.getEstado() == Proyecto.Estado.DENEGADO || 
+                    (proyectoAux.getEstado() == Proyecto.Estado.SOLICITADO && proyectoAux.getPromotor() == null)) 
+                {
                     proyectoService.delete(proyectoAux.getId());
                     UI.getCurrent().navigate(ProyectosView.class);
                 } else
@@ -165,7 +164,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
         promotor.setLabel("Promotor");
         promotor.setWidth(MIN_CONTENT);
         promotor.setItems(usuarioService.get(Roles.PROMOTOR));
-        promotor.setItemLabelGenerator(Usuario::getNombre);
+        promotor.setItemLabelGenerator(usuario -> usuario.getNombre() + " " + usuario.getApellido());
         promotor.setValue(proyectoAux.getPromotor());
 
         nombre.setLabel("Nombre del proyecto");
@@ -194,9 +193,8 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
 
         fechaLimite.setPlaceholder("Añadir solo si el proyecto se realiza para cumplir con alguna ley próxima a entrar en vigor");
         fechaLimite.setAriaLabel("Añadir solo si el proyecto se realiza para cumplir con alguna ley próxima a entrar en vigor");
-        if (proyectoAux.getFechaLimite() != null) {
+        if (proyectoAux.getFechaLimite() != null) 
             fechaLimite.setValue(proyectoAux.getFechaLimite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        }
 
         upload.setAcceptedFileTypes("application/pdf", ".pdf");
         upload.setMaxFileSize(10 * 1024 * 1024);
@@ -210,24 +208,26 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
                 
                 Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
                 proyectoAux.setMemoria(blob);
-                if (proyectoAux.getMemoria() != null) {
+                if (proyectoAux.getMemoria() != null)
                     Notification.show("Archivo subido correctamente: " + event.getFileName());
-                } else {
+                else
                     Notification.show("Error: No se pudo guardar el archivo.");
-                }
             } catch (Exception ex) {
                 Notification.show("Error al subir el archivo: " + ex.getMessage());
             }
         });
-        Paragraph hint = new Paragraph("Tamaño máximo permitido: 10 MB \n" + //
-                        "Tipo de archivo permitido: .pdf");
+        Paragraph hint = new Paragraph("Tamaño máximo permitido: 10 MB \n" +
+                                       "Tipo de archivo permitido: .pdf");
         hint.getStyle().set("color", "var(--lumo-secondary-text-color)");
         upload.setDropLabel(hint);  
     }
 
     private void actualizarProyecto(Proyecto proyectoAux) {
-        proyectoService.update(proyectoAux);
-        Notification.show("Proyecto actualizado");
+        if(proyectoAux.getAportacionInicial().compareTo(proyectoAux.getCoste()) > 0)
+            Notification.show("La aportación inicial no puede ser mayor que el coste total");
+        else{
+            proyectoService.update(proyectoAux);
+            Notification.show("Proyecto actualizado");
+        }
     }
 }
-

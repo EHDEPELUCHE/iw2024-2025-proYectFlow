@@ -12,6 +12,14 @@ public class AlineamientoEstrategico extends AbstractEntity {
     @Column(unique = true, nullable = false)
     private String objetivo;
 
+    public AlineamientoEstrategico(String objetivo) {
+        this.objetivo = objetivo;
+    }
+
+    public AlineamientoEstrategico() {
+        //Empty constructor
+    }
+    
     public String getObjetivo() {
         return objetivo;
     }
