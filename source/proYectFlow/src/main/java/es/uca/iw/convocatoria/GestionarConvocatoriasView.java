@@ -17,6 +17,10 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+
+import es.uca.iw.proyecto.ProyectoService;
+import es.uca.iw.usuario.UsuarioService;
+import es.uca.iw.usuario.views.GestionarUsuariosView;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.domain.PageRequest;
 
@@ -27,9 +31,13 @@ import org.springframework.data.domain.PageRequest;
 @RolesAllowed("ROLE_ADMIN")
 public class GestionarConvocatoriasView extends Div {
     private final ConvocatoriaService convocatoriaService;
+    private final UsuarioService usuarioService;
+    private final ProyectoService proyectoService;
 
-    public GestionarConvocatoriasView(ConvocatoriaService convocatoriaService) {
+    public GestionarConvocatoriasView(ConvocatoriaService convocatoriaService, UsuarioService usuarioService, ProyectoService proyectoService) {
         this.convocatoriaService = convocatoriaService;
+        this.usuarioService = usuarioService;
+        this.proyectoService = proyectoService;
 
         setSizeFull();
         addClassNames("convocatorias-view");
@@ -94,6 +102,8 @@ public class GestionarConvocatoriasView extends Div {
                 try {
                     convocatoriaService.hacerVigente(convocatoria);
                     Notification.show("Convocatoria activada");
+                    GestionarUsuariosView gu = new GestionarUsuariosView(usuarioService, proyectoService);
+                    gu.guardarPromotores();
                     UI.getCurrent().getPage().reload();
                 } catch (IllegalArgumentException ex) {
                     Notification errorNotification = new Notification(ex.getMessage(), 3000, Notification.Position.MIDDLE);

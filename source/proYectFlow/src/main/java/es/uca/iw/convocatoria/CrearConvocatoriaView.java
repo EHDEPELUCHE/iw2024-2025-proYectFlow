@@ -15,6 +15,10 @@ import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import es.uca.iw.proyecto.ProyectoService;
+import es.uca.iw.usuario.UsuarioService;
+import es.uca.iw.usuario.views.GestionarUsuariosView;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.time.ZoneId;
@@ -32,7 +36,7 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
     final DatePicker fechaLimite = new DatePicker();
     final DatePicker fechaFinal = new DatePicker();
 
-    public CrearConvocatoriaView(ConvocatoriaService convocatoriaservice) {
+    public CrearConvocatoriaView(ConvocatoriaService convocatoriaservice, UsuarioService usuarioService, ProyectoService proyectoService) {
         this.convocatoriaservice = convocatoriaservice;
 
         H1 title = new H1("Crear una nueva convocatoria");
@@ -59,14 +63,19 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
                     Date.from(fechaInicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
                     Date.from(fechaFinal.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())
             );
-
+            
+           
             convocatoria.setActiva(false);
             convocatoriaservice.guardar(convocatoria);
             Notification.show("Convocatoria creada correctamente");
 
             Button vigenteButton = new Button("Hacerla vigente");
             vigenteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-            vigenteButton.addClickListener(ev -> convocatoriaservice.hacerVigente(convocatoria));
+            vigenteButton.addClickListener(ev -> {
+                convocatoriaservice.hacerVigente(convocatoria);
+                GestionarUsuariosView gu = new GestionarUsuariosView(usuarioService, proyectoService);
+                gu.guardarPromotores();
+            });
             getContent().add(vigenteButton);
         });
 
