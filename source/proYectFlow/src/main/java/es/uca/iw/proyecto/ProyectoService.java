@@ -130,15 +130,16 @@ public class ProyectoService {
             //MANDAR CORREO
             if (proyectoAux.getSolicitante() != null) {
                 mailSender.sendEmail(proyectoAux.getSolicitante().getCorreo(), "Su proyecto ha sido avalado",
-                        "¡Felicidades! " + proyectoAux.getPromotor().getNombre() + " ha aceptado ser su aval.");
+                        "¡Felicidades! " + proyectoAux.getPromotor().getNombre() + " ha aceptado ser su aval en el proyecto: " + proyectoAux.getNombre() + 
+                        ".\nAcceda a nuestra web para ver más información.");
             }
             repository.save(proyectoAux);
         } else {
             //MANDAR CORREO
             if (proyectoAux.getSolicitante() != null) {
                 mailSender.sendEmail(proyectoAux.getSolicitante().getCorreo(), "Su proyecto NO ha sido avalado",
-                        "Lo lamentamos, " + proyectoAux.getPromotor().getNombre() + " ha rechazado avalar su propuesta." +
-                                " Acceda a nuestra web si aún está en plazo y solicite otro aval.");
+                        "Lo lamentamos, " + proyectoAux.getPromotor().getNombre() + " ha rechazado avalar su propuesta: " + proyectoAux.getNombre()  +
+                        ".\nAcceda a nuestra web si aún está en plazo y solicite otro aval.");
             }
             proyectoAux.setPromotor(null);
             repository.save(proyectoAux);

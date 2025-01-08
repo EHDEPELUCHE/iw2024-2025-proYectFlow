@@ -132,7 +132,12 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
                     (proyectoAux.getEstado() == Proyecto.Estado.SOLICITADO && proyectoAux.getPromotor() == null)) 
                 {
                     proyectoService.delete(proyectoAux.getId());
-                    UI.getCurrent().navigate(ProyectosView.class);
+                    authenticatedUser.get().ifPresent(user -> {
+                        if (user.getTipo() == Roles.ADMIN)
+                            cancelarButton.addClickListener(e -> UI.getCurrent().navigate(ProyectosView.class));
+                        else
+                            cancelarButton.addClickListener(e -> UI.getCurrent().navigate(EstadoProyectosView.class));
+                    });
                 } else
                     Notification.show("Este proyecto aún no se puede eliminar");
             });
