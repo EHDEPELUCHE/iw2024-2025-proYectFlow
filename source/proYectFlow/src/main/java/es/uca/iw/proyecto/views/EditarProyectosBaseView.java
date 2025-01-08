@@ -222,7 +222,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
             }
         });
         Paragraph hint = new Paragraph();
-        hint.getElement().setText("Tamaño máximo permitido: 10 MB\nTipo de archivo permitido: .pdf");
+        hint.getElement().setProperty("innerHTML", "Tamaño máximo permitido: 10 MB<br>Tipo de archivo permitido: .pdf");
         hint.getStyle().set("color", "var(--lumo-secondary-text-color)");
         upload.setDropLabel(hint);  
     }
