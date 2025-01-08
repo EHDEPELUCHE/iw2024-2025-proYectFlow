@@ -221,8 +221,8 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
                 Notification.show("Error al subir el archivo: " + ex.getMessage());
             }
         });
-        Paragraph hint = new Paragraph("Tamaño máximo permitido: 10 MB \n" +
-                                       "Tipo de archivo permitido: .pdf");
+        Paragraph hint = new Paragraph();
+        hint.getElement().setText("Tamaño máximo permitido: 10 MB\nTipo de archivo permitido: .pdf");
         hint.getStyle().set("color", "var(--lumo-secondary-text-color)");
         upload.setDropLabel(hint);  
     }
@@ -230,6 +230,8 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
     private void actualizarProyecto(Proyecto proyectoAux) {
         if(proyectoAux.getAportacionInicial().compareTo(proyectoAux.getCoste()) > 0)
             Notification.show("La aportación inicial no puede ser mayor que el coste total");
+        else if(proyectoAux.getFechaLimite().compareTo(proyectoAux.getFechaSolicitud()) <= 0)
+            Notification.show("La fecha límite debe ser posterior a la fecha de solicitud");
         else{
             proyectoService.update(proyectoAux);
             Notification.show("Proyecto actualizado");

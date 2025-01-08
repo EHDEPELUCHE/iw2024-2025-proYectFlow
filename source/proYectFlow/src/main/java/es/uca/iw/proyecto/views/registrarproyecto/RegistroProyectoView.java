@@ -130,8 +130,8 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
                     Notification.show("El tamaño máximo del archivo es de 10MB");
                 }
             });
-            Paragraph hint = new Paragraph("Tamaño máximo permitido: 10 MB \n" + //
-                                "Tipo de archivo permitido: .pdf");
+            Paragraph hint = new Paragraph();
+            hint.getElement().setText("Tamaño máximo permitido: 10 MB\nTipo de archivo permitido: .pdf");
             hint.getStyle().set("color", "var(--lumo-secondary-text-color)");
             upload.setDropLabel(hint);
             upload.getElement()
