@@ -206,16 +206,22 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
                     promotor.getValue(), usuarioService.getCorreo(emailField.getValue()), fechaSql, pdfBlob));
 
             if (binder.validate().isOk() && aportacionInicial.getValue().compareTo(coste.getValue()) <= 0) {
-                if (fechaLimite.getValue() == fechaLimite.getEmptyValue() || fechaLimite.getValue().isAfter(new java.util.Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate())) {
-                    if (proyectoService.registerProyecto(binder.getBean())) {
-                        binder.setBean(new Proyecto());
-                        Notification.show("Proyecto registrado correctamente.");
+                if (fechaLimite.getValue() != fechaLimite.getEmptyValue()) {
+                    if (fechaLimite.getValue().isAfter(new java.util.Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate())) {
+                        if (proyectoService.registerProyecto(binder.getBean())) {
+                            binder.setBean(new Proyecto());
+                            Notification.show("Proyecto registrado correctamente.");
+                        }
                     } else if (fechaLimite.getValue().isBefore(new java.util.Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()) || fechaLimite.getValue().isEqual(new java.util.Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()))
                         Notification.show("La fecha límite no puede ser anterior a la fecha actual ni la fecha actual");
                     else
                         Notification.show("El proyecto tiene datos incorrectos");
+                } else {
+                    if (proyectoService.registerProyecto(binder.getBean())) {
+                        binder.setBean(new Proyecto());
+                        Notification.show("Proyecto registrado correctamente.");
+                    }
                 }
-
             } else if (aportacionInicial.getValue().compareTo(coste.getValue()) > 0)
                 Notification.show("La aportación inicial no puede ser mayor que el coste total");
             else
