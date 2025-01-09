@@ -52,6 +52,10 @@ public class ProyectoService {
         return repository.findAll(filter, pageable);
     }
 
+    public List<Proyecto> findByConvocatoria(Convocatoria convocatoriaVieja) {
+        return repository.findByConvocatoria(convocatoriaVieja);
+    }
+
     public int count() {
         return (int) repository.count();
     }
@@ -130,16 +134,16 @@ public class ProyectoService {
             //MANDAR CORREO
             if (proyectoAux.getSolicitante() != null) {
                 mailSender.sendEmail(proyectoAux.getSolicitante().getCorreo(), "Su proyecto ha sido avalado",
-                        "¡Felicidades! " + proyectoAux.getPromotor().getNombre() + " ha aceptado ser su aval en el proyecto: " + proyectoAux.getNombre() + 
-                        ".\nAcceda a nuestra web para ver más información.");
+                        "¡Felicidades! " + proyectoAux.getPromotor().getNombre() + " ha aceptado ser su aval en el proyecto: " + proyectoAux.getNombre() +
+                                ".\nAcceda a nuestra web para ver más información.");
             }
             repository.save(proyectoAux);
         } else {
             //MANDAR CORREO
             if (proyectoAux.getSolicitante() != null) {
                 mailSender.sendEmail(proyectoAux.getSolicitante().getCorreo(), "Su proyecto NO ha sido avalado",
-                        "Lo lamentamos, " + proyectoAux.getPromotor().getNombre() + " ha rechazado avalar su propuesta: " + proyectoAux.getNombre()  +
-                        ".\nAcceda a nuestra web si aún está en plazo y solicite otro aval.");
+                        "Lo lamentamos, " + proyectoAux.getPromotor().getNombre() + " ha rechazado avalar su propuesta: " + proyectoAux.getNombre() +
+                                ".\nAcceda a nuestra web si aún está en plazo y solicite otro aval.");
             }
             proyectoAux.setPromotor(null);
             repository.save(proyectoAux);
@@ -219,4 +223,6 @@ public class ProyectoService {
         }
         repository.save(proyecto);
     }
+
+
 }

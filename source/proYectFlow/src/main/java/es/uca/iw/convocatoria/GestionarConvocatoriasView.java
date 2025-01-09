@@ -17,12 +17,14 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-
+import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.usuario.views.GestionarUsuariosView;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.domain.PageRequest;
+
+import java.util.List;
 
 @Route("GestionarConvocatorias")
 @PageTitle("Gestionar Convocatorias")
@@ -100,6 +102,17 @@ public class GestionarConvocatoriasView extends Div {
             Button activarButton = new Button("Activar");
             activarButton.addClickListener(e -> {
                 try {
+                    Convocatoria convocatoriaVieja = convocatoriaService.convocatoriaActual();
+                    if (convocatoriaVieja != null) {
+                        List<Proyecto> proyectosViejos = proyectoService.findByConvocatoria(convocatoriaVieja);
+                        for (Proyecto proyecto : proyectosViejos) {
+                            if (proyecto.getEstado() == Proyecto.Estado.EN_DESARROLLO)
+                                proyecto.setEstado(Proyecto.Estado.FINALIZADO);
+                            else
+                                proyecto.setEstado(Proyecto.Estado.DENEGADO);
+                            proyectoService.update(proyecto);
+                        }
+                    }
                     convocatoriaService.hacerVigente(convocatoria);
                     Notification.show("Convocatoria activada");
                     GestionarUsuariosView gu = new GestionarUsuariosView(usuarioService, proyectoService);

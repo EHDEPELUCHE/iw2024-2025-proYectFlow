@@ -6,6 +6,7 @@ import es.uca.iw.usuario.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Blob;
@@ -248,5 +249,5 @@ public class Proyecto extends AbstractEntity {
         return 31;
     }
 
-    public enum Estado {SOLICITADO, AVALADO, EVALUADO_TECNICAMENTE, EVALUADO_ESTRATEGICAMENTE, NO_EN_DESARROLLO, EN_DESARROLLO, DENEGADO}
+    public enum Estado {SOLICITADO, AVALADO, EVALUADO_TECNICAMENTE, EVALUADO_ESTRATEGICAMENTE, NO_EN_DESARROLLO, EN_DESARROLLO, DENEGADO, FINALIZADO}
 }

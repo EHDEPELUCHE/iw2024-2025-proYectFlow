@@ -2,6 +2,7 @@ package es.uca.iw.proyecto.views;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
@@ -31,6 +32,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+
 import java.io.IOException;
 
 @PageTitle("Priorizar Proyectos ")
@@ -79,7 +81,7 @@ public class PriorizarProyectos extends Div {
                 layout.setSpacing(false);
                 add(layout);
             }
-        } else 
+        } else
             add(new H1("Aún no se puede realizar la evaluación"));
     }
 
@@ -131,7 +133,9 @@ public class PriorizarProyectos extends Div {
                         Notification.show("Este proyecto se realizará");
                     } else
                         Notification.show("El presupuesto disponible es insuficiente para desarrollar este proyecto");
-                    getUI().ifPresent(ui -> ui.getPage().reload());
+                    Notification notification = new Notification();
+                    notification.setDuration(2000);
+                    notification.addDetachListener(detachEvent -> UI.getCurrent().getPage().reload());
                 });
                 Button cancelar = new Button("Cancelar");
                 cancelar.setClassName("buttonSecondary");
