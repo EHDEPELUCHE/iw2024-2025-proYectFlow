@@ -228,13 +228,17 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
     }
 
     private void actualizarProyecto(Proyecto proyectoAux) {
-        if (proyectoAux.getAportacionInicial().compareTo(proyectoAux.getCoste()) > 0)
-            Notification.show("La aportación inicial no puede ser mayor que el coste total");
-        else if (proyectoAux.getFechaLimite() != null && proyectoAux.getFechaLimite().compareTo(proyectoAux.getFechaSolicitud()) <= 0)
-            Notification.show("La fecha límite debe ser posterior a la fecha de solicitud");
-        else {
-            proyectoService.update(proyectoAux);
-            Notification.show("Proyecto actualizado");
-        }
+        if ((proyectoAux.getEstado() == Proyecto.Estado.SOLICITADO && proyectoAux.getPromotor() == null)) {
+            if (proyectoAux.getAportacionInicial().compareTo(proyectoAux.getCoste()) > 0)
+                Notification.show("La aportación inicial no puede ser mayor que el coste total");
+            else if (proyectoAux.getFechaLimite() != null && proyectoAux.getFechaLimite().compareTo(proyectoAux.getFechaSolicitud()) <= 0)
+                Notification.show("La fecha límite debe ser posterior a la fecha de solicitud");
+            else {
+                proyectoService.update(proyectoAux);
+                Notification.show("Proyecto actualizado");
+            }
+        } else
+            Notification.show("Este proyecto no se puede editar");
+
     }
 }
