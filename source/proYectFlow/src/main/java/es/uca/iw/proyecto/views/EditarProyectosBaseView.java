@@ -31,6 +31,7 @@ import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.usuario.Usuario;
 import es.uca.iw.usuario.UsuarioService;
+
 import java.io.IOException;
 import java.sql.Blob;
 import java.time.ZoneId;
@@ -72,7 +73,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
             } catch (IllegalArgumentException e) {
                 this.proyecto = Optional.empty();
             }
-        } else 
+        } else
             this.proyecto = Optional.empty();
 
         if (proyecto.isEmpty()) {
@@ -128,9 +129,8 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
             layoutRow.setAlignSelf(FlexComponent.Alignment.START, cancelarButton);
 
             Button borrarProyectoButton = new Button("Borrar Proyecto", eventy -> {
-                if (proyectoAux.getEstado() == Proyecto.Estado.DENEGADO || 
-                    (proyectoAux.getEstado() == Proyecto.Estado.SOLICITADO && proyectoAux.getPromotor() == null)) 
-                {
+                if (proyectoAux.getEstado() == Proyecto.Estado.DENEGADO ||
+                        (proyectoAux.getEstado() == Proyecto.Estado.SOLICITADO && proyectoAux.getPromotor() == null)) {
                     proyectoService.delete(proyectoAux.getId());
                     authenticatedUser.get().ifPresent(user -> {
                         if (user.getTipo() == Roles.ADMIN)
@@ -198,7 +198,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
 
         fechaLimite.setPlaceholder("Añadir solo si el proyecto se realiza para cumplir con alguna ley próxima a entrar en vigor");
         fechaLimite.setAriaLabel("Añadir solo si el proyecto se realiza para cumplir con alguna ley próxima a entrar en vigor");
-        if (proyectoAux.getFechaLimite() != null) 
+        if (proyectoAux.getFechaLimite() != null)
             fechaLimite.setValue(proyectoAux.getFechaLimite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 
         upload.setAcceptedFileTypes("application/pdf", ".pdf");
@@ -210,7 +210,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
         upload.addSucceededListener(event -> {
             try {
                 byte[] bytes = buffer.getInputStream().readAllBytes();
-                
+
                 Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
                 proyectoAux.setMemoria(blob);
                 if (proyectoAux.getMemoria() != null)
@@ -224,15 +224,15 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
         Paragraph hint = new Paragraph();
         hint.getElement().setProperty("innerHTML", "Tamaño máximo permitido: 10 MB<br>Tipo de archivo permitido: .pdf");
         hint.getStyle().set("color", "var(--lumo-secondary-text-color)");
-        upload.setDropLabel(hint);  
+        upload.setDropLabel(hint);
     }
 
     private void actualizarProyecto(Proyecto proyectoAux) {
-        if(proyectoAux.getAportacionInicial().compareTo(proyectoAux.getCoste()) > 0)
+        if (proyectoAux.getAportacionInicial().compareTo(proyectoAux.getCoste()) > 0)
             Notification.show("La aportación inicial no puede ser mayor que el coste total");
-        else if(proyectoAux.getFechaLimite().compareTo(proyectoAux.getFechaSolicitud()) <= 0)
+        else if (proyectoAux.getFechaLimite() != null && proyectoAux.getFechaLimite().compareTo(proyectoAux.getFechaSolicitud()) <= 0)
             Notification.show("La fecha límite debe ser posterior a la fecha de solicitud");
-        else{
+        else {
             proyectoService.update(proyectoAux);
             Notification.show("Proyecto actualizado");
         }
