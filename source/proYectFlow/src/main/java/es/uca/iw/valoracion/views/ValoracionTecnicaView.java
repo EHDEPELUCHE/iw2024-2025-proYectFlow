@@ -78,6 +78,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             getContent().add(new H1("Valora de 1 a 10 la idoneidad del proyecto según su: "));
             BigDecimal costeFinal = proyectoAux.getCoste().subtract(proyectoAux.getAportacionInicial());
             getContent().add(new H4("Coste total del proyecto: " + costeFinal + " €"));
+            getContent().add(new H4("Presupuesto de la convocatoria actual: " + proyectoAux.getConvocatoria().getPresupuestorestante() + " €"));
 
             //Mostramos el precio total menos la valoración inicial
             HorizontalLayout valoracionLayoutPrecio = new HorizontalLayout();
