@@ -14,9 +14,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.router.*;
+import es.uca.iw.global.DownloadPdfComponent;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
-import es.uca.iw.global.DownloadPdfComponent;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.io.IOException;
@@ -30,10 +30,10 @@ import java.util.UUID;
 @Menu(order = 1, icon = "line-awesome/svg/user.svg")
 @RolesAllowed("ROLE_OTP")
 public class ValoracionTecnicaView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
-    Optional<Proyecto> proyecto;
-    final ProyectoService proyectoService;
-    UUID uuid;
     static final String PX = "300px";
+    final ProyectoService proyectoService;
+    Optional<Proyecto> proyecto;
+    UUID uuid;
 
     public ValoracionTecnicaView(ProyectoService proyectoService) {
         this.proyectoService = proyectoService;
@@ -64,13 +64,13 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             grid.setItems(List.of(proyectoAux));
             grid.setColumns("nombre", "descripcion", "fechaSolicitud", "coste", "aportacionInicial");
             grid.addComponentColumn(proyecto1 ->
-                DownloadPdfComponent.createDownloadButton("Memoria", () -> {
-                    try {
-                        return proyectoService.getPdf(proyecto1.getId());
-                    } catch (IOException ex) {
-                        throw new RuntimeException("Error al obtener el PDF", ex);
-                    }
-                })
+                    DownloadPdfComponent.createDownloadButton("Memoria", () -> {
+                        try {
+                            return proyectoService.getPdf(proyecto1.getId());
+                        } catch (IOException ex) {
+                            throw new RuntimeException("Error al obtener el PDF", ex);
+                        }
+                    })
             ).setHeader("PDF").setAutoWidth(true);
             grid.setAllRowsVisible(true);
             getContent().add(grid);
@@ -87,7 +87,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             valoracionGroupPrecio.setLabel("Precio:");
             valoracionGroupPrecio.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
             valoracionGroupPrecio.setValue(0); // Valor por defecto
-            valoracionGroupPrecio.setEnabled(false);
+            valoracionGroupPrecio.setEnabled(true);
 
             valoracionLayoutPrecio.add(valoracionGroupPrecio);
             getContent().add(valoracionLayoutPrecio);
@@ -100,7 +100,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             valoracionGroupHoras.setLabel("Horas / Recursos necesarios:");
             valoracionGroupHoras.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
             valoracionGroupHoras.setValue(0); // Valor por defecto
-            valoracionGroupHoras.setEnabled(false);
+            valoracionGroupHoras.setEnabled(true);
 
             valoracionLayoutHoras.add(valoracionGroupHoras);
             getContent().add(valoracionLayoutHoras);
@@ -113,7 +113,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             valoracionGroupIT.setLabel("Idoneidad técnica:");
             valoracionGroupIT.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
             valoracionGroupIT.setValue(0); // Valor por defecto
-            valoracionGroupIT.setEnabled(false);
+            valoracionGroupIT.setEnabled(true);
 
             valoracionLayoutIT.add(valoracionGroupIT);
             getContent().add(valoracionLayoutIT);
@@ -126,7 +126,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
                 Notification notification = Notification.show("Valoración guardada con éxito.");
                 notification.setDuration(2000);
                 notification.addDetachListener(detachEvent -> UI.getCurrent().navigate("proyectosOTP"));
-                
+
             });
 
             HorizontalLayout buttonLayout = new HorizontalLayout(guardar);
