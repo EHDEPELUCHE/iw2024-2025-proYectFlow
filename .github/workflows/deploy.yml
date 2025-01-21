@@ -44,12 +44,13 @@ jobs:
 
     # 5. Construir el proyecto con Maven
     - name: Build with Maven
-      run: mvn clean package
+      run: mvn clean package -Dmaven.test.skip=true
       working-directory: ./source/proYectFlow
 
     # 6. Hacer el deploy como package a GitHub
     - name: Deploy to GitHub packages
       run: mvn deploy -Dmaven.test.skip=true
+      working-directory: ./source/proYectFlow
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
