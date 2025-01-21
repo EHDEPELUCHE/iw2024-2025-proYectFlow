@@ -28,6 +28,42 @@ import jakarta.annotation.security.PermitAll;
 
 import java.util.Optional;
 
+/**
+ * Vista para mostrar y editar los datos personales del usuario autenticado.
+ * 
+ * Anotaciones:
+ * - @PageTitle: Título de la página.
+ * - @Route: Ruta de la vista.
+ * - @Menu: Configuración del menú (orden e icono).
+ * - @PermitAll: Permite el acceso a todos los usuarios autenticados.
+ * 
+ * Componentes:
+ * - BeanValidationBinder<Usuario>: Binder para la validación de los datos del usuario.
+ * - UsuarioService: Servicio para la gestión de usuarios.
+ * - ProyectoService: Servicio para la gestión de proyectos.
+ * - TextField: Campos de texto para el nombre de usuario, nombre y apellidos.
+ * - EmailField: Campo de texto para el correo electrónico.
+ * 
+ * Constructor:
+ * - MisDatosView(AuthenticatedUser authenticatedUser, UsuarioService uservice, ProyectoService proyectoservice):
+ *   Inicializa los servicios y componentes, y configura el layout de la vista.
+ * 
+ * Métodos:
+ * - buttonPrimary.addClickListener: Listener para el botón de guardar, que valida y actualiza los datos del usuario.
+ * - buttonSecondary.addClickListener: Listener para el botón de cancelar, que navega a la pantalla de inicio.
+ * - borrar.addClickListener: Listener para el botón de borrar, que elimina los datos del usuario y cierra la sesión.
+ * 
+ * Layouts:
+ * - VerticalLayout: Layout principal y secundario para organizar los componentes verticalmente.
+ * - HorizontalLayout: Layout para organizar los botones horizontalmente.
+ * - FormLayout: Layout para organizar los campos de formulario.
+ * 
+ * Enlaces:
+ * - RouterLink: Enlace para cambiar la contraseña.
+ * 
+ * Estilos:
+ * - Se configuran estilos y tamaños para los componentes y layouts.
+ */
 @PageTitle("Mis datos")
 @Route("Ver-mis-datos")
 @Menu(order = 6, icon = "line-awesome/svg/user.svg")

@@ -7,7 +7,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -17,20 +16,36 @@ import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.router.*;
 import es.uca.iw.proyecto.AlineamientoEstrategico;
 import es.uca.iw.proyecto.AlineamientoEstrategicoService;
+import es.uca.iw.proyecto.InfoProyecto;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
-import es.uca.iw.global.DownloadPdfComponent;
 import jakarta.annotation.security.RolesAllowed;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Vista para la valoración estratégica de proyectos por parte del CIO.
+ * 
+ * <p>Esta vista permite al CIO evaluar un proyecto específico y asignarle una valoración estratégica.
+ * Además, permite seleccionar alineamientos estratégicos relevantes para el proyecto.</p>
+ * 
+ * <p>La vista se compone de los siguientes elementos:</p>
+ * <ul>
+ *   <li>Un título que indica si ha ocurrido un error al cargar el proyecto.</li>
+ *   <li>Información detallada del proyecto.</li>
+ *   <li>Un grupo de casillas de verificación para seleccionar alineamientos estratégicos.</li>
+ *   <li>Un grupo de botones de radio para asignar una valoración estratégica al proyecto.</li>
+ *   <li>Un botón para guardar la valoración y los alineamientos seleccionados.</li>
+ * </ul>
+ * 
+ * <p>La vista está protegida por roles y solo es accesible para usuarios con el rol "ROLE_CIO".</p>
+ * 
+ * @param proyectoService Servicio para gestionar proyectos.
+ * @param alineamientoEstrategicoService Servicio para gestionar alineamientos estratégicos.
+ */
 @PageTitle("Valoración CIO")
 @Route("ValoracionEstrategica")
 @Menu(order = 1, icon = "line-awesome/svg/user.svg")
@@ -64,47 +79,14 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
         } else {
             //MOSTRAR DATOS DEL PROYECTO
             Proyecto proyectoAux = proyecto.get();
-
-            getContent().add(new H1("Detalles del Proyecto"));
-
-            FormLayout formLayout = new FormLayout();
-            formLayout.setWidth("100%");
-            if(proyectoAux.getSolicitante()!=null)
-                formLayout.addFormItem(new Span(proyectoAux.getSolicitante().getNombre()), "Solicitante");
-
-            LocalDate localDate = proyectoAux.getFechaSolicitud().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-            FormLayout.FormItem formItem = formLayout.addFormItem(new Span(localDate.format(formatterDate)), "Fecha de Solicitud");
-            formItem.getElement().getStyle().set("white-space", "nowrap");
-
-            formLayout.addFormItem(new Span(proyectoAux.getNombre()), "Nombre");
-            formLayout.addFormItem(new Span(proyectoAux.getDescripcion()), "Descripción");
-            formLayout.addFormItem(new Span(proyectoAux.getAlcance()), "Alcance");
-            formLayout.addFormItem(new Span(proyectoAux.getInteresados()), "Interesados");
-
-            formLayout.addFormItem(new Span(proyectoAux.getCoste() + "€"), "Coste");
-            formLayout.addFormItem(new Span(proyectoAux.getAportacionInicial() + "€"), "Aportación Inicial");
-            if(proyectoAux.getFechaLimite() != null) {     
-                LocalDate localDateL = proyectoAux.getFechaLimite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                DateTimeFormatter formatterDateL = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-                formLayout.addFormItem(new Span(localDateL.format(formatterDateL)), "Fecha Límite de puesta en marcha");
-            }
-            
-            Button downloadButton = DownloadPdfComponent.createDownloadButton("Memoria", () -> {
-                try {
-                    return proyectoService.getPdf(proyectoAux.getId());
-                } catch (IOException ex) {
-                    throw new RuntimeException("Error al obtener el PDF", ex);
-                }
-            });
-
-            getContent().add(formLayout, downloadButton);
+            InfoProyecto infoProyecto = new InfoProyecto(proyectoService, proyectoAux);
+            getContent().add(infoProyecto);
 
             //CheckBox
             getContent().add(new H2("Alineamientos estratégicos a contemplar"));
             CheckboxGroup<AlineamientoEstrategico> objetivos = new CheckboxGroup<>();
             objetivos.setLabel("Alineamientos estratégicos");
-            objetivos.setItems(alineamientoEstrategicoService.findAll());
+            objetivos.setItems(alineamientoEstrategicoService.findAllActivos());
             objetivos.setItemLabelGenerator(alineamientoEstrategico -> alineamientoEstrategico.getObjetivo());
             objetivos.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
 

@@ -40,6 +40,52 @@ import jakarta.annotation.security.PermitAll;
 import java.sql.Blob;
 import java.util.Optional;
 
+/**
+ * Esta vista maneja el registro de nuevos proyectos.
+ * Es accesible para todos los usuarios y forma parte del menú principal.
+ * La vista solo está disponible si hay una convocatoria activa para proyectos.
+ * 
+ * Anotaciones:
+ * - @PageTitle: Establece el título de la página.
+ * - @Route: Define la ruta para acceder a esta vista.
+ * - @Menu: Añade esta vista al menú principal con un orden e icono específicos.
+ * - @PermitAll: Permite el acceso a todos los usuarios.
+ * 
+ * Campos:
+ * - MIN_CONTENT: Constante para establecer el ancho mínimo del contenido.
+ * - usuarioService: Servicio para la gestión de usuarios.
+ * - authenticatedUser: Servicio para la gestión de usuarios autenticados.
+ * - proyectoService: Servicio para la gestión de proyectos.
+ * - fechaLimite: Selector de fecha para la fecha límite del proyecto.
+ * - buffer: Buffer de memoria para la carga de archivos.
+ * - convocatoriaService: Servicio para la gestión de convocatorias de proyectos.
+ * - binder: Binder para validar y enlazar datos del proyecto.
+ * - emailField: Campo de correo electrónico para el correo del solicitante.
+ * - promotor: ComboBox para seleccionar el promotor del proyecto.
+ * - nombre: TextField para el nombre del proyecto.
+ * - descripcion: TextField para la descripción del proyecto.
+ * - alcance: TextField para el alcance del proyecto.
+ * - interesados: TextField para los interesados del proyecto.
+ * - aportacionInicial: BigDecimalField para la financiación inicial.
+ * - coste: BigDecimalField para el coste total.
+ * - upload: Componente de carga para subir documentos del proyecto.
+ * 
+ * Constructor:
+ * - Inicializa los componentes y el diseño de la vista.
+ * - Configura los campos del formulario y sus etiquetas.
+ * - Configura el componente de carga para archivos PDF.
+ * - Añade listeners para la presentación del formulario y la carga de archivos.
+ * - Enlaza los campos del formulario con la clase Proyecto.
+ * 
+ * Métodos:
+ * - onRegistroProyecto: Maneja el proceso de registro del proyecto.
+ *   - Valida los datos del formulario.
+ *   - Convierte el archivo subido a Blob.
+ *   - Convierte la fecha seleccionada a SQL Date.
+ *   - Enlaza los datos del formulario a una nueva instancia de Proyecto.
+ *   - Registra el proyecto si los datos son válidos.
+ *   - Muestra notificaciones basadas en el resultado del registro.
+ */
 @PageTitle("Registro Proyecto")
 @Route("registro-proyecto")
 @Menu(order = 2, icon = "line-awesome/svg/egg-solid.svg")

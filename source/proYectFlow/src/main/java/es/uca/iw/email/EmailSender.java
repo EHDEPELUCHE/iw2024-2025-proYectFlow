@@ -8,6 +8,15 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 
+/**
+ * Clase de servicio para enviar correos electrónicos.
+ * Implementa la interfaz EmailService.
+ * 
+ * Esta clase utiliza JavaMailSender para enviar correos electrónicos y proporciona métodos para obtener la URL del servidor
+ * según el perfil activo.
+ * 
+ * @author 
+ */
 @Service
 public class EmailSender implements EmailService {
     private final JavaMailSender correo;

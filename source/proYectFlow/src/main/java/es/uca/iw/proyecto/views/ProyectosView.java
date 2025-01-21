@@ -22,6 +22,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+
+import es.uca.iw.convocatoria.Convocatoria;
+import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.global.DownloadPdfComponent;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
@@ -32,11 +35,36 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Arrays;
 
+/**
+ * La clase ProyectosView representa una vista para gestionar proyectos en la aplicación.
+ * Está anotada con varias anotaciones de Vaadin y Spring Security para definir su
+ * ruta, título de la página, orden en el menú y control de acceso.
+ * 
+ * Se crea una instancia de esta clase con un ProyectoService, que se utiliza para
+ * interactuar con el backend para operaciones relacionadas con proyectos.
+ * 
+ * La vista consta de un título, filtros y una cuadrícula para mostrar los proyectos.
+ * 
+ * Los filtros permiten a los usuarios buscar proyectos en función de varios criterios como
+ * nombre, promotor, rango de fechas y estado del proyecto.
+ * 
+ * La cuadrícula muestra los detalles del proyecto e incluye columnas para varios atributos del
+ * proyecto como nombre, descripción, interesados, alcance, promotor, coste,
+ * aportación inicial, fecha de solicitud y estado. También incluye botones para
+ * descargar un PDF del proyecto y editar el proyecto.
+ * 
+ * La clase Filters es una clase interna estática abstracta que define los componentes de filtro
+ * y su comportamiento. Implementa la interfaz Specification para proporcionar la lógica de filtrado.
+ * 
+ * El método createDownloadButton crea un botón para descargar un PDF del
+ * proyecto, y el método createEditButton crea un botón para editar el proyecto.
+ * 
+ * El método refreshGrid actualiza los datos de la cuadrícula.
+ */
 @PageTitle("Proyectos")
 @Route("proyectos")
 @Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg")
@@ -47,11 +75,13 @@ public class ProyectosView extends Div {
     static final String NOMBRE = "nombre";
     static final String FECHA_SOLICITUD = "fechaSolicitud";
     private final ProyectoService proyectoService;
+    protected final ConvocatoriaService convocatoriaService;
     private Grid<Proyecto> grid;
     private Filters filters;
 
-    public ProyectosView(ProyectoService proyectoService) {
+    public ProyectosView(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
         this.proyectoService = proyectoService;
+        this.convocatoriaService = convocatoriaService;
         initializeView();
     }
 
@@ -74,7 +104,7 @@ public class ProyectosView extends Div {
     }
 
     private Filters createFilters() {
-        return new Filters(this::refreshGrid) {
+        return new Filters(this::refreshGrid, convocatoriaService) {
             @Override
             public Predicate toPredicate(Root<Proyecto> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 Predicate predicate = criteriaBuilder.conjunction();
@@ -97,6 +127,9 @@ public class ProyectosView extends Div {
                 if (!estado.isEmpty()) {
                     predicate = criteriaBuilder.and(predicate, root.get("estado").in(
                             estado.getValue().stream().map(Proyecto.Estado::valueOf).toList()));
+                }
+                if (!convocatoria.isEmpty()) {
+                    predicate = criteriaBuilder.and(predicate, root.get("convocatoria").get("nombre").in(convocatoria.getValue()));
                 }
                 return predicate;
             }
@@ -131,6 +164,14 @@ public class ProyectosView extends Div {
         grid.addColumn("aportacionInicial").setAutoWidth(true);
         grid.addColumn(FECHA_SOLICITUD).setAutoWidth(true);
         grid.addColumn("estado").setAutoWidth(true);
+        grid.addColumn(proyecto -> proyecto.getJefe() != null ?
+                proyecto.getJefe().getNombre() + " " + proyecto.getJefe().getApellido() :
+                "Sin jefe").setHeader("Jefe de proyecto").setAutoWidth(true);
+        grid.addColumn(proyecto-> proyecto.getDirector() != null ?
+                proyecto.getDirector() :  "Sin director").setHeader("Director").setAutoWidth(true);
+        grid.addColumn(proyecto -> proyecto.getConvocatoria() != null ?
+            proyecto.getConvocatoria().getNombre() :
+            "Sin convocatoria").setHeader("Convocatoria").setAutoWidth(true);
         grid.addComponentColumn(this::createDownloadButton).setHeader("PDF").setAutoWidth(true);
         grid.addComponentColumn(this::createEditButton).setHeader("Acciones").setAutoWidth(true);
     }
@@ -162,18 +203,21 @@ public class ProyectosView extends Div {
         protected final DatePicker startDate = new DatePicker("Fecha solicitud");
         protected final DatePicker endDate = new DatePicker();
         protected final MultiSelectComboBox<String> estado = new MultiSelectComboBox<>("Estado del proyecto");
+        protected final MultiSelectComboBox<String> convocatoria = new MultiSelectComboBox<>("Convocatoria");
 
-        protected Filters(Runnable onSearch) {
+        protected Filters(Runnable onSearch, ConvocatoriaService convocatoriaService) {
             setWidthFull();
             addClassName("filter-layout");
             addClassNames(LumoUtility.Padding.Horizontal.LARGE, LumoUtility.Padding.Vertical.MEDIUM,
                     LumoUtility.BoxSizing.BORDER);
-            configureFilters(onSearch);
+            configureFilters(onSearch, convocatoriaService);
         }
 
-        private void configureFilters(Runnable onSearch) {
+        private void configureFilters(Runnable onSearch, ConvocatoriaService convocatoriaService) {
             nombre.setPlaceholder("Nombre o apellido");
             estado.setItems(Arrays.stream(Proyecto.Estado.values()).map(Enum::name).toList());
+            // Aquí puedes añadir las convocatorias disponibles
+            convocatoria.setItems(convocatoriaService.findAll().stream().map(Convocatoria::getNombre).toList());
 
             Button resetBtn = createResetButton(onSearch);
             Button searchBtn = createSearchButton(onSearch);
@@ -185,7 +229,7 @@ public class ProyectosView extends Div {
             horizontalLayout.setSpacing(true);
             horizontalLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-            horizontalLayout.add(nombre, promotor, createDateRangeFilter(), estado, actions);
+            horizontalLayout.add(nombre, promotor, createDateRangeFilter(), estado, convocatoria, actions);
             add(horizontalLayout);
         }
 
@@ -197,6 +241,7 @@ public class ProyectosView extends Div {
                 promotor.clear();
                 endDate.clear();
                 estado.clear();
+                convocatoria.clear();
                 onSearch.run();
             });
             resetBtn.getElement().setAttribute(ARIALABEL, "Borrar filtros");

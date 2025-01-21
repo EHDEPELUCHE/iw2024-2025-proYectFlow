@@ -12,6 +12,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -26,19 +27,60 @@ import es.uca.iw.rest.Respuesta;
 import es.uca.iw.usuario.Usuario;
 import es.uca.iw.usuario.UsuarioService;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
 import java.util.logging.Logger;
 
+/**
+ * Vista para la gestión de usuarios en el sistema.
+ * 
+ * <p>Esta clase proporciona una interfaz para administrar usuarios, incluyendo la
+ * capacidad de buscar, modificar y eliminar usuarios, así como actualizar promotores
+ * en el sistema.</p>
+ * 
+ * <p>La vista incluye un formulario para buscar usuarios por correo electrónico,
+ * una tabla para mostrar los usuarios y un diálogo para modificar los datos de un
+ * usuario seleccionado.</p>
+ * 
+ * <p>Además, se proporciona un botón para actualizar los promotores mediante una
+ * llamada a una API externa.</p>
+ * 
+ * <p>Esta clase está anotada con:</p>
+ * <ul>
+ *   <li>{@code @PageTitle}: Establece el título de la página.</li>
+ *   <li>{@code @Route}: Define la ruta de la vista.</li>
+ *   <li>{@code @Menu}: Configura el ítem del menú.</li>
+ *   <li>{@code @RolesAllowed}: Restringe el acceso a usuarios con el rol "ROLE_ADMIN".</li>
+ *   <li>{@code @EnableAsync}: Habilita la ejecución asíncrona de métodos.</li>
+ * </ul>
+ * 
+ * <p>Campos:</p>
+ * <ul>
+ *   <li>{@code logger}: Logger para registrar mensajes de la aplicación.</li>
+ *   <li>{@code restTemplate}: Cliente para realizar solicitudes HTTP.</li>
+ *   <li>{@code usuarioService}: Servicio para la gestión de usuarios.</li>
+ *   <li>{@code proyectoService}: Servicio para la gestión de proyectos.</li>
+ *   <li>{@code grid}: Tabla para mostrar los usuarios.</li>
+ * </ul>
+ * 
+ * <p>Métodos:</p>
+ * <ul>
+ *   <li>{@code GestionarUsuariosView}: Constructor que inicializa la vista.</li>
+ *   <li>{@code gestionarUsuario}: Método para gestionar un usuario específico.</li>
+ *   <li>{@code guardarPromotores}: Método asíncrono para actualizar los promotores desde una API externa.</li>
+ * </ul>
+ */
 @PageTitle("Administración de usuarios")
 @Route("AdministrarUsuarios")
 @Menu(order = 1, icon = "line-awesome/svg/user.svg")
 @RolesAllowed("ROLE_ADMIN")
+@EnableAsync
 public class GestionarUsuariosView extends Composite<VerticalLayout> {
     private static final Logger logger = Logger.getLogger(GestionarUsuariosView.class.getName());
     private final RestTemplate restTemplate;
@@ -167,7 +209,7 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
         }
     }
 
-    @Transactional
+    @Async
     public void guardarPromotores() {
         String apiUrl = "https://e608f590-1a0b-43c5-b363-e5a883961765.mock.pstmn.io/sponsors";
         try {
@@ -180,14 +222,13 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
                     throw e;
                 }
                 Respuesta apiResponse = response.getBody();
-                Notification.show("Respuesta de la API: " + response.getBody());
+                Notification notification = Notification.show("Promotores actualizados con éxito");
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                notification.setPosition(Notification.Position.MIDDLE);
                 if (apiResponse != null && apiResponse.getData() != null) {
                     for (Promotor promotor : apiResponse.getData()) {
-                        logger.info("Promotor nombre: " + promotor.getNombre());
-                        logger.info("Promotor apellido: " + promotor.getApellido());
                         try {
                             usuarioService.createPromotor(promotor);
-                            Notification.show("Promotor guardado exitosamente");
                         } catch (Exception ex) {
                             logger.severe("Error al guardar el promotor: " + ex.getMessage());
                             Notification.show("Error al guardar el promotor");

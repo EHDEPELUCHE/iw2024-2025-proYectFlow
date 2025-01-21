@@ -18,6 +18,35 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Vista del menú de usuario.
+ * 
+ * Esta clase representa la vista del menú de usuario donde se pueden gestionar
+ * proyectos y datos personales. La vista se construye dinámicamente en función
+ * de los roles del usuario autenticado.
+ * 
+ * Anotaciones:
+ * - @PageTitle: Título de la página.
+ * - @Route: Ruta de la vista.
+ * - @Menu: Configuración del menú (orden e icono).
+ * - @PermitAll: Permite el acceso a todos los usuarios autenticados.
+ * 
+ * Constantes:
+ * - FOTOPROYECTOS: URL de la imagen para proyectos.
+ * - FOTO: URL de una imagen genérica.
+ * - FOTOUSU: URL de la imagen para usuarios.
+ * - ADMIN, CIO, OTP, PROMOTOR, SOLICITANTE: Roles de usuario.
+ * - CONSULTAR: Texto para el botón de consulta.
+ * 
+ * Métodos:
+ * - constructUI(): Construye la interfaz de usuario.
+ * - addCardIfRoleMatches(): Agrega una tarjeta al menú si el usuario tiene el rol necesario.
+ * - getCurrentUserRoles(): Obtiene los roles del usuario autenticado.
+ * 
+ * La interfaz de usuario se compone de un contenedor horizontal con un encabezado
+ * y una lista ordenada de tarjetas. Cada tarjeta se agrega en función de los roles
+ * del usuario autenticado.
+ */
 @PageTitle("Menu de usuario")
 @Route("menuUsuarioView")
 @Menu(order = 8, icon = "line-awesome/svg/border-all-solid.svg")

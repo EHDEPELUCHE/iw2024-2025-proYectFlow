@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+permissions:
+  packages: write
+  contents: read
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -43,19 +47,25 @@ jobs:
       run: mvn clean package
       working-directory: ./source/proYectFlow
 
-    # 6. Configurar SSH
+    # 6. Hacer el deploy como package a GitHub
+    - name: Deploy to GitHub packages
+      run: mvn deploy -Dmaven.test.skip=true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # 7. Configurar SSH
     - name: Add SSH key
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    # 7. Verificar y agregar la clave del host de Azure a known_hosts
+    # 8. Verificar y agregar la clave del host de Azure a known_hosts
     - name: Add Azure Host to known_hosts
       run: |
         mkdir -p ~/.ssh
         ssh-keyscan proyectflow.westeurope.cloudapp.azure.com >> ~/.ssh/known_hosts
 
-    # 8. Desplegar el JAR en la máquina virtual de Azure
+    # 9. Desplegar el JAR en la máquina virtual de Azure
     - name: Deploy to Azure VM
       run: |
         scp ./source/proYectFlow/target/*.jar DaniFlow@proyectflow.westeurope.cloudapp.azure.com:/home/DaniFlow/proYectFlow/proyectflow.jar

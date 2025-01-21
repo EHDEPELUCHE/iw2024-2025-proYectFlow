@@ -5,7 +5,8 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -14,20 +15,51 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
+import es.uca.iw.proyecto.InfoProyecto;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
-import es.uca.iw.global.DownloadPdfComponent;
+import es.uca.iw.usuario.Usuario;
+import es.uca.iw.usuario.UsuarioService;
 import jakarta.annotation.security.RolesAllowed;
-
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Vista para la valoración de proyectos por parte de un promotor.
+ * 
+ * Esta vista permite a los promotores evaluar proyectos, asignar un director y 
+ * decidir si avalan o no la propuesta del proyecto.
+ * 
+ * Anotaciones:
+ * - @PageTitle: Título de la página.
+ * - @Route: Ruta de la vista.
+ * - @Menu: Configuración del menú (orden e icono).
+ * - @RolesAllowed: Roles permitidos para acceder a esta vista.
+ * 
+ * Atributos:
+ * - proyecto: Proyecto a evaluar.
+ * - proyectoService: Servicio para gestionar proyectos.
+ * - usuarioService: Servicio para gestionar usuarios.
+ * - uuid: Identificador único del proyecto.
+ * - SI_AVALO: Constante para la opción de avalar el proyecto.
+ * 
+ * Constructor:
+ * - ValoracionPromotorView(ProyectoService proyectoService, UsuarioService usuarioService): 
+ *   Inicializa los servicios de proyecto y usuario.
+ * 
+ * Métodos:
+ * - setParameter(BeforeEvent event, String parameter): 
+ *   Configura el parámetro de la URL y carga el proyecto correspondiente.
+ * 
+ * Comportamiento:
+ * - Si el proyecto no se encuentra, muestra un mensaje de error.
+ * - Si el proyecto se encuentra, muestra la información del proyecto y opciones para avalar o rechazar.
+ * - Permite seleccionar una valoración del proyecto y asignar un director.
+ * - Incluye un botón para guardar la valoración y redirigir a la lista de proyectos del promotor.
+ */
 @PageTitle("Valoración Promotor")
 @Route("ValoracionPromotor")
 @Menu(order = 1, icon = "line-awesome/svg/user.svg")
@@ -35,11 +67,13 @@ import java.util.UUID;
 public class ValoracionPromotorView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
     Optional<Proyecto> proyecto;
     final ProyectoService proyectoService;
+    final UsuarioService usuarioService;
     UUID uuid;
     static final String SI_AVALO = "Sí, avalo este proyecto";
 
-    public ValoracionPromotorView(ProyectoService proyectoService) {
+    public ValoracionPromotorView(ProyectoService proyectoService, UsuarioService usuarioService) {
         this.proyectoService = proyectoService;
+        this.usuarioService = usuarioService;
     }
 
     @Override
@@ -62,41 +96,9 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
             //MOSTRAR DATOS DEL PROYECTO
             Proyecto proyectoAux = proyecto.get();
 
-            getContent().add(new H1("Detalles del Proyecto"));
+            InfoProyecto infoProyecto = new InfoProyecto(proyectoService, proyectoAux);
+            getContent().add(infoProyecto);
 
-            FormLayout formLayout = new FormLayout();
-            formLayout.setWidth("100%");
-
-            formLayout.addFormItem(new Span(proyectoAux.getSolicitante().getNombre()), "Solicitante");
-
-            LocalDate localDate = proyectoAux.getFechaSolicitud().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-            FormLayout.FormItem formItem = formLayout.addFormItem(new Span(localDate.format(formatterDate)), "Fecha de Solicitud");
-            formItem.getElement().getStyle().set("white-space", "nowrap");
-
-            formLayout.addFormItem(new Span(proyectoAux.getNombre()), "Nombre");
-            formLayout.addFormItem(new Span(proyectoAux.getDescripcion()), "Descripción");
-            formLayout.addFormItem(new Span(proyectoAux.getAlcance()), "Alcance");
-            formLayout.addFormItem(new Span(proyectoAux.getInteresados()), "Interesados");
-
-            formLayout.addFormItem(new Span(proyectoAux.getCoste() + "€"), "Coste");
-            formLayout.addFormItem(new Span(proyectoAux.getAportacionInicial() + "€"), "Aportación Inicial");
-
-            if (proyectoAux.getFechaLimite() != null) {
-                LocalDate localDateL = proyectoAux.getFechaLimite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                DateTimeFormatter formatterDateL = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-                formLayout.addFormItem(new Span(localDateL.format(formatterDateL)), "Fecha Límite de puesta en marcha");
-            }
-
-            Button downloadButton = DownloadPdfComponent.createDownloadButton("Memoria", () -> {
-                try {
-                    return proyectoService.getPdf(proyecto.get().getId());
-                } catch (IOException ex) {
-                    throw new RuntimeException("Error al obtener el PDF", ex);
-                }
-            });
-
-            getContent().add(formLayout, downloadButton);
             getContent().add(new H2("¿Quiere avalar esta propuesta?"));
 
             RadioButtonGroup<String> eleccionValorarGroup = new RadioButtonGroup<>();
@@ -118,12 +120,46 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
             valoracionLayout.add(valoracionGroup);
             getContent().add(valoracionLayout);
 
+            ComboBox<Usuario> directorCombo = new ComboBox<>();
+            directorCombo.setLabel("Selecciona el director del proyecto:");
+            directorCombo.setItems(usuarioService.list());
+            directorCombo.setItemLabelGenerator(usuario -> usuario.getNombre() + " " + usuario.getApellido());
+            directorCombo.setEnabled(false);
+            getContent().add(directorCombo);
+
+            Checkbox directorEscrito = new Checkbox();
+            directorEscrito.setLabel("Si su director no está en la lista de usuarios, seleccione esta opción:");
+            directorEscrito.setEnabled(false);
+            getContent().add(directorEscrito);
+            
+            TextField director = new TextField();
+            director.setLabel("Persona que designa como director de este proyecto: ");
+            director.setPlaceholder("Nombre y apellidos del director");
+            director.setEnabled(false);
+            getContent().add(director);
+
+            directorEscrito.addValueChangeListener(eventval -> {
+                if(Boolean.TRUE.equals(directorEscrito.getValue())){
+                    director.setEnabled(true);
+                    directorCombo.setEnabled(false);
+                    directorCombo.setValue(directorCombo.getEmptyValue());
+                }else{
+                    director.setEnabled(false);
+                    directorCombo.setEnabled(true);
+                    director.setValue(director.getEmptyValue());
+                }
+            });
+
             eleccionValorarGroup.addValueChangeListener(eventval -> {
                 if (SI_AVALO.equals(eventval.getValue())) {
                     valoracionGroup.setEnabled(true);
+                    directorCombo.setEnabled(true);
+                    directorEscrito.setEnabled(true);
                 } else {
                     valoracionGroup.setEnabled(false);
+                    directorCombo.setEnabled(false);
                     valoracionGroup.setValue(0);
+                    directorEscrito.setEnabled(false);
                 }
             });
 
@@ -144,10 +180,18 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
                     Notification notification;
 
                     if (SI_AVALO.equals(valorarOk)) {
-                        proyectoService.setValoracionPromotor(BigDecimal.valueOf(valorSeleccionado), true, proyectoAux);
-                        notification = Notification.show("Valoración guardada con éxito.");
-                        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-
+                        if(director.getValue().isEmpty() && directorCombo.getValue() == null){
+                            Notification.show("Por favor, introduzca el nombre del director o un usuario disponible.");
+                            return;
+                        }else{
+                            if(director.getValue().isEmpty())
+                                proyectoAux.setDirector(directorCombo.getValue().getNombre() + " " + directorCombo.getValue().getApellido());
+                            else
+                                proyectoAux.setDirector(director.getValue());
+                            proyectoService.setValoracionPromotor(BigDecimal.valueOf(valorSeleccionado), true, proyectoAux);
+                            notification = Notification.show("Valoración guardada con éxito.");
+                            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                        }
                     } else {
                         proyectoService.setValoracionPromotor(BigDecimal.valueOf(valorSeleccionado), false, proyectoAux);
                         notification = Notification.show("Propuesta de valoración rechazada con éxito.");

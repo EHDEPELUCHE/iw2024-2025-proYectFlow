@@ -30,11 +30,32 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-
 import java.io.IOException;
 
+/**
+ * La clase PriorizarProyectos representa una vista para priorizar proyectos.
+ * Está anotada con @PageTitle, @Route, @Menu, @Uses y @RolesAllowed para definir su metadata y roles de seguridad.
+ * Esta clase extiende Div e implementa un componente de UI para mostrar y gestionar proyectos.
+ * 
+ * La clase contiene los siguientes campos:
+ * - convocatoria: La instancia actual de Convocatoria.
+ * - proyectoService: Servicio para gestionar entidades de Proyecto.
+ * - convocatoriaService: Servicio para gestionar entidades de Convocatoria.
+ * - filters: Filtros para consultar entidades de Proyecto.
+ * 
+ * El constructor inicializa los servicios, recupera la Convocatoria actual y configura los componentes de la UI.
+ * Muestra diferentes mensajes y diseños basados en el estado de la convocatoria y los proyectos.
+ * 
+ * El método createGrid crea un componente Grid para mostrar entidades de Proyecto con varias columnas y acciones.
+ * Incluye botones para descargar PDFs y desarrollar proyectos, con diálogos para confirmación.
+ * 
+ * La clase Filters es una clase abstracta estática que extiende Div e implementa Specification<Proyecto>.
+ * Se utiliza para definir filtros personalizados para consultar entidades de Proyecto.
+ */
 @PageTitle("Priorizar Proyectos ")
 @Route("priorizarproyectos")
 @Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg")
@@ -60,7 +81,8 @@ public class PriorizarProyectos extends Div {
         setSizeFull();
         addClassNames("proyectos-view");
         boolean hasInvalidStateProjects = proyectoService.list(PageRequest.of(0, Integer.MAX_VALUE)).stream()
-                .anyMatch(proyecto -> proyecto.getEstado() == Proyecto.Estado.AVALADO || proyecto.getEstado() == Proyecto.Estado.EVALUADO_TECNICAMENTE);
+            .anyMatch(proyecto -> (proyecto.getEstado() == Proyecto.Estado.AVALADO || proyecto.getEstado() == Proyecto.Estado.EVALUADO_TECNICAMENTE)
+                && proyecto.getConvocatoria().equals(convocatoria));
 
         if (!convocatoriaService.convocatoriaActual().enPlazo()) {
             if (hasInvalidStateProjects)
@@ -125,17 +147,22 @@ public class PriorizarProyectos extends Div {
                 confirmar.addClickShortcut(Key.ENTER);
                 confirmar.addClickListener(event -> {
                     //Si da el dinero
-                    if (convocatoria.getPresupuestorestante().compareTo(proyecto.getCoste().subtract(proyecto.getAportacionInicial())) >= 0) {
-                        convocatoria.setPresupuestorestante(convocatoria.getPresupuestorestante().subtract(proyecto.getCoste().subtract(proyecto.getAportacionInicial())));
-                        convocatoriaService.guardar(convocatoria);
-                        proyectoService.desarrollar(proyecto, true);
-                        dialog.close();
-                        Notification.show("Este proyecto se realizará");
-                    } else
-                        Notification.show("El presupuesto disponible es insuficiente para desarrollar este proyecto");
-                    Notification notification = new Notification();
-                    notification.setDuration(2000);
-                    notification.addDetachListener(detachEvent -> UI.getCurrent().getPage().reload());
+                    try{
+                        if (convocatoria.getPresupuestorestante().compareTo(proyecto.getCoste().subtract(proyecto.getAportacionInicial())) >= 0) {
+                            convocatoria.setPresupuestorestante(convocatoria.getPresupuestorestante().subtract(proyecto.getCoste().subtract(proyecto.getAportacionInicial())));
+                            convocatoriaService.guardar(convocatoria);
+                            proyectoService.desarrollar(proyecto, true);
+                            dialog.close();
+                            Notification.show("Este proyecto se realizará");
+                        } else
+                            Notification.show("El presupuesto disponible es insuficiente para desarrollar este proyecto");
+                        Notification notification = new Notification();
+                        notification.setDuration(5);
+                        UI.getCurrent().getPage().reload();
+                    }catch(OptimisticLockingFailureException ex){
+                        Notification.show("Error al desarrollar el proyecto, intentelo mása tarde");
+                    }
+                    
                 });
                 Button cancelar = new Button("Cancelar");
                 cancelar.setClassName("buttonSecondary");

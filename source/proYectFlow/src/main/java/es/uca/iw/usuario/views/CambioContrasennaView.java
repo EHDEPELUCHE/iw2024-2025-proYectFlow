@@ -24,6 +24,36 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
+/**
+ * Vista para el cambio de contraseña de un usuario autenticado.
+ * 
+ * Esta vista permite a los usuarios cambiar su contraseña actual por una nueva.
+ * 
+ * Anotaciones:
+ * - @PageTitle: Título de la página.
+ * - @Route: Ruta de la vista.
+ * - @PermitAll: Permite el acceso a todos los usuarios autenticados.
+ * 
+ * Componentes:
+ * - BeanValidationBinder<Usuario>: Binder para la validación de campos del formulario.
+ * - AuthenticatedUser: Usuario autenticado actualmente.
+ * - PasswordEncoder: Codificador de contraseñas.
+ * - UsuarioService: Servicio para la gestión de usuarios.
+ * - PasswordField contrasenna2: Campo para la contraseña actual.
+ * - PasswordField password1: Campo para la nueva contraseña.
+ * - PasswordField password2: Campo para confirmar la nueva contraseña.
+ * 
+ * Constructor:
+ * - Inicializa los componentes y configura el diseño de la vista.
+ * - Si el usuario está autenticado, se carga su información en el binder.
+ * 
+ * Métodos:
+ * - onSaveButtonClick(Usuario usuario): Maneja el evento de clic del botón "Guardar".
+ *   - Verifica que las nuevas contraseñas coincidan.
+ *   - Verifica que la contraseña actual sea correcta.
+ *   - Si las validaciones son correctas, actualiza la contraseña del usuario.
+ *   - Muestra notificaciones según el resultado de la operación.
+ */
 @PageTitle("Cambio Contraseña")
 @Route("Cambiocontraseña")
 @PermitAll

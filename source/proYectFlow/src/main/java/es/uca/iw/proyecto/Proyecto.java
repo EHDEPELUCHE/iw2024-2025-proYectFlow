@@ -6,7 +6,6 @@ import es.uca.iw.usuario.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Blob;
@@ -14,8 +13,45 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+/**
+ * Representa una entidad de proyecto con varios atributos como nombre, descripción, interesados, alcance, costos y más.
+ * Esta entidad es auditada y extiende de AbstractEntity.
+ * 
+ * Atributos:
+ * - nombre: El nombre del proyecto. Debe ser único y no vacío.
+ * - descripcion: La descripción del proyecto. No debe estar vacía.
+ * - interesados: Los interesados del proyecto. No debe estar vacío.
+ * - alcance: El alcance del proyecto. No debe estar vacío.
+ * - fechaLimite: La fecha límite para el proyecto. Puede ser nula.
+ * - fechaSolicitud: La fecha en que se solicitó el proyecto.
+ * - aportacionInicial: La contribución inicial para el proyecto. No debe ser nula.
+ * - coste: El costo del proyecto. No debe ser nulo.
+ * - puntuacionEstrategica: La puntuación estratégica del proyecto. Por defecto es -1 indicando no evaluado.
+ * - puntuacionTecnica: La puntuación técnica del proyecto. Por defecto es -1 indicando no evaluado.
+ * - puntuacionAval: La puntuación de aval del proyecto. Por defecto es -1 indicando no evaluado.
+ * - memoria: El blob de memoria del proyecto. Puede ser nulo.
+ * - promotor: El promotor (aval) del proyecto. Puede ser nulo.
+ * - solicitante: El solicitante del proyecto. Puede ser nulo.
+ * - jefe: El jefe del proyecto. Puede ser nulo.
+ * - director: El director del proyecto.
+ * - gradoAvance: El grado de avance del proyecto.
+ * - estado: El estado del proyecto, representado por el enum Estado.
+ * - convocatoria: La convocatoria a la que pertenece el proyecto. No debe ser nula.
+ * 
+ * Métodos:
+ * - Getters y setters para todos los atributos.
+ * - getPdf(): Devuelve un InputStream del blob de memoria PDF.
+ * - getPdfNombre(): Devuelve el nombre del archivo PDF.
+ * - equals(Object other): Verifica la igualdad basada en el ID del proyecto.
+ * - hashCode(): Devuelve el código hash para el proyecto.
+ * 
+ * Enum Estado:
+ * - Representa los varios estados en los que un proyecto puede estar: SOLICITADO, AVALADO, EVALUADO_TECNICAMENTE, EVALUADO_ESTRATEGICAMENTE, NO_EN_DESARROLLO, EN_DESARROLLO, DENEGADO, FINALIZADO.
+ */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Proyecto extends AbstractEntity {
     private static final Logger logger = Logger.getLogger(Proyecto.class.getName());
 
@@ -50,6 +86,14 @@ public class Proyecto extends AbstractEntity {
     @JoinColumn(name = "solicitante_id", nullable = true)
     Usuario solicitante;
 
+    @ManyToOne
+    @JoinColumn(name = "jefe_id", nullable = true)
+    Usuario jefe;
+
+    String director;
+
+    Double gradoAvance;
+
     @Enumerated(EnumType.ORDINAL)
     Estado estado;
 
@@ -74,6 +118,7 @@ public class Proyecto extends AbstractEntity {
         this.fechaLimite = fechaLimite;
         this.fechaSolicitud = new Date();
         this.memoria = memoria;
+        gradoAvance = 0.0;
     }
 
     public Proyecto() {
@@ -200,6 +245,14 @@ public class Proyecto extends AbstractEntity {
         this.estado = estado;
     }
 
+    public void setJefe(Usuario jefe) {
+        this.jefe = jefe;
+    }
+
+    public Usuario getJefe() {
+        return jefe;
+    }
+
     public InputStream getPdf() {
         try {
             if (memoria != null) {
@@ -235,6 +288,22 @@ public class Proyecto extends AbstractEntity {
 
     public void setConvocatoria(Convocatoria convocatoria) {
         this.convocatoria = convocatoria;
+    }
+
+    public Double getGradoAvance() {
+        return gradoAvance;
+    }
+
+    public void setGradoAvance(Double gradoAvance) {
+        this.gradoAvance = gradoAvance;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
     }
 
     @Override

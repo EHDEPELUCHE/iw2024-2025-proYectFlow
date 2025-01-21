@@ -12,6 +12,26 @@ import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.security.AuthenticatedUser;
 
+/**
+ * Vista de inicio de sesión para usuarios anónimos.
+ * 
+ * <p>Esta clase representa la vista de inicio de sesión utilizando un LoginOverlay
+ * y permite a los usuarios autenticarse o registrarse si no tienen una cuenta.</p>
+ * 
+ * <p>La vista está configurada con un título, campos de usuario y contraseña, y un botón
+ * para enviar el formulario. También incluye un enlace para redirigir a los usuarios
+ * a la página de registro si no tienen una cuenta.</p>
+ * 
+ * <p>Además, maneja la autenticación y redirección de usuarios autenticados a la vista
+ * "Ver-mis-datos".</p>
+ * 
+ * <p>La clase implementa BeforeEnterObserver para verificar si el usuario ya está autenticado
+ * antes de entrar a la vista.</p>
+ * 
+ * @PageTitle("Inicio Sesión")
+ * @Route("login")
+ * @AnonymousAllowed
+ */
 @PageTitle("Inicio Sesión")
 @Route("login")
 @AnonymousAllowed

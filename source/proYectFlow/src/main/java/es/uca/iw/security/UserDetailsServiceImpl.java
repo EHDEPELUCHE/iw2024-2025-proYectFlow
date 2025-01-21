@@ -7,18 +7,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UsuarioRepository userRepository;
 
-    public UserDetailsServiceImpl(UsuarioRepository userRepository) {
+    public UserDetailsServiceImpl( UsuarioRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername( String username) throws UsernameNotFoundException {
         Usuario user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("No user present with username: " + username);

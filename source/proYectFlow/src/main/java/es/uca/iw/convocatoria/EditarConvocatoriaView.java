@@ -18,6 +18,33 @@ import java.util.Date;
 import java.time.ZoneId;
 import java.util.UUID;
 
+/**
+ * La clase EditarConvocatoriaView representa una vista para editar una Convocatoria existente.
+ * Extiende Composite<VerticalLayout> e implementa HasUrlParameter<String> para manejar parámetros de URL.
+ * 
+ * Anotaciones:
+ * - @Route("EditarConvocatoria"): Define la ruta para esta vista.
+ * - @PageTitle("Editar Convocatoria"): Establece el título de la página.
+ * - @RolesAllowed("ROLE_ADMIN"): Restringe el acceso a usuarios con el rol ROLE_ADMIN.
+ * 
+ * Campos:
+ * - convocatoriaService: Servicio para manejar operaciones de Convocatoria.
+ * - convocatoria: La entidad Convocatoria que se está editando.
+ * - presupuestototal: BigDecimalField para ingresar el presupuesto total.
+ * - fechaInicio: DatePicker para seleccionar la fecha de inicio de la Convocatoria.
+ * - fechaLimite: DatePicker para seleccionar la fecha límite para la presentación de proyectos.
+ * - fechaFinal: DatePicker para seleccionar la fecha de finalización de la cartera de proyectos para el año.
+ * - binder: BeanValidationBinder para vincular los campos de Convocatoria al formulario.
+ * 
+ * Constructor:
+ * - EditarConvocatoriaView(ConvocatoriaService convocatoriaService): Inicializa la vista con el ConvocatoriaService dado.
+ * 
+ * Métodos:
+ * - setParameter(BeforeEvent event, String parameter): Establece la Convocatoria a editar basada en el parámetro de URL.
+ * 
+ * La vista incluye un diseño de formulario con campos para editar la Convocatoria y un botón para guardar los cambios.
+ * Cuando se hace clic en el botón de guardar, la Convocatoria se actualiza y guarda utilizando el ConvocatoriaService.
+ */
 @Route("EditarConvocatoria")
 @PageTitle("Editar Convocatoria")
 @RolesAllowed("ROLE_ADMIN")

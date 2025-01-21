@@ -8,6 +8,18 @@ import com.vaadin.flow.theme.lumo.LumoUtility.*;
 
 import java.util.List;
 
+/**
+ * Esta clase representa una tarjeta de vista de menú de usuario que extiende de ListItem.
+ * Se utiliza para mostrar una tarjeta con una imagen, título, descripción, etiqueta y un botón de redirección.
+ * 
+ * @param title El título de la tarjeta.
+ * @param descriptionText El texto de la descripción de la tarjeta.
+ * @param imageUrl La URL de la imagen que se mostrará en la tarjeta.
+ * @param label La etiqueta que se mostrará en la tarjeta.
+ * @param buttonText El texto del botón de redirección.
+ * @param navigationTarget El destino de navegación al hacer clic en el botón.
+ * @param allowedRoles Lista de roles permitidos para esta tarjeta.
+ */
 @AnonymousAllowed
 public class MenuUsuarioViewCard extends ListItem {
     public MenuUsuarioViewCard(String title, String descriptionText, String imageUrl, String label, String buttonText, String navigationTarget, List<String> allowedRoles) {

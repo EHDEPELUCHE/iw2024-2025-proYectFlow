@@ -24,6 +24,40 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import es.uca.iw.usuario.Usuario;
 import es.uca.iw.usuario.UsuarioService;
 
+/**
+ * Vista de registro de usuario.
+ * 
+ * Esta clase representa la vista para el registro de un nuevo usuario en la aplicación.
+ * Utiliza Vaadin Flow para construir la interfaz de usuario y gestionar la validación de datos.
+ * 
+ * Anotaciones:
+ * - @PageTitle: Establece el título de la página.
+ * - @Route: Define la ruta de la vista.
+ * - @Menu: Configura el elemento del menú.
+ * - @AnonymousAllowed: Permite el acceso anónimo a esta vista.
+ * 
+ * Componentes:
+ * - TextField username: Campo de texto para el nombre de usuario.
+ * - TextField nombre: Campo de texto para el nombre.
+ * - TextField apellido: Campo de texto para el apellido.
+ * - EmailField correo: Campo de texto para el correo electrónico.
+ * - PasswordField contrasenna: Campo de texto para la contraseña.
+ * 
+ * Servicios:
+ * - UsuarioService servicio: Servicio para gestionar las operaciones relacionadas con el usuario.
+ * 
+ * Métodos:
+ * - RegistrodeusuarioView(UsuarioService usuarioService): Constructor que inicializa la vista y configura los componentes.
+ * - onRegisterButtonClick(PasswordField passwordField2): Método que maneja el evento de clic en el botón de registro.
+ * 
+ * Validaciones:
+ * - La contraseña es obligatoria y debe tener al menos 8 caracteres.
+ * - La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial.
+ * - Las contraseñas deben coincidir.
+ * 
+ * Notificaciones:
+ * - Muestra notificaciones al usuario en caso de éxito o error en el registro.
+ */
 @PageTitle("Registro de usuario")
 @Route("registro-usuario")
 @Menu(order = 1, icon = "line-awesome/svg/user.svg")

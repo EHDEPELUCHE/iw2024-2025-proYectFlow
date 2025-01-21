@@ -31,13 +31,52 @@ import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.security.AuthenticatedUser;
 import es.uca.iw.usuario.Usuario;
 import es.uca.iw.usuario.UsuarioService;
-
 import java.io.IOException;
 import java.sql.Blob;
 import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * La clase EditarProyectosBaseView es una vista para editar los detalles del proyecto.
+ * Extiende Composite con un VerticalLayout e implementa HasUrlParameter<String>.
+ * Esta vista permite a los usuarios editar los detalles del proyecto, subir documentos del proyecto y gestionar los estados del proyecto.
+ * 
+ * Campos:
+ * - MIN_CONTENT: Una constante que representa el tamaño mínimo del contenido.
+ * - proyectoService: Servicio para manejar operaciones relacionadas con proyectos.
+ * - usuarioService: Servicio para manejar operaciones relacionadas con usuarios.
+ * - authenticatedUser: El usuario autenticado actualmente.
+ * - emailField: Campo para mostrar el correo electrónico del solicitante del proyecto.
+ * - promotor: ComboBox para seleccionar el promotor del proyecto.
+ * - jefe: ComboBox para seleccionar el jefe del proyecto.
+ * - nombre: TextField para el nombre del proyecto.
+ * - descripcion: TextField para la descripción del proyecto.
+ * - alcance: TextField para el alcance del proyecto.
+ * - fechaLimite: DatePicker para la fecha límite del proyecto.
+ * - interesados: TextField para los interesados del proyecto.
+ * - aportacionInicial: BigDecimalField para la financiación inicial.
+ * - coste: BigDecimalField para el coste total.
+ * - buffer: MemoryBuffer para manejar la subida de archivos.
+ * - upload: Componente de subida para subir documentos del proyecto.
+ * - binder: BeanValidationBinder para enlazar los campos del proyecto.
+ * - proyecto: Optional que contiene el proyecto que se está editando.
+ * - uuid: UUID del proyecto que se está editando.
+ * 
+ * Constructor:
+ * - EditarProyectosBaseView(ProyectoService proyectoService, UsuarioService usuarioService, AuthenticatedUser authenticatedUser):
+ *   Inicializa la vista con los servicios proporcionados y el usuario autenticado.
+ * 
+ * Métodos:
+ * - setParameter(BeforeEvent event, String parameter):
+ *   Establece el parámetro para la vista, recupera el proyecto basado en el parámetro e inicializa los componentes de la vista.
+ * 
+ * - setupFields(Proyecto proyectoAux):
+ *   Configura los campos con los detalles del proyecto y configura el componente de subida.
+ * 
+ * - actualizarProyecto(Proyecto proyectoAux):
+ *   Actualiza los detalles del proyecto si el proyecto está en un estado que permite la edición.
+ */
 public class EditarProyectosBaseView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
     static final String MIN_CONTENT = "min-content";
     final ProyectoService proyectoService;
@@ -45,6 +84,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
     final AuthenticatedUser authenticatedUser;
     final EmailField emailField = new EmailField();
     final ComboBox<Usuario> promotor = new ComboBox<>();
+    final ComboBox<Usuario> jefe = new ComboBox<>();
     final TextField nombre = new TextField();
     final TextField descripcion = new TextField();
     final TextField alcance = new TextField();
@@ -171,6 +211,13 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
         promotor.setItems(usuarioService.get(Roles.PROMOTOR));
         promotor.setItemLabelGenerator(usuario -> usuario.getNombre() + " " + usuario.getApellido());
         promotor.setValue(proyectoAux.getPromotor());
+
+        jefe.setLabel("jefe");
+        jefe.setWidth(MIN_CONTENT);
+        jefe.setItems(usuarioService.get(Roles.OTP));
+        jefe.setItemLabelGenerator(usuario -> usuario.getNombre() + " " + usuario.getApellido());
+        if(proyectoAux.getJefe() != null)
+            jefe.setValue(proyectoAux.getJefe());
 
         nombre.setLabel("Nombre del proyecto");
         nombre.setWidth(MIN_CONTENT);

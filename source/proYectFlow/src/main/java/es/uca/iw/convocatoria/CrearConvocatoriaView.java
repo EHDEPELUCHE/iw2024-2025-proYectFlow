@@ -23,6 +23,33 @@ import jakarta.annotation.security.RolesAllowed;
 import java.time.ZoneId;
 import java.util.Date;
 
+/**
+ * La clase CrearConvocatoriaView representa una vista para crear una nueva "Convocatoria".
+ * Esta vista es accesible solo para usuarios con el rol "ROLE_ADMIN".
+ * 
+ * Anotaciones:
+ * - @Route("CrearConvocatoria"): Define la ruta para acceder a esta vista.
+ * - @PageTitle("Nueva Convocatoria"): Establece el título de la página.
+ * - @Menu(order = 7, icon = "line-awesome/svg/archive-solid.svg"): Añade esta vista al menú con un orden e icono especificados.
+ * - @Uses(Icon.class): Indica que esta vista usa la clase Icon.
+ * - @RolesAllowed("ROLE_ADMIN"): Restringe el acceso a usuarios con el rol "ROLE_ADMIN".
+ * 
+ * Campos:
+ * - convocatoriaservice: Servicio para gestionar entidades "Convocatoria".
+ * - presupuestototal: Campo para ingresar el presupuesto total.
+ * - fechaInicio: Selector de fecha para seleccionar la fecha de inicio de la "Convocatoria".
+ * - fechaLimite: Selector de fecha para seleccionar la fecha límite para la presentación de proyectos.
+ * - fechaFinal: Selector de fecha para seleccionar la fecha de finalización de la cartera de proyectos para el año.
+ * 
+ * Constructor:
+ * - CrearConvocatoriaView(ConvocatoriaService convocatoriaservice, UsuarioService usuarioService, ProyectoService proyectoService):
+ *   Inicializa la vista con los servicios proporcionados y configura el diseño del formulario y el listener del botón de clic.
+ * 
+ * Métodos:
+ * - guardarButton.addClickListener: Maneja el evento de clic para el botón "Crear convocatoria". Crea una nueva entidad "Convocatoria",
+ *   la guarda usando el ConvocatoriaService y navega a la vista "GestionarConvocatorias" tras una creación exitosa.
+ *   Si ocurre un error, se muestra una notificación al usuario.
+ */
 @Route("CrearConvocatoria")
 @PageTitle("Nueva Convocatoria")
 @Menu(order = 7, icon = "line-awesome/svg/archive-solid.svg")

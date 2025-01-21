@@ -14,6 +14,30 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Optional;
 
+/**
+ * La clase EstadoProyectosView representa una vista para mostrar el estado de los proyectos del usuario.
+ * Extiende la clase VisualizarProyectos y está anotada con @PageTitle, @Route, @Menu y @PermitAll
+ * para definir su título, ruta, orden en el menú y permisos de acceso respectivamente.
+ * 
+ * La vista se inicializa con un ProyectoService y un AuthenticatedUser.
+ * Si el usuario está autenticado, filtra los proyectos para mostrar solo aquellos solicitados por el usuario.
+ * Si el usuario no está autenticado o no tiene proyectos, muestra un mensaje indicando que no hay proyectos disponibles.
+ * 
+ * Anotaciones:
+ * - @PageTitle: Establece el título de la página como "Estado de mis Proyectos".
+ * - @Route: Define la ruta para acceder a esta vista como "estadomisproyectos".
+ * - @Menu: Especifica el orden y el icono del elemento del menú.
+ * - @PermitAll: Permite el acceso a todos los usuarios.
+ * 
+ * Constructor:
+ * - EstadoProyectosView(ProyectoService proyectoService, AuthenticatedUser userAuthenticated):
+ *   Inicializa la vista con el ProyectoService y el AuthenticatedUser dados.
+ *   Si el usuario está autenticado, filtra e inicializa la vista con los proyectos del usuario.
+ *   Si el usuario no está autenticado, muestra un mensaje indicando que no hay proyectos disponibles.
+ * 
+ * @param proyectoService El servicio para gestionar proyectos.
+ * @param userAuthenticated El usuario autenticado.
+ */
 @PageTitle("Estado de mis Proyectos")
 @Route("estadomisproyectos")
 @Menu(order = 2, icon = "line-awesome/svg/archive-solid.svg")

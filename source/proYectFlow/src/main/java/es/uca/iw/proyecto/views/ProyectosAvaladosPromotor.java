@@ -12,6 +12,30 @@ import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.jpa.domain.Specification;
 
+/**
+ * Esta clase de vista representa la página "Proyectos avalados" para usuarios con el rol "ROLE_PROMOTOR".
+ * Extiende la clase VisualizarProyectos para mostrar proyectos que han sido avalados por el promotor.
+ * 
+ * <p>Anotaciones:</p>
+ * <ul>
+ *   <li>@PageTitle: Establece el título de la página como "Proyectos avalados".</li>
+ *   <li>@Route: Define la ruta para acceder a esta vista como "proyectosAvaladosPromotor".</li>
+ *   <li>@Menu: Añade esta vista al menú con un orden de 5 y un icono.</li>
+ *   <li>@Uses: Indica que esta vista utiliza la clase Icon.</li>
+ *   <li>@RolesAllowed: Restringe el acceso a usuarios con el rol "ROLE_PROMOTOR".</li>
+ * </ul>
+ * 
+ * <p>Constructor:</p>
+ * <ul>
+ *   <li>ProyectosAvaladosPromotor(ProyectoService proyectoService, AuthenticatedUser user): 
+ *       Inicializa la vista con el ProyectoService y AuthenticatedUser proporcionados. 
+ *       Configura filtros para mostrar proyectos donde el promotor es el usuario autenticado 
+ *       y el estado del proyecto no es "SOLICITADO".</li>
+ * </ul>
+ * 
+ * @param proyectoService El servicio utilizado para gestionar proyectos.
+ * @param user El usuario autenticado.
+ */
 @PageTitle("Proyectos avalados")
 @Route("proyectosAvaladosPromotor")
 @Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg")

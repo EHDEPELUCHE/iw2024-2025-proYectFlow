@@ -61,12 +61,15 @@ class RegistroProyectoViewTest {
         registroProyectoView.aportacionInicial.setValue(new BigDecimal("500"));
 
         Usuario mockPromotor = mock(Usuario.class);
+        Usuario mockjefe = mock(Usuario.class);
         when(usuarioService.get(Roles.PROMOTOR)).thenReturn(List.of(mockPromotor));
+        when(usuarioService.get(Roles.OTP)).thenReturn(List.of(mockjefe));
         Usuario solicitante4 = new Usuario("solicitante4", "solicitante4", "solicitante4", "solicitante4@flow.com", "solicitante4", Roles.SOLICITANTE);
         usuarioService.registerUser(solicitante4);
         registroProyectoView.emailField.setValue("solicitante4@flow.com");
         registroProyectoView.promotor.setItems(usuarioService.get(Roles.PROMOTOR));
         registroProyectoView.promotor.setValue(usuarioService.get(Roles.PROMOTOR).get(0));
+
 
 
         MemoryBuffer buffer = new MemoryBuffer();

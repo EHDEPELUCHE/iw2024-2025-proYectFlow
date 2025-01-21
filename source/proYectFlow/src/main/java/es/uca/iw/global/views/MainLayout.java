@@ -27,9 +27,23 @@ import es.uca.iw.usuario.views.MisDatosView;
 
 import java.util.List;
 import java.util.Optional;
-
 /**
- * The main view is a top-level placeholder for other views.
+ * La vista principal es un marcador de posición de nivel superior para otras vistas.
+ */
+/**
+ * MainLayout es el diseño principal de la aplicación, extendiendo AppLayout.
+ * Configura las secciones primarias, el contenido del cajón y el contenido del encabezado.
+ * 
+ * <p>Este diseño incluye:
+ * <ul>
+ *   <li>Un encabezado con un interruptor de menú, logotipo, título de la vista, icono de ayuda y avatar de usuario con un menú.</li>
+ *   <li>Un cajón con el nombre de la aplicación y elementos de navegación.</li>
+ *   <li>Un pie de página con información adicional.</li>
+ * </ul>
+ * 
+ * <p>Las características de accesibilidad incluyen etiquetas ARIA, roles y atributos tabindex para garantizar que el diseño sea navegable y utilizable por tecnologías de asistencia.
+ * 
+ * @param user El usuario autenticado, utilizado para mostrar información y acciones específicas del usuario.
  */
 @Layout
 @AnonymousAllowed

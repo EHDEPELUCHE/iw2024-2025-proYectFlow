@@ -26,6 +26,36 @@ import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.global.Roles;
 import jakarta.annotation.security.RolesAllowed;
 
+/**
+ * Vista para el registro de usuarios administradores.
+ * 
+ * Esta vista permite a los administradores registrar nuevos usuarios con roles específicos.
+ * 
+ * Anotaciones:
+ * - @PageTitle: Título de la página.
+ * - @Route: Ruta de la vista.
+ * - @Menu: Configuración del menú (orden e icono).
+ * - @RolesAllowed: Roles permitidos para acceder a esta vista.
+ * 
+ * Componentes:
+ * - BeanValidationBinder<Usuario>: Binder para la validación de campos del formulario.
+ * - TextField username: Campo de texto para el nombre de usuario.
+ * - TextField nombre: Campo de texto para el nombre.
+ * - TextField apellido: Campo de texto para el apellido.
+ * - EmailField correo: Campo de texto para el correo electrónico.
+ * - PasswordField contrasenna: Campo de texto para la contraseña.
+ * - ComboBox<Roles> tipo: ComboBox para seleccionar el rol del usuario.
+ * - UsuarioService servicio: Servicio para la gestión de usuarios.
+ * 
+ * Constructor:
+ * - RegistroUsuarioAdminView(UsuarioService usuarioService): Inicializa la vista con el servicio de usuario.
+ * 
+ * Métodos:
+ * - onRegisterButtonClick(PasswordField passwordField2): Maneja el evento de clic del botón de registro.
+ * 
+ * Uso:
+ * Esta vista se utiliza para registrar nuevos usuarios administradores, validando los datos de entrada y mostrando notificaciones según el resultado del registro.
+ */
 @PageTitle("Registro de usuario admin")
 @Route("registro-usuario-admin")
 @Menu(order = 2, icon = "line-awesome/svg/user.svg")

@@ -23,14 +23,42 @@ import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.usuario.views.GestionarUsuariosView;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.util.List;
-
+/**
+ * La clase GestionarConvocatoriasView representa una vista para gestionar convocatorias (llamadas a proyectos).
+ * Extiende la clase Div y está anotada con varias anotaciones de Vaadin y Spring para enrutamiento, seguridad y procesamiento asincrónico.
+ * 
+ * Anotaciones:
+ * - @Route: Define la ruta para esta vista.
+ * - @PageTitle: Establece el título de la página.
+ * - @Menu: Configura el elemento del menú para esta vista.
+ * - @Uses: Especifica la clase Icon a utilizar.
+ * - @RolesAllowed: Restringe el acceso a usuarios con el rol ROLE_ADMIN.
+ * - @EnableAsync: Habilita el procesamiento asincrónico.
+ * 
+ * Campos:
+ * - convocatoriaService: Servicio para gestionar convocatorias.
+ * - usuarioService: Servicio para gestionar usuarios.
+ * - proyectoService: Servicio para gestionar proyectos.
+ * 
+ * Constructor:
+ * - Inicializa la vista con los servicios proporcionados, establece el tamaño y estilo, y añade los componentes principales del diseño.
+ * 
+ * Métodos:
+ * - crearGridDatosConvocatoria: Crea y configura un componente Grid para mostrar datos de convocatorias.
+ * - editarConvocatoria: Crea un botón para editar una convocatoria y navega a la vista de edición.
+ * - estadoConvocatoria: Crea un botón para activar una convocatoria o muestra su estado actual.
+ * - guardarPromotores: Guarda asincrónicamente promotores utilizando la clase GestionarUsuariosView.
+ */
 @Route("GestionarConvocatorias")
 @PageTitle("Gestionar Convocatorias")
 @Menu(order = 8, icon = "line-awesome/svg/archive-solid.svg")
 @Uses(Icon.class)
 @RolesAllowed("ROLE_ADMIN")
+@EnableAsync
 public class GestionarConvocatoriasView extends Div {
     private final ConvocatoriaService convocatoriaService;
     private final UsuarioService usuarioService;
@@ -96,8 +124,9 @@ public class GestionarConvocatoriasView extends Div {
         editarButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("EditarConvocatoria/" + convocatoria.getId())));
         return editarButton;
     }
-
-    protected Component estadoConvocatoria(Convocatoria convocatoria) {
+    
+    
+    public Component estadoConvocatoria(Convocatoria convocatoria) {
         if (Boolean.FALSE.equals(convocatoria.getActiva())) {
             Button activarButton = new Button("Activar");
             activarButton.addClickListener(e -> {
@@ -106,17 +135,14 @@ public class GestionarConvocatoriasView extends Div {
                     if (convocatoriaVieja != null) {
                         List<Proyecto> proyectosViejos = proyectoService.findByConvocatoria(convocatoriaVieja);
                         for (Proyecto proyecto : proyectosViejos) {
-                            if (proyecto.getEstado() == Proyecto.Estado.EN_DESARROLLO)
-                                proyecto.setEstado(Proyecto.Estado.FINALIZADO);
-                            else
-                                proyecto.setEstado(Proyecto.Estado.DENEGADO);
+                            if (proyecto.getEstado() != Proyecto.Estado.EN_DESARROLLO)
+                            proyecto.setEstado(Proyecto.Estado.DENEGADO);
                             proyectoService.update(proyecto);
                         }
                     }
                     convocatoriaService.hacerVigente(convocatoria);
                     Notification.show("Convocatoria activada");
-                    GestionarUsuariosView gu = new GestionarUsuariosView(usuarioService, proyectoService);
-                    gu.guardarPromotores();
+                    guardarPromotores();
                     UI.getCurrent().getPage().reload();
                 } catch (IllegalArgumentException ex) {
                     Notification errorNotification = new Notification(ex.getMessage(), 3000, Notification.Position.MIDDLE);
@@ -128,5 +154,11 @@ public class GestionarConvocatoriasView extends Div {
         } else {
             return new Div(new Text("Activada"));
         }
+    }
+    
+    @Async
+    public void guardarPromotores() {
+        GestionarUsuariosView gu = new GestionarUsuariosView(usuarioService, proyectoService);
+        gu.guardarPromotores();
     }
 }

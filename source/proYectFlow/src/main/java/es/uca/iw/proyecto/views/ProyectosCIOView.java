@@ -18,6 +18,35 @@ import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.jpa.domain.Specification;
 
 
+/**
+ * La clase ProyectosCIOView representa una vista para evaluar proyectos por el CIO.
+ * Extiende la clase VisualizarProyectos y está anotada con varias anotaciones de Vaadin y de seguridad.
+ * 
+ * <p>Anotaciones:</p>
+ * <ul>
+ *   <li>@PageTitle("Evaluar Proyectos CIO") - Establece el título de la página como "Evaluar Proyectos CIO".</li>
+ *   <li>@Route("proyectosCIO") - Define la ruta para acceder a esta vista como "proyectosCIO".</li>
+ *   <li>@Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg") - Añade esta vista al menú con un orden y un icono especificados.</li>
+ *   <li>@Uses(Icon.class) - Indica que esta vista utiliza la clase Icon.</li>
+ *   <li>@RolesAllowed("ROLE_CIO") - Restringe el acceso a usuarios con el rol "ROLE_CIO".</li>
+ * </ul>
+ * 
+ * <p>Constructor:</p>
+ * <ul>
+ *   <li>ProyectosCIOView(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) - Inicializa la vista con los servicios dados.</li>
+ * </ul>
+ * 
+ * <p>Métodos:</p>
+ * <ul>
+ *   <li>crearBotonesAcciones(Proyecto proyecto) - Crea botones de acción para el proyecto dado, incluyendo un botón "Evaluar" que navega a la vista "ValoracionEstrategica" para el proyecto.</li>
+ * </ul>
+ * 
+ * <p>Comportamiento:</p>
+ * <ul>
+ *   <li>Si la convocatoria actual no está dentro del periodo de evaluación, inicializa la vista con proyectos por evaluar.</li>
+ *   <li>Si la convocatoria actual está dentro del periodo de evaluación, muestra un mensaje indicando que aún no se puede realizar la evaluación.</li>
+ * </ul>
+ */
 @PageTitle("Evaluar Proyectos CIO")
 @Route("proyectosCIO")
 @Menu(order = 5, icon = "line-awesome/svg/archive-solid.svg")

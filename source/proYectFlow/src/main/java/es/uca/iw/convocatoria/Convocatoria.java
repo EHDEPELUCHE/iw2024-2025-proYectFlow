@@ -3,14 +3,63 @@ package es.uca.iw.convocatoria;
 import es.uca.iw.global.AbstractEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.validation.constraints.NotNull;
-
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+/**
+ * Representa una entidad Convocatoria con detalles sobre una convocatoria específica.
+ * Esta entidad incluye información como el presupuesto total, el presupuesto restante,
+ * las fechas de inicio y fin, y si la convocatoria está activa.
+ * 
+ * <p>Esta clase extiende {@link AbstractEntity} y está anotada con anotaciones JPA 
+ * para mapearla a una tabla de base de datos. También utiliza {@link AuditingEntityListener} 
+ * para propósitos de auditoría.</p>
+ * 
+ * <p>Atributos:</p>
+ * <ul>
+ *   <li>{@code nombre} - El nombre de la convocatoria, generado en base a las fechas de inicio y fin.</li>
+ *   <li>{@code presupuestototal} - El presupuesto total para la convocatoria. Este campo es obligatorio.</li>
+ *   <li>{@code presupuestorestante} - El presupuesto restante para la convocatoria.</li>
+ *   <li>{@code fechaLimite} - La fecha límite para la convocatoria.</li>
+ *   <li>{@code fechaInicio} - La fecha de inicio de la convocatoria. Este campo es obligatorio.</li>
+ *   <li>{@code fechaFinal} - La fecha de fin de la convocatoria. Este campo es obligatorio.</li>
+ *   <li>{@code activa} - Indica si la convocatoria está actualmente activa.</li>
+ * </ul>
+ * 
+ * <p>Constructores:</p>
+ * <ul>
+ *   <li>{@link #Convocatoria(BigDecimal, Date, Date, Date)} - Construye una nueva Convocatoria con el presupuesto, fecha límite, fecha de inicio y fecha de fin especificados.</li>
+ *   <li>{@link #Convocatoria()} - Constructor por defecto.</li>
+ * </ul>
+ * 
+ * <p>Métodos:</p>
+ * <ul>
+ *   <li>{@link #enPlazo()} - Verifica si la fecha actual está dentro del período de la convocatoria.</li>
+ *   <li>{@link #getFechaFinal()} - Obtiene la fecha de fin de la convocatoria.</li>
+ *   <li>{@link #setFechaFinal(Date)} - Establece la fecha de fin de la convocatoria, asegurando que sea posterior a la fecha límite.</li>
+ *   <li>{@link #getFechaLimite()} - Obtiene la fecha límite de la convocatoria.</li>
+ *   <li>{@link #setFechaLimite(Date)} - Establece la fecha límite de la convocatoria, asegurando que sea posterior a la fecha de inicio.</li>
+ *   <li>{@link #getPresupuestototal()} - Obtiene el presupuesto total de la convocatoria.</li>
+ *   <li>{@link #setPresupuestototal(BigDecimal)} - Establece el presupuesto total de la convocatoria.</li>
+ *   <li>{@link #getFechaInicio()} - Obtiene la fecha de inicio de la convocatoria.</li>
+ *   <li>{@link #setFechaInicio(Date)} - Establece la fecha de inicio de la convocatoria.</li>
+ *   <li>{@link #getPresupuestorestante()} - Obtiene el presupuesto restante de la convocatoria.</li>
+ *   <li>{@link #setPresupuestorestante(BigDecimal)} - Establece el presupuesto restante de la convocatoria.</li>
+ *   <li>{@link #getActiva()} - Obtiene el estado activo de la convocatoria.</li>
+ *   <li>{@link #setActiva(Boolean)} - Establece el estado activo de la convocatoria.</li>
+ *   <li>{@link #getNombre()} - Obtiene el nombre de la convocatoria.</li>
+ *   <li>{@link #setNombre()} - Establece el nombre de la convocatoria basado en las fechas de inicio y fin.</li>
+ *   <li>{@link #equals(Object)} - Verifica si esta convocatoria es igual a otro objeto.</li>
+ *   <li>{@link #hashCode()} - Devuelve el código hash para esta convocatoria.</li>
+ * </ul>
+ */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Convocatoria extends AbstractEntity {
 
     @Column(nullable = true)

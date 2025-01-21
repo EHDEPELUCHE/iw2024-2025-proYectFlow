@@ -13,6 +13,19 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.proyecto.views.ProyectosEnDesarrolloView;
 
+/**
+ * La clase PantallaInicioView representa la vista principal de la aplicación ProYectFlow.
+ * Extiende VerticalLayout y está anotada con @AnonymousAllowed, @PageTitle, @Route y @Menu.
+ * 
+ * Esta vista contiene los siguientes componentes:
+ * - Una imagen (imagenfondo) con el fondo de la UCA.
+ * - Un encabezado (titulo) que da la bienvenida a los usuarios a ProYectFlow y les invita a iniciar sesión y registrar su proyecto.
+ * - Un botón (crearProyecto) que navega a la página de registro de proyectos cuando se hace clic.
+ * - Un segundo encabezado (texto2) que invita a los usuarios a ver los proyectos en desarrollo.
+ * - Un botón (verProyectos) que navega a la página de proyectos en desarrollo cuando se hace clic.
+ * 
+ * Los componentes están alineados horizontalmente al centro y se añaden al diseño.
+ */
 @AnonymousAllowed
 @PageTitle("ProYectFlow")
 @Route("")

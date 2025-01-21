@@ -5,14 +5,48 @@ import es.uca.iw.global.Roles;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * La clase Usuario representa a un usuario en el sistema.
+ * Implementa la interfaz UserDetails para integrarse con Spring Security.
+ * 
+ * Anotaciones:
+ * - @Entity: Indica que esta clase es una entidad JPA.
+ * - @EntityListeners(AuditingEntityListener.class): Añade soporte para auditoría.
+ * - @Table: Define la tabla y sus índices en la base de datos.
+ * 
+ * Atributos:
+ * - username: Nombre de usuario único y no vacío.
+ * - nombre: Nombre del usuario, no vacío.
+ * - apellido: Apellido del usuario, no vacío.
+ * - correo: Correo electrónico único y no vacío.
+ * - contrasenna: Contraseña del usuario, no vacía.
+ * - tipo: Rol del usuario, almacenado como texto.
+ * - activo: Indica si el usuario está activo.
+ * - codigo: Código adicional del usuario.
+ * 
+ * Constructores:
+ * - Usuario(String nombre, String username, String apellido, String correo, String contrasenna): Inicializa un usuario con rol SOLICITANTE y no activo.
+ * - Usuario(): Constructor vacío.
+ * - Usuario(String nombre, String username, String apellido, String correo, String contrasenna, Roles tipo): Inicializa un usuario con un rol específico y no activo.
+ * 
+ * Métodos:
+ * - Getters y setters para todos los atributos.
+ * - getAuthorities(): Devuelve la autoridad del usuario basada en su rol.
+ * - isEnabled(): Indica si el usuario está activo.
+ * - getPassword(): Devuelve la contraseña del usuario.
+ * - getHashedPassword(): Devuelve la contraseña del usuario.
+ * - equals(Object o): Compara este usuario con otro objeto.
+ * - hashCode(): Devuelve el código hash del usuario.
+ */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(
         indexes = @Index(
                 name = "idx_correo",

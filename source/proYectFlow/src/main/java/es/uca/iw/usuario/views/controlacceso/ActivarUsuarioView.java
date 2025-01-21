@@ -14,6 +14,31 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.usuario.UsuarioService;
 
+/**
+ * Vista para la activación de usuarios.
+ * 
+ * Esta vista permite a los usuarios activar su cuenta proporcionando su email y un código de activación.
+ * 
+ * Anotaciones:
+ * - @PageTitle: Establece el título de la página como "Activación de usuario".
+ * - @Route: Define la ruta de acceso a esta vista como "ActivarUsuario".
+ * - @AnonymousAllowed: Permite el acceso a esta vista sin necesidad de autenticación.
+ * 
+ * Componentes:
+ * - UsuarioService usuarioService: Servicio para la gestión de usuarios.
+ * - HorizontalLayout horizontalLayout: Layout horizontal para organizar los campos de email y código.
+ * - H1 titulo: Título de la vista.
+ * - EmailField email: Campo para ingresar el email del usuario.
+ * - TextField codigo: Campo para ingresar el código de activación enviado al usuario.
+ * - Button guardar: Botón para enviar los datos y activar el usuario.
+ * 
+ * Funcionalidad:
+ * - Al hacer clic en el botón "Guardar" o presionar la tecla ENTER, se llama al método activateUser del servicio usuarioService.
+ * - Si la activación es exitosa, se muestra una notificación de éxito.
+ * - Si la activación falla, se muestra una notificación de error.
+ * 
+ * @param usuarioService Servicio para la gestión de usuarios.
+ */
 @PageTitle("Activación de usuario")
 @Route("ActivarUsuario")
 @AnonymousAllowed

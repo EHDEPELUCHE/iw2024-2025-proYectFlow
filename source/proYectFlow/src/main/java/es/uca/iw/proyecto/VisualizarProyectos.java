@@ -15,6 +15,25 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.io.IOException;
 
+/**
+ * La clase abstracta VisualizarProyectos extiende de Div y proporciona una vista para visualizar proyectos.
+ * 
+ * @param proyectoService El servicio de proyectos utilizado para obtener datos de los proyectos.
+ * @param mostrarColumnaAcciones Indica si se debe mostrar la columna de acciones en la vista.
+ * @param grid La cuadrícula utilizada para mostrar los datos de los proyectos.
+ * 
+ * Métodos:
+ * 
+ * - VisualizarProyectos(ProyectoService proyectoService, boolean mostrarColumnaAcciones): Constructor que inicializa el servicio de proyectos y la visibilidad de la columna de acciones.
+ * 
+ * - inicializarVistaProyectos(String titulo, Specification<Proyecto> filters): Método protegido que inicializa la vista de proyectos con un título y filtros específicos.
+ * 
+ * - crearGridDatosProyecto(Specification<Proyecto> filters): Método privado que crea y configura la cuadrícula de datos del proyecto.
+ * 
+ * - crearBotonDescargaMemoria(Proyecto proyecto): Método privado que crea un botón para descargar el PDF de la memoria del proyecto.
+ * 
+ * - crearBotonesAcciones(Proyecto proyecto): Método protegido que crea los botones de acciones para editar el proyecto.
+ */
 public abstract class VisualizarProyectos extends Div {
     protected final ProyectoService proyectoService;
     private final boolean mostrarColumnaAcciones;
@@ -53,6 +72,15 @@ public abstract class VisualizarProyectos extends Div {
                         return "Sin promotor";
                     }
                 }).setHeader("Promotor").setAutoWidth(true)
+                .setSortable(true);
+
+                grid.addColumn(proyecto -> {
+                    if (proyecto.getJefe() != null) {
+                        return proyecto.getJefe().getNombre() + " " + proyecto.getJefe().getApellido();
+                    } else {
+                        return "Sin jefe";
+                    }
+                }).setHeader("jefe").setAutoWidth(true)
                 .setSortable(true);
         grid.addColumn("coste").setHeader("Coste").setAutoWidth(true);
         grid.addColumn("aportacionInicial").setHeader("Aportación Inicial").setAutoWidth(true);
