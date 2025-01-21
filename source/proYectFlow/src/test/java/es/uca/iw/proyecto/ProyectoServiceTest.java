@@ -2,8 +2,9 @@ package es.uca.iw.proyecto;
 
 import es.uca.iw.convocatoria.Convocatoria;
 import es.uca.iw.convocatoria.ConvocatoriaService;
-import es.uca.iw.usuario.Usuario;
 import es.uca.iw.email.EmailSender;
+import es.uca.iw.global.Roles;
+import es.uca.iw.usuario.Usuario;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,11 +15,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -30,7 +34,7 @@ class ProyectoServiceTest {
     private EmailSender mailSender;
 
     @Mock
-    private ConvocatoriaService convocatoriaService ;
+    private ConvocatoriaService convocatoriaService;
 
     @InjectMocks
     private ProyectoService proyectoService;
@@ -38,8 +42,9 @@ class ProyectoServiceTest {
     @BeforeAll
     static void beforeAll() {
         System.setProperty("spring.profiles.active", "test");
-        
+
     }
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -94,7 +99,10 @@ class ProyectoServiceTest {
     void setValoracionTecnica() {
         Proyecto proyecto = new Proyecto();
         proyecto.setEstado(Proyecto.Estado.EN_DESARROLLO);
+        Usuario jefe = new Usuario("usu1nombre", "usu1", "usu1apellido", "usu1email", "usu1pass", Roles.OTP);
+        proyecto.setJefe(jefe);
         when(repository.save(proyecto)).thenReturn(proyecto);
+
 
         proyectoService.setValoracionTecnica(100, 100, 100, proyecto);
 
