@@ -12,4 +12,5 @@ public interface ConvocatoriaRepository extends JpaRepository<Convocatoria, UUID
 
     Optional<Convocatoria> findById(UUID id);
 
+
 }

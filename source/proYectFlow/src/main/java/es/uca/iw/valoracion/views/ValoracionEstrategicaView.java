@@ -121,7 +121,7 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
                     if (allValid) {
                         proyectoService.setValoracionEstrategica(BigDecimal.valueOf(valorSeleccionado), proyectoAux);
                         Notification notification = Notification.show("Valoración guardada con éxito.");
-                        notification.setDuration(2000);
+                        notification.setDuration(500);
                     notification.addDetachListener(detachEvent -> UI.getCurrent().navigate("proyectosCIO"));
                     } else
                         Notification.show("Error: Algunos alineamientos estratégicos no son válidos.");

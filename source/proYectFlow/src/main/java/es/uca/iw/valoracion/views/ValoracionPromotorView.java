@@ -197,7 +197,7 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
                         notification = Notification.show("Propuesta de valoración rechazada con éxito.");
                     }
                     //Redireccion
-                    notification.setDuration(2000);
+                    notification.setDuration(500);
                     notification.addDetachListener(detachEvent -> UI.getCurrent().navigate("proyectosPromotor"));
                 }
             });

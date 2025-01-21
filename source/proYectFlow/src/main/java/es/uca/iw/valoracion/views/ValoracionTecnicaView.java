@@ -168,7 +168,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
                     proyectoAux.setJefe(jefes.getValue());
                     proyectoService.setValoracionTecnica(valoracionGroupPrecio.getValue(), valoracionGroupHoras.getValue(), valoracionGroupIT.getValue(), proyectoAux);
                     Notification notification = Notification.show("Valoración guardada con éxito.");
-                    notification.setDuration(2000);
+                    notification.setDuration(500);
                     notification.addDetachListener(detachEvent -> UI.getCurrent().navigate("proyectosOTP"));
                 }
                 
