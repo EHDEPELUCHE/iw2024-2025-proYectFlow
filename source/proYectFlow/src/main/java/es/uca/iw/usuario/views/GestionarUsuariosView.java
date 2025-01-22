@@ -33,7 +33,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.Objects;
 import java.util.logging.Logger;
 

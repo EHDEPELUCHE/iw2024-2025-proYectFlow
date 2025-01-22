@@ -23,41 +23,14 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- * Vista para el cambio de contraseña de un usuario autenticado.
- * 
- * Esta vista permite a los usuarios cambiar su contraseña actual por una nueva.
- * 
- * Anotaciones:
- * - @PageTitle: Título de la página.
- * - @Route: Ruta de la vista.
- * - @PermitAll: Permite el acceso a todos los usuarios autenticados.
- * 
- * Componentes:
- * - BeanValidationBinder<Usuario>: Binder para la validación de campos del formulario.
- * - AuthenticatedUser: Usuario autenticado actualmente.
- * - PasswordEncoder: Codificador de contraseñas.
- * - UsuarioService: Servicio para la gestión de usuarios.
- * - PasswordField contrasenna2: Campo para la contraseña actual.
- * - PasswordField password1: Campo para la nueva contraseña.
- * - PasswordField password2: Campo para confirmar la nueva contraseña.
- * 
- * Constructor:
- * - Inicializa los componentes y configura el diseño de la vista.
- * - Si el usuario está autenticado, se carga su información en el binder.
- * 
- * Métodos:
- * - onSaveButtonClick(Usuario usuario): Maneja el evento de clic del botón "Guardar".
- *   - Verifica que las nuevas contraseñas coincidan.
- *   - Verifica que la contraseña actual sea correcta.
- *   - Si las validaciones son correctas, actualiza la contraseña del usuario.
- *   - Muestra notificaciones según el resultado de la operación.
- */
 @PageTitle("Cambio Contraseña")
 @Route("Cambiocontraseña")
 @PermitAll
 public class CambioContrasennaView extends Composite<VerticalLayout> {
+    private static final Logger logger = Logger.getLogger(CambioContrasennaView.class.getName());
     private final BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
     private final AuthenticatedUser authenticatedUser;
     private final PasswordEncoder passwordEncoder;
@@ -67,6 +40,7 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
     private final PasswordField password1 = new PasswordField();
     private final PasswordField password2 = new PasswordField();
     private Usuario usuario = new Usuario();
+
     public CambioContrasennaView(AuthenticatedUser authenticatedUser, UsuarioService uservice, PasswordEncoder passwordEncoder) {
         this.authenticatedUser = authenticatedUser;
         this.uservice = uservice;
@@ -77,6 +51,9 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
         if(user.isPresent()) {
             usuario = user.get();
             binder.setBean(usuario);
+            logger.info("Usuario autenticado: " + usuario.getUsername());
+        } else {
+            logger.warning("No se encontró un usuario autenticado.");
         }
 
         VerticalLayout layoutColumn2 = new VerticalLayout();
@@ -124,12 +101,16 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
     }
 
     public void onSaveButtonClick(Usuario usuario) {
+        logger.info("Intentando cambiar la contraseña para el usuario: " + usuario.getUsername());
+
         if (!password1.getValue().equals(password2.getValue())) {
             Notification.show("Las contraseñas no coinciden");
+            logger.warning("Las nuevas contraseñas no coinciden.");
             return;
         }
         if (!passwordEncoder.matches(contrasenna2.getValue(), usuario.getPassword())) {
             Notification.show("Contraseña errónea");
+            logger.warning("La contraseña actual no es correcta.");
             return;
         }
 
@@ -140,15 +121,18 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
                 usuario.setContrasenna(cambiarContrasenna);
                 uservice.update(usuario);
                 Notification.show("Contraseña actualizada con éxito.");
+                logger.info("Contraseña actualizada con éxito para el usuario: " + usuario.getUsername());
                 contrasenna2.clear();
                 password1.clear();
                 password2.clear();
                 authenticatedUser.logout();
             } catch (Exception ex) {
                 Notification.show("Error al actualizar la contraseña: " + ex.getMessage());
+                logger.log(Level.SEVERE, "Error al actualizar la contraseña para el usuario: " + usuario.getUsername(), ex);
             }
         } else {
             Notification.show("Por favor, verifique los datos de entrada");
+            logger.warning("Validación del formulario fallida.");
         }
     }
 }

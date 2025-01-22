@@ -26,45 +26,15 @@ import jakarta.annotation.security.RolesAllowed;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- * Vista para la valoración de proyectos por parte de un promotor.
- * 
- * Esta vista permite a los promotores evaluar proyectos, asignar un director y 
- * decidir si avalan o no la propuesta del proyecto.
- * 
- * Anotaciones:
- * - @PageTitle: Título de la página.
- * - @Route: Ruta de la vista.
- * - @Menu: Configuración del menú (orden e icono).
- * - @RolesAllowed: Roles permitidos para acceder a esta vista.
- * 
- * Atributos:
- * - proyecto: Proyecto a evaluar.
- * - proyectoService: Servicio para gestionar proyectos.
- * - usuarioService: Servicio para gestionar usuarios.
- * - uuid: Identificador único del proyecto.
- * - SI_AVALO: Constante para la opción de avalar el proyecto.
- * 
- * Constructor:
- * - ValoracionPromotorView(ProyectoService proyectoService, UsuarioService usuarioService): 
- *   Inicializa los servicios de proyecto y usuario.
- * 
- * Métodos:
- * - setParameter(BeforeEvent event, String parameter): 
- *   Configura el parámetro de la URL y carga el proyecto correspondiente.
- * 
- * Comportamiento:
- * - Si el proyecto no se encuentra, muestra un mensaje de error.
- * - Si el proyecto se encuentra, muestra la información del proyecto y opciones para avalar o rechazar.
- * - Permite seleccionar una valoración del proyecto y asignar un director.
- * - Incluye un botón para guardar la valoración y redirigir a la lista de proyectos del promotor.
- */
 @PageTitle("Valoración Promotor")
 @Route("ValoracionPromotor")
 @Menu(order = 1, icon = "line-awesome/svg/user.svg")
 @RolesAllowed("ROLE_PROMOTOR")
 public class ValoracionPromotorView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
+    private static final Logger logger = Logger.getLogger(ValoracionPromotorView.class.getName());
     Optional<Proyecto> proyecto;
     final ProyectoService proyectoService;
     final UsuarioService usuarioService;
@@ -83,6 +53,7 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
                 uuid = UUID.fromString(parameter);
                 this.proyecto = proyectoService.get(uuid);
             } catch (IllegalArgumentException e) {
+                logger.log(Level.SEVERE, "UUID inválido: " + parameter, e);
                 this.proyecto = Optional.empty();
             }
         } else {
@@ -90,6 +61,7 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
         }
 
         if (proyecto.isEmpty()) {
+            logger.log(Level.WARNING, "Proyecto no encontrado para UUID: " + parameter);
             H1 title = new H1("Ha ocurrido un error, no se encuentra el proyecto :(");
             getContent().add(title);
         } else {

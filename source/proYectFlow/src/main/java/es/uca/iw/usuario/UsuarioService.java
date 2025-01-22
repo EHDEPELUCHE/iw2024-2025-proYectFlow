@@ -4,6 +4,8 @@ import es.uca.iw.email.EmailService;
 import es.uca.iw.global.Roles;
 import es.uca.iw.rest.Promotor;
 import jakarta.transaction.Transactional;
+
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -42,7 +44,7 @@ public class UsuarioService {
     public Optional<Usuario> getnombre(String nombre) {
         return Optional.of(repository.findByUsername(nombre));
     }
-
+    @CachePut(value = "Usuario", key = "#usuario.id")
     public void update(Usuario entity) {
         repository.save(entity);
     }

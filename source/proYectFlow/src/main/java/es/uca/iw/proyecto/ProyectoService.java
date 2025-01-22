@@ -7,6 +7,8 @@ import es.uca.iw.email.EmailService;
 import es.uca.iw.usuario.Usuario;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -41,7 +43,8 @@ public class ProyectoService {
     public Optional<Proyecto> get(@Valid UUID id) {
         return repository.findById(id);
     }
-
+    
+    @CachePut(value = "Proyecto", key = "#proyecto.id")
     public void update(@Valid Proyecto entity) {
         repository.save(entity);
     }

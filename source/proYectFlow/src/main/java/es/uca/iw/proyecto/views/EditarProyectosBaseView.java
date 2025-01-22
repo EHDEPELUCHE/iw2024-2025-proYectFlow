@@ -36,49 +36,12 @@ import java.sql.Blob;
 import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- * La clase EditarProyectosBaseView es una vista para editar los detalles del proyecto.
- * Extiende Composite con un VerticalLayout e implementa HasUrlParameter<String>.
- * Esta vista permite a los usuarios editar los detalles del proyecto, subir documentos del proyecto y gestionar los estados del proyecto.
- * 
- * Campos:
- * - MIN_CONTENT: Una constante que representa el tamaño mínimo del contenido.
- * - proyectoService: Servicio para manejar operaciones relacionadas con proyectos.
- * - usuarioService: Servicio para manejar operaciones relacionadas con usuarios.
- * - authenticatedUser: El usuario autenticado actualmente.
- * - emailField: Campo para mostrar el correo electrónico del solicitante del proyecto.
- * - promotor: ComboBox para seleccionar el promotor del proyecto.
- * - jefe: ComboBox para seleccionar el jefe del proyecto.
- * - nombre: TextField para el nombre del proyecto.
- * - descripcion: TextField para la descripción del proyecto.
- * - alcance: TextField para el alcance del proyecto.
- * - fechaLimite: DatePicker para la fecha límite del proyecto.
- * - interesados: TextField para los interesados del proyecto.
- * - aportacionInicial: BigDecimalField para la financiación inicial.
- * - coste: BigDecimalField para el coste total.
- * - buffer: MemoryBuffer para manejar la subida de archivos.
- * - upload: Componente de subida para subir documentos del proyecto.
- * - binder: BeanValidationBinder para enlazar los campos del proyecto.
- * - proyecto: Optional que contiene el proyecto que se está editando.
- * - uuid: UUID del proyecto que se está editando.
- * 
- * Constructor:
- * - EditarProyectosBaseView(ProyectoService proyectoService, UsuarioService usuarioService, AuthenticatedUser authenticatedUser):
- *   Inicializa la vista con los servicios proporcionados y el usuario autenticado.
- * 
- * Métodos:
- * - setParameter(BeforeEvent event, String parameter):
- *   Establece el parámetro para la vista, recupera el proyecto basado en el parámetro e inicializa los componentes de la vista.
- * 
- * - setupFields(Proyecto proyectoAux):
- *   Configura los campos con los detalles del proyecto y configura el componente de subida.
- * 
- * - actualizarProyecto(Proyecto proyectoAux):
- *   Actualiza los detalles del proyecto si el proyecto está en un estado que permite la edición.
- */
 public class EditarProyectosBaseView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
     static final String MIN_CONTENT = "min-content";
+    private static final Logger logger = Logger.getLogger(EditarProyectosBaseView.class.getName());
     final ProyectoService proyectoService;
     final UsuarioService usuarioService;
     final AuthenticatedUser authenticatedUser;
@@ -102,25 +65,33 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
         this.proyectoService = proyectoService;
         this.usuarioService = usuarioService;
         this.authenticatedUser = authenticatedUser;
+        logger.info("EditarProyectosBaseView initialized");
     }
 
     @Override
     public void setParameter(BeforeEvent event, String parameter) {
+        logger.info("setParameter called with parameter: " + parameter);
         if (parameter != null && !parameter.isEmpty()) {
             try {
                 uuid = UUID.fromString(parameter);
                 this.proyecto = proyectoService.get(uuid);
+                logger.info("Project found with UUID: " + uuid);
             } catch (IllegalArgumentException e) {
                 this.proyecto = Optional.empty();
+                logger.log(Level.WARNING, "Invalid UUID: " + parameter, e);
             }
-        } else
+        } else {
             this.proyecto = Optional.empty();
+            logger.warning("Parameter is empty or null");
+        }
 
         if (proyecto.isEmpty()) {
             H1 title = new H1("Ha ocurrido un error, no se encuentra el proyecto :(");
             getContent().add(title);
+            logger.warning("Project not found");
         } else {
             Proyecto proyectoAux = proyecto.get();
+            logger.info("Setting up fields for project: " + proyectoAux.getNombre());
 
             getContent().add(new H1("Detalles del Proyecto"));
             VerticalLayout layoutColumn2 = new VerticalLayout();
@@ -178,8 +149,11 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
                         else
                             UI.getCurrent().navigate(EstadoProyectosView.class);
                     });
-                } else
+                    logger.info("Project deleted: " + proyectoAux.getNombre());
+                } else {
                     Notification.show("Este proyecto aún no se puede eliminar");
+                    logger.warning("Project cannot be deleted: " + proyectoAux.getNombre());
+                }
             });
 
             borrarProyectoButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -188,6 +162,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
                 try {
                     return proyectoService.getPdf(proyecto.get().getId());
                 } catch (IOException ex) {
+                    logger.log(Level.SEVERE, "Error al obtener el PDF", ex);
                     throw new RuntimeException("Error al obtener el PDF", ex);
                 }
             });
@@ -201,6 +176,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
     }
 
     void setupFields(Proyecto proyectoAux) {
+        logger.info("Setting up fields for project: " + proyectoAux.getNombre());
         emailField.setLabel("Solicitante");
         emailField.setValue(proyectoAux.getSolicitante().getCorreo());
         emailField.setWidth(MIN_CONTENT);
@@ -260,12 +236,16 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
 
                 Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
                 proyectoAux.setMemoria(blob);
-                if (proyectoAux.getMemoria() != null)
+                if (proyectoAux.getMemoria() != null) {
                     Notification.show("Archivo subido correctamente: " + event.getFileName());
-                else
+                    logger.info("File uploaded successfully: " + event.getFileName());
+                } else {
                     Notification.show("Error: No se pudo guardar el archivo.");
+                    logger.warning("Failed to save the uploaded file: " + event.getFileName());
+                }
             } catch (Exception ex) {
                 Notification.show("Error al subir el archivo: " + ex.getMessage());
+                logger.log(Level.SEVERE, "Error uploading file", ex);
             }
         });
         Paragraph hint = new Paragraph();
@@ -275,17 +255,22 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
     }
 
     private void actualizarProyecto(Proyecto proyectoAux) {
+        logger.info("Updating project: " + proyectoAux.getNombre());
         if ((proyectoAux.getEstado() == Proyecto.Estado.SOLICITADO && proyectoAux.getPromotor() == null)) {
-            if (proyectoAux.getAportacionInicial().compareTo(proyectoAux.getCoste()) > 0)
+            if (proyectoAux.getAportacionInicial().compareTo(proyectoAux.getCoste()) > 0) {
                 Notification.show("La aportación inicial no puede ser mayor que el coste total");
-            else if (proyectoAux.getFechaLimite() != null && proyectoAux.getFechaLimite().compareTo(proyectoAux.getFechaSolicitud()) <= 0)
+                logger.warning("Initial contribution is greater than total cost for project: " + proyectoAux.getNombre());
+            } else if (proyectoAux.getFechaLimite() != null && proyectoAux.getFechaLimite().compareTo(proyectoAux.getFechaSolicitud()) <= 0) {
                 Notification.show("La fecha límite debe ser posterior a la fecha de solicitud");
-            else {
+                logger.warning("Deadline is before the request date for project: " + proyectoAux.getNombre());
+            } else {
                 proyectoService.update(proyectoAux);
                 Notification.show("Proyecto actualizado");
+                logger.info("Project updated successfully: " + proyectoAux.getNombre());
             }
-        } else
+        } else {
             Notification.show("Este proyecto no se puede editar");
-
+            logger.warning("Project cannot be edited: " + proyectoAux.getNombre());
+        }
     }
 }

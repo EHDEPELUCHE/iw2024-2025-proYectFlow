@@ -25,8 +25,8 @@ import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
-
 import java.util.List;
+
 /**
  * La clase GestionarConvocatoriasView representa una vista para gestionar convocatorias (llamadas a proyectos).
  * Extiende la clase Div y está anotada con varias anotaciones de Vaadin y Spring para enrutamiento, seguridad y procesamiento asincrónico.
@@ -126,7 +126,7 @@ public class GestionarConvocatoriasView extends Div {
         return editarButton;
     }
     
-    
+    @Async
     public Component estadoConvocatoria(Convocatoria convocatoria) {
         if (Boolean.FALSE.equals(convocatoria.getActiva())) {
             Button activarButton = new Button("Activar");
@@ -143,7 +143,8 @@ public class GestionarConvocatoriasView extends Div {
                     }
                     convocatoriaService.hacerVigente(convocatoria);
                     Notification.show("Convocatoria activada");
-                    guardarPromotores();
+                    GestionarUsuariosView gu = new GestionarUsuariosView(usuarioService, proyectoService);
+                    gu.guardarPromotores();
                     UI.getCurrent().getPage().reload();
                 } catch (IllegalArgumentException ex) {
                     Notification errorNotification = new Notification(ex.getMessage(), 3000, Notification.Position.MIDDLE);
@@ -157,9 +158,4 @@ public class GestionarConvocatoriasView extends Div {
         }
     }
     
-    @Async
-    public void guardarPromotores() {
-        GestionarUsuariosView gu = new GestionarUsuariosView(usuarioService, proyectoService);
-        gu.guardarPromotores();
-    }
 }

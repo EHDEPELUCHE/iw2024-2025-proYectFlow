@@ -52,6 +52,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@NamedEntityGraph(
+    name = "Proyecto.detail",
+    attributeNodes = {
+        @NamedAttributeNode("promotor"),
+        @NamedAttributeNode("solicitante"),
+        @NamedAttributeNode("jefe"),
+        @NamedAttributeNode("convocatoria")
+    }
+)
 public class Proyecto extends AbstractEntity {
     private static final Logger logger = Logger.getLogger(Proyecto.class.getName());
 

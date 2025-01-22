@@ -39,58 +39,15 @@ import jakarta.annotation.security.PermitAll;
 
 import java.sql.Blob;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- * Esta vista maneja el registro de nuevos proyectos.
- * Es accesible para todos los usuarios y forma parte del menú principal.
- * La vista solo está disponible si hay una convocatoria activa para proyectos.
- * 
- * Anotaciones:
- * - @PageTitle: Establece el título de la página.
- * - @Route: Define la ruta para acceder a esta vista.
- * - @Menu: Añade esta vista al menú principal con un orden e icono específicos.
- * - @PermitAll: Permite el acceso a todos los usuarios.
- * 
- * Campos:
- * - MIN_CONTENT: Constante para establecer el ancho mínimo del contenido.
- * - usuarioService: Servicio para la gestión de usuarios.
- * - authenticatedUser: Servicio para la gestión de usuarios autenticados.
- * - proyectoService: Servicio para la gestión de proyectos.
- * - fechaLimite: Selector de fecha para la fecha límite del proyecto.
- * - buffer: Buffer de memoria para la carga de archivos.
- * - convocatoriaService: Servicio para la gestión de convocatorias de proyectos.
- * - binder: Binder para validar y enlazar datos del proyecto.
- * - emailField: Campo de correo electrónico para el correo del solicitante.
- * - promotor: ComboBox para seleccionar el promotor del proyecto.
- * - nombre: TextField para el nombre del proyecto.
- * - descripcion: TextField para la descripción del proyecto.
- * - alcance: TextField para el alcance del proyecto.
- * - interesados: TextField para los interesados del proyecto.
- * - aportacionInicial: BigDecimalField para la financiación inicial.
- * - coste: BigDecimalField para el coste total.
- * - upload: Componente de carga para subir documentos del proyecto.
- * 
- * Constructor:
- * - Inicializa los componentes y el diseño de la vista.
- * - Configura los campos del formulario y sus etiquetas.
- * - Configura el componente de carga para archivos PDF.
- * - Añade listeners para la presentación del formulario y la carga de archivos.
- * - Enlaza los campos del formulario con la clase Proyecto.
- * 
- * Métodos:
- * - onRegistroProyecto: Maneja el proceso de registro del proyecto.
- *   - Valida los datos del formulario.
- *   - Convierte el archivo subido a Blob.
- *   - Convierte la fecha seleccionada a SQL Date.
- *   - Enlaza los datos del formulario a una nueva instancia de Proyecto.
- *   - Registra el proyecto si los datos son válidos.
- *   - Muestra notificaciones basadas en el resultado del registro.
- */
 @PageTitle("Registro Proyecto")
 @Route("registro-proyecto")
 @Menu(order = 2, icon = "line-awesome/svg/egg-solid.svg")
 @PermitAll
 public class RegistroProyectoView extends Composite<VerticalLayout> {
+    private static final Logger logger = Logger.getLogger(RegistroProyectoView.class.getName());
     static final String MIN_CONTENT = "min-content";
     final UsuarioService usuarioService;
     final AuthenticatedUser authenticatedUser;
@@ -117,7 +74,10 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
         this.convocatoriaService = convocatoriaService;
         binder = new BeanValidationBinder<>(Proyecto.class);
 
+        logger.info("Initializing RegistroProyectoView");
+
         if (convocatoriaService.convocatoriaActual() != null && convocatoriaService.convocatoriaActual().enPlazo()) {
+            logger.info("Convocatoria actual en plazo");
             VerticalLayout layoutColumn2 = new VerticalLayout();
             H3 h3 = new H3();
             FormLayout formLayout2Col = new FormLayout();
@@ -175,6 +135,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             upload.addFailedListener(event -> {
                 if (event.getReason().getMessage().contains("Maximum upload size exceeded")) {
                     Notification.show("El tamaño máximo del archivo es de 10MB");
+                    logger.warning("Archivo excede el tamaño máximo permitido");
                 }
             });
             Paragraph hint = new Paragraph();
@@ -227,24 +188,30 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             binder.forField(promotor).bind(Proyecto::getPromotor, Proyecto::setPromotor);
         } else {
             getContent().add(new H2("Lo lamentamos, en estos momentos el plazo de solicitudes está cerrado."));
+            logger.info("El plazo de solicitudes está cerrado");
         }
     }
 
     public void onRegistroProyecto() {
+        logger.info("Iniciando registro de proyecto");
         Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioService.getCorreo(emailField.getValue()));
 
         if (usuarioOptional.isPresent()) {
+            logger.info("Usuario encontrado: " + usuarioOptional.get().getCorreo());
 
             Blob pdfBlob = null;
             try {
                 pdfBlob = new javax.sql.rowset.serial.SerialBlob(buffer.getInputStream().readAllBytes());
+                logger.info("Archivo PDF procesado correctamente");
             } catch (Exception ex) {
                 Notification.show("Error al procesar el archivo PDF");
+                logger.log(Level.SEVERE, "Error al procesar el archivo PDF", ex);
             }
 
             java.sql.Date fechaSql = null;
             if (fechaLimite.getValue() != null) {
                 fechaSql = java.sql.Date.valueOf(fechaLimite.getValue());
+                logger.info("Fecha límite seleccionada: " + fechaSql);
             }
 
             binder.setBean(new Proyecto(nombre.getValue(), descripcion.getValue(), interesados.getValue(),
@@ -257,22 +224,32 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
                         if (proyectoService.registerProyecto(binder.getBean())) {
                             binder.setBean(new Proyecto());
                             Notification.show("Proyecto registrado correctamente.");
+                            logger.info("Proyecto registrado correctamente");
                         }
-                    } else if (fechaLimite.getValue().isBefore(new java.util.Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()) || fechaLimite.getValue().isEqual(new java.util.Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()))
+                    } else if (fechaLimite.getValue().isBefore(new java.util.Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()) || fechaLimite.getValue().isEqual(new java.util.Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate())) {
                         Notification.show("La fecha límite no puede ser anterior a la fecha actual ni la fecha actual");
-                    else
+                        logger.warning("Fecha límite anterior o igual a la fecha actual");
+                    } else {
                         Notification.show("El proyecto tiene datos incorrectos");
+                        logger.warning("Datos incorrectos en el proyecto");
+                    }
                 } else {
                     if (proyectoService.registerProyecto(binder.getBean())) {
                         binder.setBean(new Proyecto());
                         Notification.show("Proyecto registrado correctamente.");
+                        logger.info("Proyecto registrado correctamente");
                     }
                 }
-            } else if (aportacionInicial.getValue().compareTo(coste.getValue()) > 0)
+            } else if (aportacionInicial.getValue().compareTo(coste.getValue()) > 0) {
                 Notification.show("La aportación inicial no puede ser mayor que el coste total");
-            else
+                logger.warning("La aportación inicial es mayor que el coste total");
+            } else {
                 Notification.show("Por favor, verifique los datos de entrada");
-        } else
+                logger.warning("Datos de entrada incorrectos");
+            }
+        } else {
             Notification.show("El usuario no existe");
+            logger.warning("Usuario no encontrado");
+        }
     }
 }

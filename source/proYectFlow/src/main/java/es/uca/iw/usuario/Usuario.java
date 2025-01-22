@@ -53,6 +53,12 @@ import java.util.List;
                 columnList = "correo",
                 unique = true)
 )
+@NamedEntityGraph(
+    name = "Usuario.detail",
+    attributeNodes = {
+        @NamedAttributeNode("tipo")
+    }
+)
 public class Usuario extends AbstractEntity implements UserDetails {
     @NotEmpty
     @Column(unique = true, nullable = false)

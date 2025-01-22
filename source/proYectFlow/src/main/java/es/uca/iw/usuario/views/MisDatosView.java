@@ -27,48 +27,15 @@ import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.PermitAll;
 
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- * Vista para mostrar y editar los datos personales del usuario autenticado.
- * 
- * Anotaciones:
- * - @PageTitle: Título de la página.
- * - @Route: Ruta de la vista.
- * - @Menu: Configuración del menú (orden e icono).
- * - @PermitAll: Permite el acceso a todos los usuarios autenticados.
- * 
- * Componentes:
- * - BeanValidationBinder<Usuario>: Binder para la validación de los datos del usuario.
- * - UsuarioService: Servicio para la gestión de usuarios.
- * - ProyectoService: Servicio para la gestión de proyectos.
- * - TextField: Campos de texto para el nombre de usuario, nombre y apellidos.
- * - EmailField: Campo de texto para el correo electrónico.
- * 
- * Constructor:
- * - MisDatosView(AuthenticatedUser authenticatedUser, UsuarioService uservice, ProyectoService proyectoservice):
- *   Inicializa los servicios y componentes, y configura el layout de la vista.
- * 
- * Métodos:
- * - buttonPrimary.addClickListener: Listener para el botón de guardar, que valida y actualiza los datos del usuario.
- * - buttonSecondary.addClickListener: Listener para el botón de cancelar, que navega a la pantalla de inicio.
- * - borrar.addClickListener: Listener para el botón de borrar, que elimina los datos del usuario y cierra la sesión.
- * 
- * Layouts:
- * - VerticalLayout: Layout principal y secundario para organizar los componentes verticalmente.
- * - HorizontalLayout: Layout para organizar los botones horizontalmente.
- * - FormLayout: Layout para organizar los campos de formulario.
- * 
- * Enlaces:
- * - RouterLink: Enlace para cambiar la contraseña.
- * 
- * Estilos:
- * - Se configuran estilos y tamaños para los componentes y layouts.
- */
 @PageTitle("Mis datos")
 @Route("Ver-mis-datos")
 @Menu(order = 6, icon = "line-awesome/svg/user.svg")
 @PermitAll
 public class MisDatosView extends Composite<VerticalLayout> {
+    private static final Logger logger = Logger.getLogger(MisDatosView.class.getName());
     private final BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
     final UsuarioService uservice;
     final ProyectoService proyectoservice;
@@ -111,17 +78,21 @@ public class MisDatosView extends Composite<VerticalLayout> {
         layoutRow.getStyle().set("flex-grow", "1");
         buttonPrimary.setText("Guardar");
         buttonPrimary.addClickListener(e -> {
+            logger.log(Level.INFO, "Guardar button clicked");
             if (binder.validate().isOk()) {
                 try {
                     uservice.update(binder.getBean());
                     binder.setBean(new Usuario());
                     Notification.show("Datos actualizados correctamente");
+                    logger.log(Level.INFO, "Datos actualizados correctamente");
 
                 } catch (Exception ex) {
                     Notification.show("Usuario o correo repetido");
+                    logger.log(Level.SEVERE, "Error al actualizar datos: Usuario o correo repetido", ex);
                 }
             } else {
                 Notification.show("Por favor, verifique los datos de entrada");
+                logger.log(Level.WARNING, "Datos de entrada no válidos");
             }
         });
         buttonPrimary.setWidth(MIN_CONTENT);
@@ -139,14 +110,19 @@ public class MisDatosView extends Composite<VerticalLayout> {
         formLayout2Col.add(username);
 
         RouterLink cambiocontrasenna = new RouterLink("Cambiar contraseña", CambioContrasennaView.class);
-        Button btncancelar = new Button("Volver", event -> UI.getCurrent().navigate(PantallaInicioView.class));
+        Button btncancelar = new Button("Volver", event -> {
+            logger.log(Level.INFO, "Cancelar button clicked, navigating to PantallaInicioView");
+            UI.getCurrent().navigate(PantallaInicioView.class);
+        });
         btncancelar.addClassName("buttonSecondary");
 
         Button borrar = new Button("Borrar Mis datos", event -> {
+            logger.log(Level.INFO, "Borrar button clicked");
             proyectoservice.desligarUsuario(user.get());
             uservice.delete(user.get().getId());
             authenticatedUser.logout();
             UI.getCurrent().navigate(PantallaInicioView.class);
+            logger.log(Level.INFO, "Usuario borrado y sesión cerrada");
         });
         borrar.addClassName("button-danger");
         borrar.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -157,7 +133,9 @@ public class MisDatosView extends Composite<VerticalLayout> {
             Usuario aux = user.get();
             binder.bindInstanceFields(this);
             binder.setBean(aux);
+            logger.log(Level.INFO, "Usuario autenticado: " + aux.getUsername());
+        } else {
+            logger.log(Level.WARNING, "No hay usuario autenticado");
         }
-       
     }
 }

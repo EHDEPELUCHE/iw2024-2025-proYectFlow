@@ -103,7 +103,6 @@ class ProyectoServiceTest {
         proyecto.setJefe(jefe);
         when(repository.save(proyecto)).thenReturn(proyecto);
 
-
         proyectoService.setValoracionTecnica(100, 100, 100, proyecto);
 
         assertEquals(Proyecto.Estado.EVALUADO_TECNICAMENTE, proyecto.getEstado());
