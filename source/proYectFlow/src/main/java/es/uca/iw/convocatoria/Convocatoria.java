@@ -1,25 +1,27 @@
 package es.uca.iw.convocatoria;
 
 import es.uca.iw.global.AbstractEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
+import es.uca.iw.usuario.Usuario;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  * Representa una entidad Convocatoria con detalles sobre una convocatoria específica.
  * Esta entidad incluye información como el presupuesto total, el presupuesto restante,
  * las fechas de inicio y fin, y si la convocatoria está activa.
- * 
- * <p>Esta clase extiende {@link AbstractEntity} y está anotada con anotaciones JPA 
- * para mapearla a una tabla de base de datos. También utiliza {@link AuditingEntityListener} 
+ *
+ * <p>Esta clase extiende {@link AbstractEntity} y está anotada con anotaciones JPA
+ * para mapearla a una tabla de base de datos. También utiliza {@link AuditingEntityListener}
  * para propósitos de auditoría.</p>
- * 
+ *
  * <p>Atributos:</p>
  * <ul>
  *   <li>{@code nombre} - El nombre de la convocatoria, generado en base a las fechas de inicio y fin.</li>
@@ -30,13 +32,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  *   <li>{@code fechaFinal} - La fecha de fin de la convocatoria. Este campo es obligatorio.</li>
  *   <li>{@code activa} - Indica si la convocatoria está actualmente activa.</li>
  * </ul>
- * 
+ *
  * <p>Constructores:</p>
  * <ul>
- *   <li>{@link #Convocatoria(BigDecimal, Date, Date, Date)} - Construye una nueva Convocatoria con el presupuesto, fecha límite, fecha de inicio y fecha de fin especificados.</li>
+ *   <li>{@link #Convocatoria(BigDecimal, Date, Date, Date, int)} - Construye una nueva Convocatoria con el presupuesto, fecha límite, fecha de inicio y fecha de fin especificados.</li>
  *   <li>{@link #Convocatoria()} - Constructor por defecto.</li>
  * </ul>
- * 
+ *
  * <p>Métodos:</p>
  * <ul>
  *   <li>{@link #enPlazo()} - Verifica si la fecha actual está dentro del período de la convocatoria.</li>
@@ -85,6 +87,16 @@ public class Convocatoria extends AbstractEntity {
 
     Integer recHumanosRestantes;
 
+    @ManyToOne
+    @JoinColumn(name = "created_by_id")
+    @CreatedBy
+    private Usuario createdBy;
+
+    @ManyToOne
+    @JoinColumn(name = "last_modified_by_id")
+    @LastModifiedBy
+    private Usuario lastModifiedBy;
+
     public Convocatoria(BigDecimal presupuesto, Date fechaLimite, Date fechaInicio, Date fechaFinal, int recHumanosDisponibles) {
         this.presupuestototal = presupuesto;
         this.presupuestorestante = presupuesto;
@@ -96,9 +108,26 @@ public class Convocatoria extends AbstractEntity {
         setNombre();
     }
 
-    public Convocatoria() {}
+    public Convocatoria() {
+    }
 
-    public boolean enPlazo(){
+    public Usuario getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(Usuario lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Usuario getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Usuario createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public boolean enPlazo() {
         Date hoy = new Date();
         return (hoy.after(fechaInicio) && hoy.before(fechaLimite));
     }
@@ -106,6 +135,7 @@ public class Convocatoria extends AbstractEntity {
     public Date getFechaFinal() {
         return fechaFinal;
     }
+
     public void setFechaFinal(Date fechaFinal) {
         if (fechaLimite != null && fechaFinal != null && !fechaLimite.before(fechaFinal)) {
             throw new IllegalArgumentException("La fecha final debe ser posterior a la fecha límite.");
@@ -113,41 +143,55 @@ public class Convocatoria extends AbstractEntity {
         this.fechaFinal = fechaFinal;
         setNombre();
     }
+
     public Date getFechaLimite() {
         return fechaLimite;
     }
+
     public void setFechaLimite(Date fechaLimite) {
         if (fechaLimite != null && fechaInicio != null && !fechaInicio.before(fechaLimite)) {
             throw new IllegalArgumentException("La fecha límite debe ser posterior a la fecha de inicio.");
         }
         this.fechaLimite = fechaLimite;
     }
+
     public BigDecimal getPresupuestototal() {
         return presupuestototal;
     }
+
     public void setPresupuestototal(BigDecimal presupuestototal) {
         this.presupuestototal = presupuestototal;
     }
+
     public Date getFechaInicio() {
         return fechaInicio;
     }
+
     public void setFechaInicio(Date fechaInicio) {
         this.fechaInicio = fechaInicio;
         setNombre();
     }
+
     public BigDecimal getPresupuestorestante() {
         return presupuestorestante;
     }
+
     public void setPresupuestorestante(BigDecimal presupuestorestante) {
         this.presupuestorestante = presupuestorestante;
     }
+
     public Boolean getActiva() {
         return activa;
     }
+
     public void setActiva(Boolean activa) {
         this.activa = activa;
     }
-    public String getNombre() {return nombre;}
+
+    public String getNombre() {
+        return nombre;
+    }
+
     private void setNombre() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy");
         dateFormat.format(fechaInicio);

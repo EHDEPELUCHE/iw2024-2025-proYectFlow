@@ -6,6 +6,10 @@ import es.uca.iw.usuario.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Blob;
@@ -13,12 +17,11 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  * Representa una entidad de proyecto con varios atributos como nombre, descripción, interesados, alcance, costos y más.
  * Esta entidad es auditada y extiende de AbstractEntity.
- * 
+ * <p>
  * Atributos:
  * - nombre: El nombre del proyecto. Debe ser único y no vacío.
  * - descripcion: La descripción del proyecto. No debe estar vacía.
@@ -39,27 +42,27 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  * - gradoAvance: El grado de avance del proyecto.
  * - estado: El estado del proyecto, representado por el enum Estado.
  * - convocatoria: La convocatoria a la que pertenece el proyecto. No debe ser nula.
- * 
+ * <p>
  * Métodos:
  * - Getters y setters para todos los atributos.
  * - getPdf(): Devuelve un InputStream del blob de memoria PDF.
  * - getPdfNombre(): Devuelve el nombre del archivo PDF.
  * - equals(Object other): Verifica la igualdad basada en el ID del proyecto.
  * - hashCode(): Devuelve el código hash para el proyecto.
- * 
+ * <p>
  * Enum Estado:
  * - Representa los varios estados en los que un proyecto puede estar: SOLICITADO, AVALADO, EVALUADO_TECNICAMENTE, EVALUADO_ESTRATEGICAMENTE, NO_EN_DESARROLLO, EN_DESARROLLO, DENEGADO, FINALIZADO.
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @NamedEntityGraph(
-    name = "Proyecto.detail",
-    attributeNodes = {
-        @NamedAttributeNode("promotor"),
-        @NamedAttributeNode("solicitante"),
-        @NamedAttributeNode("jefe"),
-        @NamedAttributeNode("convocatoria")
-    }
+        name = "Proyecto.detail",
+        attributeNodes = {
+                @NamedAttributeNode("promotor"),
+                @NamedAttributeNode("solicitante"),
+                @NamedAttributeNode("jefe"),
+                @NamedAttributeNode("convocatoria")
+        }
 )
 public class Proyecto extends AbstractEntity {
     private static final Logger logger = Logger.getLogger(Proyecto.class.getName());
@@ -113,6 +116,16 @@ public class Proyecto extends AbstractEntity {
     @JoinColumn(name = "convocatoria_id", nullable = false)
     private Convocatoria convocatoria;
 
+    @ManyToOne
+    @JoinColumn(name = "created_by_id")
+    @CreatedBy
+    private Usuario createdBy;
+
+    @ManyToOne
+    @JoinColumn(name = "last_modified_by_id")
+    @LastModifiedBy
+    private Usuario lastModifiedBy;
+
     public Proyecto(String nombre, String descripcion, String interesados, String alcance, BigDecimal coste,
                     BigDecimal aportacionInicial, Usuario aval, Usuario solicitante, Date fechaLimite, Blob memoria) {
         this.nombre = nombre;
@@ -135,6 +148,22 @@ public class Proyecto extends AbstractEntity {
 
     public Proyecto() {
         // Empty constructor
+    }
+
+    public Usuario getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(Usuario lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Usuario getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Usuario createdBy) {
+        this.createdBy = createdBy;
     }
 
     public String getNombre() {
@@ -257,12 +286,12 @@ public class Proyecto extends AbstractEntity {
         this.estado = estado;
     }
 
-    public void setJefe(Usuario jefe) {
-        this.jefe = jefe;
-    }
-
     public Usuario getJefe() {
         return jefe;
+    }
+
+    public void setJefe(Usuario jefe) {
+        this.jefe = jefe;
     }
 
     public InputStream getPdf() {

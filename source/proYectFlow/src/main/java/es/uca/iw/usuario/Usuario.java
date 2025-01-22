@@ -5,22 +5,25 @@ import es.uca.iw.global.Roles;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.List;
 
 /**
  * La clase Usuario representa a un usuario en el sistema.
  * Implementa la interfaz UserDetails para integrarse con Spring Security.
- * 
+ * <p>
  * Anotaciones:
  * - @Entity: Indica que esta clase es una entidad JPA.
  * - @EntityListeners(AuditingEntityListener.class): Añade soporte para auditoría.
  * - @Table: Define la tabla y sus índices en la base de datos.
- * 
+ * <p>
  * Atributos:
  * - username: Nombre de usuario único y no vacío.
  * - nombre: Nombre del usuario, no vacío.
@@ -30,12 +33,12 @@ import java.util.List;
  * - tipo: Rol del usuario, almacenado como texto.
  * - activo: Indica si el usuario está activo.
  * - codigo: Código adicional del usuario.
- * 
+ * <p>
  * Constructores:
  * - Usuario(String nombre, String username, String apellido, String correo, String contrasenna): Inicializa un usuario con rol SOLICITANTE y no activo.
  * - Usuario(): Constructor vacío.
  * - Usuario(String nombre, String username, String apellido, String correo, String contrasenna, Roles tipo): Inicializa un usuario con un rol específico y no activo.
- * 
+ * <p>
  * Métodos:
  * - Getters y setters para todos los atributos.
  * - getAuthorities(): Devuelve la autoridad del usuario basada en su rol.
@@ -54,10 +57,10 @@ import java.util.List;
                 unique = true)
 )
 @NamedEntityGraph(
-    name = "Usuario.detail",
-    attributeNodes = {
-        @NamedAttributeNode("tipo")
-    }
+        name = "Usuario.detail",
+        attributeNodes = {
+                @NamedAttributeNode("tipo")
+        }
 )
 public class Usuario extends AbstractEntity implements UserDetails {
     @NotEmpty
@@ -87,7 +90,18 @@ public class Usuario extends AbstractEntity implements UserDetails {
     private Roles tipo;
 
     private boolean activo = false;
+
     private String codigo;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by_id")
+    @CreatedBy
+    private Usuario createdBy;
+
+    @ManyToOne
+    @JoinColumn(name = "last_modified_by_id")
+    @LastModifiedBy
+    private Usuario lastModifiedBy;
 
     public Usuario(String nombre, String username, String apellido, String correo, String contrasenna) {
         this.nombre = nombre;
@@ -111,6 +125,22 @@ public class Usuario extends AbstractEntity implements UserDetails {
         this.contrasenna = contrasenna;
         this.tipo = tipo;
         this.activo = false;
+    }
+
+    public Usuario getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(Usuario lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Usuario getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Usuario createdBy) {
+        this.createdBy = createdBy;
     }
 
     public String getUsername() {
