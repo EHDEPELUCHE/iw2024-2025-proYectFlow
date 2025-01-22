@@ -9,6 +9,8 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.router.BeforeEvent;
+
+import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.usuario.Usuario;
@@ -32,11 +34,12 @@ class GradoAvanceViewTest {
     private BeforeEvent beforeEvent;
 
     private GradoAvanceView gradoAvanceView;
+    private ConvocatoriaService convocatoriaService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        gradoAvanceView = new GradoAvanceView(proyectoService);
+        gradoAvanceView = new GradoAvanceView(proyectoService, convocatoriaService);
     }
 
     @Test

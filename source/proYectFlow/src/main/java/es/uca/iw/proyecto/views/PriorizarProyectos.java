@@ -12,6 +12,7 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -115,6 +116,7 @@ public class PriorizarProyectos extends Div {
         grid.addColumn("alcance").setAutoWidth(true);
         grid.addColumn(proyecto -> (proyecto.getPromotor().getNombre() + " " + proyecto.getPromotor().getApellido())).setHeader("Promotor").setAutoWidth(true);
         grid.addColumn("coste").setAutoWidth(true);
+        grid.addColumn("recHumanos").setAutoWidth(true).setHeader("Recursos Humanos Necesarios");
         grid.addColumn("aportacionInicial").setAutoWidth(true);
         grid.addColumn(solicitud -> solicitud.formatoFecha(solicitud.getFechaSolicitud()))
                 .setHeader("Fecha Solicitud").setAutoWidth(true)
@@ -141,6 +143,7 @@ public class PriorizarProyectos extends Div {
                 dialog.open();
                 dialog.setHeaderTitle("¿Desarrollar este proyecto?");
                 H2 mostrarPresupuesto = new H2("Presupuesto restante: " + convocatoria.getPresupuestorestante());
+                H3 mostrarRecHumanos = new H3("Recursos humanos disponibles: " + convocatoria.getRecHumanosRestantes());
                 Button confirmar = new Button("Confirmar");
                 confirmar.setClassName("buttonPrimary");
                 confirmar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -149,7 +152,12 @@ public class PriorizarProyectos extends Div {
                     //Si da el dinero
                     try{
                         if (convocatoria.getPresupuestorestante().compareTo(proyecto.getCoste().subtract(proyecto.getAportacionInicial())) >= 0) {
+                            if(convocatoria.getRecHumanosRestantes() < proyecto.getRecHumanos()){
+                                Notification.show("No hay suficientes recursos humanos disponibles para desarrollar este proyecto");
+                                return;
+                            }
                             convocatoria.setPresupuestorestante(convocatoria.getPresupuestorestante().subtract(proyecto.getCoste().subtract(proyecto.getAportacionInicial())));
+                            convocatoria.setRecHumanosRestantes(convocatoria.getRecHumanosRestantes() - proyecto.getRecHumanos());
                             convocatoriaService.guardar(convocatoria);
                             proyectoService.desarrollar(proyecto, true);
                             dialog.close();
@@ -176,7 +184,7 @@ public class PriorizarProyectos extends Div {
                     getUI().ifPresent(ui -> ui.getPage().reload());
                     dialog.close();
                 });
-                dialog.add(mostrarPresupuesto);
+                dialog.add(mostrarPresupuesto, mostrarRecHumanos);
                 dialog.getFooter().add(noDesarrollar, confirmar, cancelar);
             });
             return evaluarButton;

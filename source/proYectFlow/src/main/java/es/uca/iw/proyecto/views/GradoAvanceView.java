@@ -15,13 +15,18 @@ import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.router.*;
 
+import es.uca.iw.convocatoria.Convocatoria;
+import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.proyecto.InfoProyecto;
 import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
+import es.uca.iw.proyecto.Proyecto.Estado;
 import jakarta.annotation.security.RolesAllowed;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
+
 
 /**
  * La clase GradoAvanceView representa una vista para mostrar y actualizar el progreso de un proyecto.
@@ -70,10 +75,12 @@ import java.util.UUID;
 public class GradoAvanceView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
     Optional<Proyecto> proyecto;
     final ProyectoService proyectoService;
+    final ConvocatoriaService convocatoriaService;
     UUID uuid;
 
-    public GradoAvanceView(ProyectoService proyectoService) {
+    public GradoAvanceView(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
         this.proyectoService = proyectoService;
+        this.convocatoriaService = convocatoriaService;
     }
 
     @Override
@@ -140,6 +147,28 @@ public class GradoAvanceView extends Composite<VerticalLayout> implements HasUrl
                 }
                
             });
+            if(proyectoAux.getGradoAvance() == 100) {
+                Convocatoria convocatoria = proyectoAux.getConvocatoria();
+                actualizar.setEnabled(false);
+                Checkbox finalizado = new Checkbox("Proyecto finalizado");
+                getContent().add(finalizado);
+                Button confirmar = new Button("Confirmar finalización");
+                confirmar.addClickListener(e -> {
+                    if(finalizado.getValue()){
+                        proyectoAux.setEstado(Estado.FINALIZADO);
+                        //Liberamos rec humanos
+                        convocatoria.setRecHumanosDisponibles(convocatoria.getRecHumanosDisponibles() + proyectoAux.getRecHumanos());
+                        convocatoriaService.guardar(convocatoria);
+                        proyectoService.update(proyectoAux);
+                        Notification.show("Proyecto finalizado correctamente", 1000, Notification.Position.MIDDLE).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                    }else{
+                        proyectoAux.setGradoAvance(99.0);
+                        proyectoService.update(proyectoAux);           
+                    }
+                   UI.getCurrent().refreshCurrentRoute(isAttached());
+                });
+                getContent().add(confirmar);
+            }
             Button volver = new Button("Volver");
             volver.addClickListener(e -> UI.getCurrent().navigate("proyectosjefe"));
             HorizontalLayout buttonLayout = new HorizontalLayout(actualizar);

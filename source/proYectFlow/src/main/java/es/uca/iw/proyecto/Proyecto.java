@@ -97,6 +97,9 @@ public class Proyecto extends AbstractEntity {
     @Enumerated(EnumType.ORDINAL)
     Estado estado;
 
+    @Column(nullable = true)
+    Integer recHumanos;
+
     @ManyToOne
     @JoinColumn(name = "convocatoria_id", nullable = false)
     private Convocatoria convocatoria;
@@ -304,6 +307,14 @@ public class Proyecto extends AbstractEntity {
 
     public void setDirector(String director) {
         this.director = director;
+    }
+
+    public Integer getRecHumanos() {
+        return recHumanos;
+    }
+
+    public void setRecHumanos(Integer recHumanos) {
+        this.recHumanos = recHumanos;
     }
 
     @Override

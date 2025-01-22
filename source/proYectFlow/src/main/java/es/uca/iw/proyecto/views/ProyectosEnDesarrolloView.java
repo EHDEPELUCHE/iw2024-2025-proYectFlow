@@ -1,8 +1,12 @@
 package es.uca.iw.proyecto.views;
 
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.html.OrderedList;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -51,38 +55,40 @@ import java.util.List;
 @AnonymousAllowed
 public class ProyectosEnDesarrolloView extends Main {
     private OrderedList projectContainer;
+    protected final MultiSelectComboBox<String> convocatoria = new MultiSelectComboBox<>("Convocatoria");
+    private final ProyectoService proyectoService;
 
     public ProyectosEnDesarrolloView(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
+        this.proyectoService = proyectoService;
         constructUI(proyectoService, convocatoriaService);
     }
 
     private void constructUI(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
         addClassNames("proyectos-en-desarrollo-view");
         addClassNames(MaxWidth.SCREEN_LARGE, Margin.Horizontal.AUTO, Padding.Bottom.LARGE, Padding.Horizontal.LARGE);
-        
 
         Convocatoria convocatoriaActual = convocatoriaService.convocatoriaActual();
 
         if (convocatoriaActual != null) {
-            Specification<Proyecto> filters = (root, query, criteriaBuilder) -> criteriaBuilder.and(
-                    criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.EN_DESARROLLO),
-                    criteriaBuilder.equal(root.get("convocatoria"), convocatoriaActual)
-            );
+            convocatoria.setItems(convocatoriaService.findAll().stream().map(Convocatoria::getNombre).toList());
+            convocatoria.setValue(convocatoriaActual.getNombre());
 
-            List<Proyecto> proyectos = proyectoService.list(PageRequest.of(0, 100), filters).getContent();
+            Button searchButton = new Button("Buscar", event -> updateProjectList());
 
             H1 header = new H1("Proyectos en Desarrollo");
             header.addClassNames(FontSize.XXXLARGE, Margin.Bottom.NONE, Margin.Top.XLARGE);
+
+            HorizontalLayout searchLayout = new HorizontalLayout(convocatoria, searchButton);
+            searchLayout.setDefaultVerticalComponentAlignment(Alignment.END);
 
             projectContainer = new OrderedList();
             projectContainer.addClassNames(Gap.MEDIUM, Display.GRID, ListStyleType.NONE, Margin.NONE, Padding.NONE);
             projectContainer.getStyle().set("grid-template-columns", "repeat(auto-fit, minmax(300px, 1fr))");
             projectContainer.getStyle().set("gap", "1rem");
 
-            proyectos.forEach(proyecto -> projectContainer.add(crearCardProyecto(proyecto)));
+            add(header,searchLayout, projectContainer);
 
-            add(header, projectContainer);
-
+            updateProjectList();
         } else {
             H1 noProjectsHeader = new H1("No existe ningún proyecto en desarrollo actualmente.");
             noProjectsHeader.addClassNames(FontSize.XXXLARGE, Margin.Top.XLARGE, TextColor.SECONDARY);
@@ -91,13 +97,22 @@ public class ProyectosEnDesarrolloView extends Main {
         }
     }
 
+    private void updateProjectList() {
+        projectContainer.removeAll();
+
+        Specification<Proyecto> filters = (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                root.get("estado").in(Proyecto.Estado.EN_DESARROLLO, Proyecto.Estado.FINALIZADO),
+                root.get("convocatoria").get("nombre").in(convocatoria.getValue())
+        );
+
+        List<Proyecto> proyectos = proyectoService.list(PageRequest.of(0, 100), filters).getContent();
+        proyectos.forEach(proyecto -> projectContainer.add(crearCardProyecto(proyecto)));
+    }
+
     private ProyectoViewCard crearCardProyecto(Proyecto proyecto) {
         String navigationTarget = "InfoProyecto/" + proyecto.getId().toString();
         return new ProyectoViewCard(proyecto, navigationTarget);
     }
-    
 
     static final String ARIALABEL = "aria-label";
-
-    
 }

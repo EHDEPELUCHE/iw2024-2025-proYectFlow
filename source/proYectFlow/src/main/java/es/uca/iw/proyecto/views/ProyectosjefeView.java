@@ -2,9 +2,12 @@ package es.uca.iw.proyecto.views;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -15,6 +18,7 @@ import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.proyecto.VisualizarProyectos;
 import es.uca.iw.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
+
 import org.springframework.data.jpa.domain.Specification;
 
 /**
@@ -47,16 +51,29 @@ import org.springframework.data.jpa.domain.Specification;
 @Uses(Icon.class)
 @RolesAllowed("ROLE_OTP")
 public class ProyectosjefeView extends VisualizarProyectos {
-
+    protected final MultiSelectComboBox<String> convocatoria = new MultiSelectComboBox<>("Convocatoria");
+    HorizontalLayout searchLayout = new HorizontalLayout();
     public ProyectosjefeView(ProyectoService proyectoService, ConvocatoriaService convocatoriaService,  AuthenticatedUser user) {
         super(proyectoService, true);
         Convocatoria convocatoriaActual = convocatoriaService.convocatoriaActual();
+        convocatoria.setItems(convocatoriaService.findAll().stream().map(Convocatoria::getNombre).toList());
+        convocatoria.setValue(convocatoriaActual.getNombre());
+
+        Button searchButton = new Button("Buscar", event -> updateProjectList(user));
+
+        searchLayout.add(convocatoria, searchButton);
+        searchLayout.setDefaultVerticalComponentAlignment(Alignment.END);
+        searchLayout.getStyle().set("margin", "10px");
+        add(searchLayout);
 
         if (!convocatoriaService.convocatoriaActual().enPlazo()) {
             Specification<Proyecto> filtroEvaluados = (root, query, criteriaBuilder) -> criteriaBuilder.and(
                     criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.EN_DESARROLLO),
-                    criteriaBuilder.equal(root.get("convocatoria"), convocatoriaActual),
+                    root.get("convocatoria").get("nombre").in(convocatoria.getValue()),
                     criteriaBuilder.equal(root.get("jefe"), user.get().orElse(null)));
+            
+            
+
             inicializarVistaProyectos("Proyectos que diriges", filtroEvaluados);
 
         } else {
@@ -69,5 +86,15 @@ public class ProyectosjefeView extends VisualizarProyectos {
         Button evaluarButton = new Button("Actualizar avance");
         evaluarButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("GradoAvance/" + proyecto.getId().toString())));
         return evaluarButton;
+    }
+
+     private void updateProjectList( AuthenticatedUser user) {
+        removeAll();
+        Specification<Proyecto> filters = (root, query, criteriaBuilder) -> criteriaBuilder.and(
+            criteriaBuilder.equal(root.get("estado"), Proyecto.Estado.EN_DESARROLLO),
+            root.get("convocatoria").get("nombre").in(convocatoria.getValue()),
+            criteriaBuilder.equal(root.get("jefe"), user.get().orElse(null)));
+        add(searchLayout);
+        inicializarVistaProyectos("Proyectos que diriges", filters);
     }
 }

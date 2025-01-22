@@ -103,7 +103,8 @@ public class GestionarConvocatoriasView extends Div {
 
         grid.addColumn("presupuestorestante").setHeader("Presupuesto restante").setAutoWidth(true).setSortable(true);
         grid.addColumn("presupuestototal").setHeader("Presupuesto total").setAutoWidth(true).setSortable(true);
-
+        grid.addColumn("recHumanosDisponibles").setHeader("Recursos humanos disponibles").setAutoWidth(true).setSortable(true);
+        grid.addColumn("recHumanosRestantes").setHeader("Recursos humanos restantes").setAutoWidth(true).setSortable(true);
         grid.addComponentColumn(this::estadoConvocatoria)
                 .setHeader("Estado")
                 .setAutoWidth(true)

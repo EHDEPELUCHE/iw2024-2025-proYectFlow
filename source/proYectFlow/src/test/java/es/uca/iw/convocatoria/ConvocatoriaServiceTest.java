@@ -32,7 +32,7 @@ class ConvocatoriaServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        convocatoria = new Convocatoria(BigDecimal.valueOf(40000), Date.valueOf(LocalDate.of(2025, 1, 1)), Date.valueOf(LocalDate.of(2024, 1, 1)), Date.valueOf(LocalDate.of(2025, 9, 1)));
+        convocatoria = new Convocatoria(BigDecimal.valueOf(40000), Date.valueOf(LocalDate.of(2025, 1, 1)), Date.valueOf(LocalDate.of(2024, 1, 1)), Date.valueOf(LocalDate.of(2025, 9, 1)), 800);
         convocatoria.setActiva(false);
         convocatoria.setFechaFinal(Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
     }

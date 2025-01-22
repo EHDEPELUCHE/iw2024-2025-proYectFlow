@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.textfield.BigDecimalField;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinSession;
 import es.uca.iw.proyecto.ProyectoService;
@@ -49,12 +50,14 @@ class CrearConvocatoriaViewTest {
         DatePicker fechaInicio = crearConvocatoriaView.fechaInicio;
         DatePicker fechaLimite = crearConvocatoriaView.fechaLimite;
         DatePicker fechaFinal = crearConvocatoriaView.fechaFinal;
+        IntegerField recHumanos = crearConvocatoriaView.recHumanosDisponibles;
         Button guardarButton = (Button) crearConvocatoriaView.getContent().getComponentAt(2);
 
         presupuestototal.setValue(BigDecimal.valueOf(10000));
         fechaInicio.setValue(LocalDate.now());
         fechaLimite.setValue(LocalDate.now().plusDays(10));
         fechaFinal.setValue(LocalDate.now().plusDays(20));
+        recHumanos.setValue(800);
 
         guardarButton.click();
 

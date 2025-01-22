@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.*;
 
 import es.uca.iw.global.Roles;
@@ -75,6 +76,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
     static final String PX = "300px";
     final ProyectoService proyectoService;
     final UsuarioService usuarioService;
+    final IntegerField recHumanos = new IntegerField("Recursos humanos necesarios");
     Optional<Proyecto> proyecto;
     UUID uuid;
 
@@ -157,6 +159,10 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             jefes.setRequired(true);
             getContent().add(jefes);
 
+            recHumanos.setLabel("Recursos humanos necesarios");
+            recHumanos.setRequired(true);
+            getContent().add(recHumanos);
+
             Button guardar = new Button("Guardar");
             guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             guardar.addClickShortcut(Key.ENTER);
@@ -166,13 +172,12 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
                     return;
                 }else{
                     proyectoAux.setJefe(jefes.getValue());
+                    proyectoAux.setRecHumanos(recHumanos.getValue());
                     proyectoService.setValoracionTecnica(valoracionGroupPrecio.getValue(), valoracionGroupHoras.getValue(), valoracionGroupIT.getValue(), proyectoAux);
                     Notification notification = Notification.show("Valoración guardada con éxito.");
                     notification.setDuration(500);
                     notification.addDetachListener(detachEvent -> UI.getCurrent().navigate("proyectosOTP"));
                 }
-                
-
             });
 
             HorizontalLayout buttonLayout = new HorizontalLayout(guardar);

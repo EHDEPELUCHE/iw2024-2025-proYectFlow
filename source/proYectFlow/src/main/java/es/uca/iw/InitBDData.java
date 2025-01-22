@@ -64,11 +64,11 @@ public class InitBDData {
 
                 List<Convocatoria> convocatorias = List.of(
                         new Convocatoria(new BigDecimal("1000000"), sdf.parse("15/02/2025"),
-                                sdf.parse("15/09/2024"), sdf.parse("15/06/2025")),
+                                sdf.parse("15/09/2024"), sdf.parse("15/06/2025"), 600),
                         new Convocatoria(new BigDecimal("750000"), sdf.parse("15/02/2024"),
-                                sdf.parse("15/09/2023"), sdf.parse("15/06/2024")),
+                                sdf.parse("15/09/2023"), sdf.parse("15/06/2024"), 700),
                         new Convocatoria(new BigDecimal("500000"), sdf.parse("15/02/2023"),
-                                sdf.parse("15/09/2022"), sdf.parse("15/06/2023"))
+                                sdf.parse("15/09/2022"), sdf.parse("15/06/2023"), 590)
                 );
                 convocatorias.get(0).setActiva(true);
                 convocatorias.get(1).setActiva(false);
@@ -108,6 +108,7 @@ public class InitBDData {
 
             Usuario promotor = usuarioRepository.findByUsername("maria2");
             Usuario solicitante = usuarioRepository.findByUsername("lucia4");
+            Usuario jefe = usuarioRepository.findByUsername("pablo7");
             Convocatoria convocatoriaActiva = convocatoriaService.convocatoriaActual();
 
             if (promotor != null && solicitante != null && convocatoriaActiva != null) {
@@ -169,6 +170,7 @@ public class InitBDData {
                 for (int i = 0; i < proyectos.size(); i++) {
                     Proyecto proyecto = proyectos.get(i);
                     proyecto.setEstado(estados.get(i));
+                    proyecto.setJefe(jefe);
                     proyecto.setConvocatoria(convocatoriaActiva);
                 }
                 proyectoRepository.saveAll(proyectos);

@@ -81,10 +81,16 @@ public class Convocatoria extends AbstractEntity {
 
     Boolean activa;
 
-    public Convocatoria(BigDecimal presupuesto, Date fechaLimite, Date fechaInicio, Date fechaFinal) {
+    Integer recHumanosDisponibles;
+
+    Integer recHumanosRestantes;
+
+    public Convocatoria(BigDecimal presupuesto, Date fechaLimite, Date fechaInicio, Date fechaFinal, int recHumanosDisponibles) {
         this.presupuestototal = presupuesto;
         this.presupuestorestante = presupuesto;
         this.fechaInicio = fechaInicio;
+        this.recHumanosDisponibles = recHumanosDisponibles;
+        recHumanosRestantes = recHumanosDisponibles;
         setFechaLimite(fechaLimite);
         setFechaFinal(fechaFinal);
         setNombre();
@@ -158,6 +164,22 @@ public class Convocatoria extends AbstractEntity {
         return presupuestototal.equals(that.presupuestototal) &&
                 fechaInicio.equals(that.fechaInicio) &&
                 fechaFinal.equals(that.fechaFinal);
+    }
+
+    public Integer getRecHumanosDisponibles() {
+        return recHumanosDisponibles;
+    }
+
+    public void setRecHumanosDisponibles(Integer recHumanosDisponibles) {
+        this.recHumanosDisponibles = recHumanosDisponibles;
+    }
+
+    public Integer getRecHumanosRestantes() {
+        return recHumanosRestantes;
+    }
+
+    public void setRecHumanosRestantes(Integer recHumanosRestantes) {
+        this.recHumanosRestantes = recHumanosRestantes;
     }
 
     @Override

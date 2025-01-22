@@ -18,7 +18,7 @@ class ConvocatoriaTest {
         fechaInicio = new Date(System.currentTimeMillis() - 100000);
         fechaLimite = new Date(System.currentTimeMillis() + 100000);
         fechaFinal = new Date(System.currentTimeMillis() + 200000);
-        convocatoria = new Convocatoria(new BigDecimal("1000"), fechaLimite, fechaInicio, fechaFinal);
+        convocatoria = new Convocatoria(new BigDecimal("1000"), fechaLimite, fechaInicio, fechaFinal, 800);
     }
 
     @Test
@@ -74,13 +74,13 @@ class ConvocatoriaTest {
 
     @Test
     void testEquals() {
-        Convocatoria otraConvocatoria = new Convocatoria(new BigDecimal("1000"), fechaLimite, fechaInicio, fechaFinal);
+        Convocatoria otraConvocatoria = new Convocatoria(new BigDecimal("1000"), fechaLimite, fechaInicio, fechaFinal, 800);
         assertEquals(convocatoria, otraConvocatoria);
     }
 
     @Test
     void testHashCode() {
-        Convocatoria otraConvocatoria = new Convocatoria(new BigDecimal("1000"), fechaLimite, fechaInicio, fechaFinal);
+        Convocatoria otraConvocatoria = new Convocatoria(new BigDecimal("1000"), fechaLimite, fechaInicio, fechaFinal,800);
         assertEquals(convocatoria.hashCode(), otraConvocatoria.hashCode());
     }
 }

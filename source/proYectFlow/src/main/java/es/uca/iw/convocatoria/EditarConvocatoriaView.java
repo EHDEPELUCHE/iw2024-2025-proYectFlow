@@ -8,10 +8,13 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.*;
+
 import jakarta.annotation.security.RolesAllowed;
 
 import java.util.Date;
@@ -57,6 +60,8 @@ public class EditarConvocatoriaView extends Composite<VerticalLayout> implements
     final DatePicker fechaInicio = new DatePicker();
     final DatePicker fechaLimite = new DatePicker();
     final DatePicker fechaFinal = new DatePicker();
+    final IntegerField recHumanosDisponibles = new IntegerField("Recursos humanos disponibles");
+
 
     private final BeanValidationBinder<Convocatoria> binder = new BeanValidationBinder<>(Convocatoria.class);
 
@@ -77,6 +82,9 @@ public class EditarConvocatoriaView extends Composite<VerticalLayout> implements
         fechaFinal.setLabel("Fecha en la que termina la cartera de proyectos este año");
         fechaFinal.setRequiredIndicatorVisible(true);
 
+        recHumanosDisponibles.setLabel("Recursos humanos disponibles (Trabajadores)");
+        recHumanosDisponibles.setRequiredIndicatorVisible(true);
+
         Button guardarButton = new Button("Guardar cambios");
         guardarButton.addClickShortcut(Key.ENTER);
         guardarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -87,7 +95,7 @@ public class EditarConvocatoriaView extends Composite<VerticalLayout> implements
                 convocatoria.setFechaInicio(Date.from(fechaInicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
                 convocatoria.setFechaLimite(Date.from(fechaLimite.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
                 convocatoria.setFechaFinal(Date.from(fechaFinal.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-
+                convocatoria.setRecHumanosDisponibles(recHumanosDisponibles.getValue());
                 convocatoriaService.guardar(convocatoria);
 
                 Notification.show("Convocatoria actualizada correctamente");
@@ -96,8 +104,11 @@ public class EditarConvocatoriaView extends Composite<VerticalLayout> implements
             }
         });
 
-        FormLayout formLayout = new FormLayout(presupuestototal, fechaInicio, fechaLimite, fechaFinal);
-        getContent().add(title, formLayout, guardarButton);
+        FormLayout formLayout = new FormLayout(presupuestototal, fechaInicio, fechaLimite, fechaFinal, recHumanosDisponibles);
+        Button Volver = new Button("Volver", e -> getUI().ifPresent(ui -> ui.navigate("GestionarConvocatorias")));
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.add(guardarButton, Volver);
+        getContent().add(title, formLayout, layout);
     }
 
     @Override
@@ -110,7 +121,7 @@ public class EditarConvocatoriaView extends Composite<VerticalLayout> implements
             fechaInicio.setValue(convocatoria.getFechaInicio().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             fechaLimite.setValue(convocatoria.getFechaLimite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             fechaFinal.setValue(convocatoria.getFechaFinal().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-
+            recHumanosDisponibles.setValue(convocatoria.getRecHumanosDisponibles());
             binder.setBean(convocatoria);
         } else {
             Notification.show("Convocatoria no encontrada");

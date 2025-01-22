@@ -12,6 +12,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -61,6 +62,7 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
     final DatePicker fechaInicio = new DatePicker();
     final DatePicker fechaLimite = new DatePicker();
     final DatePicker fechaFinal = new DatePicker();
+    final IntegerField recHumanosDisponibles = new IntegerField("Recursos humanos disponibles");
 
     public CrearConvocatoriaView(ConvocatoriaService convocatoriaservice, UsuarioService usuarioService, ProyectoService proyectoService) {
         this.convocatoriaservice = convocatoriaservice;
@@ -79,6 +81,9 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
         fechaFinal.setLabel("Fecha en la que termina la cartera de proyectos este año ");
         fechaFinal.setRequiredIndicatorVisible(true);
 
+        recHumanosDisponibles.setLabel("Recursos humanos disponibles (Trabajadores)");
+        recHumanosDisponibles.setRequiredIndicatorVisible(true);
+
         Button guardarButton = new Button("Crear convocatoria");
         guardarButton.addClickShortcut(Key.ENTER);
         guardarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -88,7 +93,8 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
                     presupuestototal.getValue(),
                     Date.from(fechaLimite.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
                     Date.from(fechaInicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                    Date.from(fechaFinal.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())
+                    Date.from(fechaFinal.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    recHumanosDisponibles.getValue()
                 );
                 
                 convocatoria.setActiva(false);
@@ -98,6 +104,7 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
                 fechaInicio.clear();
                 fechaLimite.clear();
                 fechaFinal.clear();
+                recHumanosDisponibles.clear();
                 getUI().ifPresent(ui -> ui.navigate("GestionarConvocatorias"));
             } catch (Exception ex) {
                 Notification.show("Error al crear la convocatoria, revise las fechas");
@@ -107,7 +114,7 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
         });
 
         FormLayout formLayout = new FormLayout();
-        formLayout.add(presupuestototal, fechaInicio, fechaLimite, fechaFinal);
+        formLayout.add(presupuestototal, fechaInicio, fechaLimite, fechaFinal, recHumanosDisponibles);
         getContent().add(title, formLayout, guardarButton);
     }
 }
