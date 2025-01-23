@@ -2,6 +2,7 @@ package es.uca.iw.usuario.views;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -12,7 +13,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -94,7 +94,11 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
 
         H1 titulo = new H1("Actualizar promotores en el sistema");
         Button meterPromotoresButton = new Button("Meter Promotores");
-        meterPromotoresButton.addClickListener(e -> guardarPromotores());
+        meterPromotoresButton.addClickListener(e -> {
+            Thread thread = new Thread(() -> guardarPromotores());
+            thread.start();
+            Notification.show("Actualizando promotores...", 5000, Notification.Position.MIDDLE);              
+        });
         getContent().add(titulo, meterPromotoresButton);
 
         H1 titulousuario = new H1("Gestionar Usuarios");
@@ -210,6 +214,7 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
 
     @Async
     public void guardarPromotores() {
+    
         String apiUrl = "https://e608f590-1a0b-43c5-b363-e5a883961765.mock.pstmn.io/sponsors";
         try {
             ResponseEntity<Respuesta> response = restTemplate.getForEntity(apiUrl, Respuesta.class);
@@ -220,27 +225,36 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
                     logger.severe("Error al destituir promotores: " + e.getMessage());
                     throw e;
                 }
-                Respuesta apiResponse = response.getBody();
-                Notification notification = Notification.show("Promotores actualizados con éxito");
-                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                notification.setPosition(Notification.Position.MIDDLE);
-                if (apiResponse != null && apiResponse.getData() != null) {
-                    for (Promotor promotor : apiResponse.getData()) {
+                
+                if (response.getBody() != null && response.getBody().getData() != null) {
+                    for (Promotor promotor : response.getBody().getData()) {
                         try {
-                            usuarioService.createPromotor(promotor);
+                            try {
+                                usuarioService.createPromotor(promotor);
+                            } catch (Exception ex) {
+                                UI.getCurrent().access(() -> {
+                                   // Notification.show("Error al guardar el promotor");
+                                    logger.severe("Error al guardar el promotor: " + ex.getMessage());
+                                });
+                               // Notification.show("Error al guardar el promotor");
+                            }
                         } catch (Exception ex) {
-                            logger.severe("Error al guardar el promotor: " + ex.getMessage());
-                            Notification.show("Error al guardar el promotor");
+                            UI.getCurrent().access(() -> {
+                                //Notification.show("Error al guardar el promotor");
+                                logger.severe("Error al guardar el promotor: " + ex.getMessage());
+                            });
                         }
                     }
                 }
             } else {
+               // UI.getCurrent().access(() -> Notification.show("Error en la solicitud: " + response.getStatusCode()));
                 logger.warning("Error en la solicitud: " + response.getStatusCode());
-                Notification.show("Error en la solicitud: " + response.getStatusCode());
+                //Notification.show("Error en la solicitud: " + response.getStatusCode());
             }
         } catch (Exception e) {
+            //UI.getCurrent().access(() -> Notification.show("Error al obtener los promotores"));
             logger.severe("Error al obtener los promotores: " + e.getMessage());
-            Notification.show("Error al obtener los promotores");
+           // Notification.show("Error al obtener los promotores");
         }
     }
 }

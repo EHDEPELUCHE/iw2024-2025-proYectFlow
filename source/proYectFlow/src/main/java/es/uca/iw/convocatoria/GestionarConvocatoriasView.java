@@ -144,7 +144,8 @@ public class GestionarConvocatoriasView extends Div {
                     convocatoriaService.hacerVigente(convocatoria);
                     Notification.show("Convocatoria activada");
                     GestionarUsuariosView gu = new GestionarUsuariosView(usuarioService, proyectoService);
-                    gu.guardarPromotores();
+                    Thread thread = new Thread(() -> gu.guardarPromotores());
+                    thread.start();
                     UI.getCurrent().getPage().reload();
                 } catch (IllegalArgumentException ex) {
                     Notification errorNotification = new Notification(ex.getMessage(), 3000, Notification.Position.MIDDLE);
