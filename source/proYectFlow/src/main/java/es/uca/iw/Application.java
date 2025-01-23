@@ -25,17 +25,11 @@ import javax.sql.DataSource;
 @EnableJpaAuditing
 public class Application implements AppShellConfigurator {
 
-    private final UsuarioService usuarioService;
-    private final ProyectoService proyectoService;
-    private final ConvocatoriaService convocatoriaService;
 
     //@Autowired
     //private AuthenticatedUser authenticatedUser;
 
     public Application(UsuarioService usuarioService, ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
-        this.usuarioService = usuarioService;
-        this.proyectoService = proyectoService;
-        this.convocatoriaService = convocatoriaService;
     }
 
     public static void main(String[] args) {

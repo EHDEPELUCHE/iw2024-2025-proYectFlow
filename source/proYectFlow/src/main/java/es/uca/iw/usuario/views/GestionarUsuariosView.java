@@ -95,7 +95,7 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
         H1 titulo = new H1("Actualizar promotores en el sistema");
         Button meterPromotoresButton = new Button("Meter Promotores");
         meterPromotoresButton.addClickListener(e -> {
-            Thread thread = new Thread(() -> guardarPromotores());
+            Thread thread = new Thread(this::guardarPromotores);
             thread.start();
             Notification.show("Actualizando promotores...", 5000, Notification.Position.MIDDLE);              
         });
@@ -223,38 +223,32 @@ public class GestionarUsuariosView extends Composite<VerticalLayout> {
                     usuarioService.destituyePromotores();
                 } catch (Exception e) {
                     logger.severe("Error al destituir promotores: " + e.getMessage());
-                    throw e;
                 }
                 
-                if (response.getBody() != null && response.getBody().getData() != null) {
-                    for (Promotor promotor : response.getBody().getData()) {
-                        try {
+                if (response.getBody() != null )
+                {
+                    Respuesta apiResponse = response.getBody();
+                    if (apiResponse != null && apiResponse.getData() != null) {
+                        for (Promotor promotor : apiResponse.getData()) {
                             try {
-                                usuarioService.createPromotor(promotor);
+                                try {
+                                    usuarioService.createPromotor(promotor);
+                                } catch (Exception ex) {
+                                    UI.getCurrent().access(() -> logger.severe("Error al guardar el promotor: " 
+                                                                            + ex.getMessage()));
+                                }
                             } catch (Exception ex) {
-                                UI.getCurrent().access(() -> {
-                                   // Notification.show("Error al guardar el promotor");
-                                    logger.severe("Error al guardar el promotor: " + ex.getMessage());
-                                });
-                               // Notification.show("Error al guardar el promotor");
+                                UI.getCurrent().access(() -> logger.severe("Error al guardar el promotor: "
+                                                                         + ex.getMessage()));
                             }
-                        } catch (Exception ex) {
-                            UI.getCurrent().access(() -> {
-                                //Notification.show("Error al guardar el promotor");
-                                logger.severe("Error al guardar el promotor: " + ex.getMessage());
-                            });
                         }
                     }
                 }
             } else {
-               // UI.getCurrent().access(() -> Notification.show("Error en la solicitud: " + response.getStatusCode()));
                 logger.warning("Error en la solicitud: " + response.getStatusCode());
-                //Notification.show("Error en la solicitud: " + response.getStatusCode());
             }
         } catch (Exception e) {
-            //UI.getCurrent().access(() -> Notification.show("Error al obtener los promotores"));
             logger.severe("Error al obtener los promotores: " + e.getMessage());
-           // Notification.show("Error al obtener los promotores");
         }
     }
 }

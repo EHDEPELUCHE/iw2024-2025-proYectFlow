@@ -21,6 +21,7 @@ import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.usuario.views.GestionarUsuariosView;
+import jakarta.annotation.Resource;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
@@ -63,6 +64,9 @@ public class GestionarConvocatoriasView extends Div {
     private final ConvocatoriaService convocatoriaService;
     private final UsuarioService usuarioService;
     private final ProyectoService proyectoService;
+
+    @Resource
+    private GestionarConvocatoriasView gcv;
 
     public GestionarConvocatoriasView(ConvocatoriaService convocatoriaService, UsuarioService usuarioService, ProyectoService proyectoService) {
         this.convocatoriaService = convocatoriaService;
@@ -126,7 +130,6 @@ public class GestionarConvocatoriasView extends Div {
         return editarButton;
     }
     
-    @Async
     public Component estadoConvocatoria(Convocatoria convocatoria) {
         if (Boolean.FALSE.equals(convocatoria.getActiva())) {
             Button activarButton = new Button("Activar");
@@ -137,15 +140,13 @@ public class GestionarConvocatoriasView extends Div {
                         List<Proyecto> proyectosViejos = proyectoService.findByConvocatoria(convocatoriaVieja);
                         for (Proyecto proyecto : proyectosViejos) {
                             if (proyecto.getEstado() != Proyecto.Estado.EN_DESARROLLO)
-                            proyecto.setEstado(Proyecto.Estado.DENEGADO);
+                                proyecto.setEstado(Proyecto.Estado.DENEGADO);
                             proyectoService.update(proyecto);
                         }
                     }
                     convocatoriaService.hacerVigente(convocatoria);
                     Notification.show("Convocatoria activada");
-                    GestionarUsuariosView gu = new GestionarUsuariosView(usuarioService, proyectoService);
-                    Thread thread = new Thread(() -> gu.guardarPromotores());
-                    thread.start();
+                    gcv.guardarPromotores();
                     UI.getCurrent().getPage().reload();
                 } catch (IllegalArgumentException ex) {
                     Notification errorNotification = new Notification(ex.getMessage(), 3000, Notification.Position.MIDDLE);
@@ -157,6 +158,13 @@ public class GestionarConvocatoriasView extends Div {
         } else {
             return new Div(new Text("Activada"));
         }
+    }
+
+    @Async
+    public void guardarPromotores() {
+        GestionarUsuariosView gu = new GestionarUsuariosView(usuarioService, proyectoService);
+        Thread thread = new Thread(gu::guardarPromotores);
+        thread.start();
     }
     
 }

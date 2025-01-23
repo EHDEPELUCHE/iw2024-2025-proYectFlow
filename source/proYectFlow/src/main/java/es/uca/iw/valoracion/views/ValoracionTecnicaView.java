@@ -74,6 +74,7 @@ import java.util.UUID;
 @RolesAllowed("ROLE_OTP")
 public class ValoracionTecnicaView extends Composite<VerticalLayout> implements HasUrlParameter<String> {
     static final String PX = "300px";
+    static final String CALIFICACION = "Calificación";
     final ProyectoService proyectoService;
     final UsuarioService usuarioService;
     final IntegerField recHumanos = new IntegerField();
@@ -131,7 +132,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             valoracionLayoutPrecio.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
             RadioButtonGroup<Integer> valoracionGroupPrecio = new RadioButtonGroup<>();
-            valoracionGroupPrecio.setLabel("Calificación");
+            valoracionGroupPrecio.setLabel(CALIFICACION);
             valoracionGroupPrecio.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
             valoracionGroupPrecio.setValue(notaRecomendada);
             valoracionGroupPrecio.setEnabled(true);
@@ -164,7 +165,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             valoracionLayoutHoras.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
             RadioButtonGroup<Integer> valoracionGroupHoras = new RadioButtonGroup<>();
-            valoracionGroupHoras.setLabel("Calificación");
+            valoracionGroupHoras.setLabel(CALIFICACION);
             valoracionGroupHoras.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
             valoracionGroupHoras.setValue(0);
             valoracionGroupHoras.setEnabled(true);
@@ -181,7 +182,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             valoracionLayoutIT.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
             RadioButtonGroup<Integer> valoracionGroupIT = new RadioButtonGroup<>();
-            valoracionGroupIT.setLabel("Calificación");
+            valoracionGroupIT.setLabel(CALIFICACION);
             valoracionGroupIT.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
             valoracionGroupIT.setValue(0);
             valoracionGroupIT.setEnabled(true);

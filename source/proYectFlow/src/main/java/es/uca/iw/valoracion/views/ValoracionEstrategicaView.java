@@ -75,7 +75,7 @@ public class ValoracionEstrategicaView extends Composite<VerticalLayout> impleme
             CheckboxGroup<AlineamientoEstrategico> objetivos = new CheckboxGroup<>();
             objetivos.setLabel("Alineamientos estratégicos");
             objetivos.setItems(alineamientoEstrategicoService.findAllActivos());
-            objetivos.setItemLabelGenerator(alineamientoEstrategico -> alineamientoEstrategico.getObjetivo());
+            objetivos.setItemLabelGenerator(AlineamientoEstrategico::getObjetivo);
             objetivos.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
             getContent().add(objetivos);
             logger.log(Level.INFO, "Displaying strategic alignments");

@@ -52,7 +52,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
     final UsuarioService usuarioService;
     final AuthenticatedUser authenticatedUser;
     final ProyectoService proyectoService;
-    final DatePicker fechaLimite = new DatePicker("fecha límite");
+    final DatePicker fechaLimite = new DatePicker("Fecha límite");
     final MemoryBuffer buffer = new MemoryBuffer();
     final ConvocatoriaService convocatoriaService;
     private final BeanValidationBinder<Proyecto> binder;
@@ -211,7 +211,7 @@ public class RegistroProyectoView extends Composite<VerticalLayout> {
             java.sql.Date fechaSql = null;
             if (fechaLimite.getValue() != null) {
                 fechaSql = java.sql.Date.valueOf(fechaLimite.getValue());
-                logger.info("Fecha límite seleccionada: " + fechaSql);
+                Optional.ofNullable(fechaSql).ifPresent(date -> logger.info("Fecha límite seleccionada: " + date));
             }
 
             binder.setBean(new Proyecto(nombre.getValue(), descripcion.getValue(), interesados.getValue(),

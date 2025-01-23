@@ -154,7 +154,7 @@ public class GradoAvanceView extends Composite<VerticalLayout> implements HasUrl
                 getContent().add(finalizado);
                 Button confirmar = new Button("Confirmar finalización");
                 confirmar.addClickListener(e -> {
-                    if(finalizado.getValue()){
+                    if(finalizado.getValue().booleanValue()){
                         proyectoAux.setEstado(Estado.FINALIZADO);
                         //Liberamos rec humanos
                         convocatoria.setRecHumanosDisponibles(convocatoria.getRecHumanosDisponibles() + proyectoAux.getRecHumanos());

@@ -25,7 +25,7 @@ public class InitBDData {
     @Bean
     CommandLineRunner initData(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder,
                                ConvocatoriaRepository convocatoriaRepository, ProyectoRepository proyectoRepository,
-                               ConvocatoriaService convocatoriaService, AlineamientoEstrategicoRepository alineamientoEstrategicoRepository) throws ParseException {
+                               ConvocatoriaService convocatoriaService, AlineamientoEstrategicoRepository alineamientoEstrategicoRepository) {
         return args -> {
             insertConvocatorias(convocatoriaRepository);
             insertAlineamientos(alineamientoEstrategicoRepository);

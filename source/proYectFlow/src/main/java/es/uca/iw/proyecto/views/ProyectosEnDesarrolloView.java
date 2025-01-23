@@ -60,10 +60,10 @@ public class ProyectosEnDesarrolloView extends Main {
 
     public ProyectosEnDesarrolloView(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
         this.proyectoService = proyectoService;
-        constructUI(proyectoService, convocatoriaService);
+        constructUI(convocatoriaService);
     }
 
-    private void constructUI(ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
+    private void constructUI(ConvocatoriaService convocatoriaService) {
         addClassNames("proyectos-en-desarrollo-view");
         addClassNames(MaxWidth.SCREEN_LARGE, Margin.Horizontal.AUTO, Padding.Bottom.LARGE, Padding.Horizontal.LARGE);
 

@@ -128,7 +128,7 @@ public class CambioContrasennaView extends Composite<VerticalLayout> {
                 authenticatedUser.logout();
             } catch (Exception ex) {
                 Notification.show("Error al actualizar la contraseña: " + ex.getMessage());
-                logger.log(Level.SEVERE, "Error al actualizar la contraseña para el usuario: " + usuario.getUsername(), ex);
+                logger.log(Level.SEVERE, String.format("Error al actualizar la contraseña para el usuario: %s", usuario.getUsername()), ex);
             }
         } else {
             Notification.show("Por favor, verifique los datos de entrada");

@@ -66,8 +66,8 @@ public class InfoProyectoView extends Composite<VerticalLayout> implements HasUr
             InfoProyecto infoProyecto = new InfoProyecto(proyectoService, proyectoAux);
             getContent().add(infoProyecto);
 
-            Button Volver = new Button("Volver", e -> UI.getCurrent().navigate("ProyectosDesarrollo"));
-            getContent().add(Volver);
+            Button volver = new Button("Volver", e -> UI.getCurrent().navigate("ProyectosDesarrollo"));
+            getContent().add(volver);
 
         }
     }

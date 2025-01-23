@@ -129,7 +129,7 @@ public class ProyectosView extends Div {
                             estado.getValue().stream().map(Proyecto.Estado::valueOf).toList()));
                 }
                 if (!convocatoria.isEmpty()) {
-                    predicate = criteriaBuilder.and(predicate, root.get("convocatoria").get("nombre").in(convocatoria.getValue()));
+                    predicate = criteriaBuilder.and(predicate, root.get("convocatoria").get(NOMBRE).in(convocatoria.getValue()));
                 }
                 return predicate;
             }

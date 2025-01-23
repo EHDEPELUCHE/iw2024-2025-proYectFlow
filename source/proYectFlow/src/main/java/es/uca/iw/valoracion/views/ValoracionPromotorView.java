@@ -53,7 +53,7 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
                 uuid = UUID.fromString(parameter);
                 this.proyecto = proyectoService.get(uuid);
             } catch (IllegalArgumentException e) {
-                logger.log(Level.SEVERE, "UUID inválido: " + parameter, e);
+                logger.log(Level.SEVERE, "UUID inválido: {0}", parameter);
                 this.proyecto = Optional.empty();
             }
         } else {
@@ -61,7 +61,7 @@ public class ValoracionPromotorView extends Composite<VerticalLayout> implements
         }
 
         if (proyecto.isEmpty()) {
-            logger.log(Level.WARNING, "Proyecto no encontrado para UUID: " + parameter);
+            logger.log(Level.WARNING, "Proyecto no encontrado para UUID: {0}", parameter);
             H1 title = new H1("Ha ocurrido un error, no se encuentra el proyecto :(");
             getContent().add(title);
         } else {

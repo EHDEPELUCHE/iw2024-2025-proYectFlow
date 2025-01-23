@@ -70,15 +70,14 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
 
     @Override
     public void setParameter(BeforeEvent event, String parameter) {
-        logger.info("setParameter called with parameter: " + parameter);
+        logger.info(() -> "setParameter called with parameter: " + parameter);
         if (parameter != null && !parameter.isEmpty()) {
             try {
                 uuid = UUID.fromString(parameter);
                 this.proyecto = proyectoService.get(uuid);
-                logger.info("Project found with UUID: " + uuid);
             } catch (IllegalArgumentException e) {
                 this.proyecto = Optional.empty();
-                logger.log(Level.WARNING, "Invalid UUID: " + parameter, e);
+                logger.log(Level.WARNING, String.format("Invalid UUID: %s", parameter), e);
             }
         } else {
             this.proyecto = Optional.empty();
@@ -163,7 +162,7 @@ public class EditarProyectosBaseView extends Composite<VerticalLayout> implement
                     return proyectoService.getPdf(proyecto.get().getId());
                 } catch (IOException ex) {
                     logger.log(Level.SEVERE, "Error al obtener el PDF", ex);
-                    throw new RuntimeException("Error al obtener el PDF", ex);
+                    return null;
                 }
             });
 

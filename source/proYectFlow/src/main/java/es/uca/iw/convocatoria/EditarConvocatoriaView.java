@@ -105,9 +105,9 @@ public class EditarConvocatoriaView extends Composite<VerticalLayout> implements
         });
 
         FormLayout formLayout = new FormLayout(presupuestototal, fechaInicio, fechaLimite, fechaFinal, recHumanosDisponibles);
-        Button Volver = new Button("Volver", e -> getUI().ifPresent(ui -> ui.navigate("GestionarConvocatorias")));
+        Button volver = new Button("Volver", e -> getUI().ifPresent(ui -> ui.navigate("GestionarConvocatorias")));
         HorizontalLayout layout = new HorizontalLayout();
-        layout.add(guardarButton, Volver);
+        layout.add(guardarButton, volver);
         getContent().add(title, formLayout, layout);
     }
 

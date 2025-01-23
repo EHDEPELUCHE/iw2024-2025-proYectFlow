@@ -17,8 +17,6 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-import es.uca.iw.proyecto.ProyectoService;
-import es.uca.iw.usuario.UsuarioService;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.time.ZoneId;
@@ -64,7 +62,7 @@ public class CrearConvocatoriaView extends Composite<VerticalLayout> {
     final DatePicker fechaFinal = new DatePicker();
     final IntegerField recHumanosDisponibles = new IntegerField("Recursos humanos disponibles");
 
-    public CrearConvocatoriaView(ConvocatoriaService convocatoriaservice, UsuarioService usuarioService, ProyectoService proyectoService) {
+    public CrearConvocatoriaView(ConvocatoriaService convocatoriaservice) {
         this.convocatoriaservice = convocatoriaservice;
 
         H1 title = new H1("Crear una nueva convocatoria");

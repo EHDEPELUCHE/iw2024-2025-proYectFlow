@@ -133,7 +133,7 @@ public class MisDatosView extends Composite<VerticalLayout> {
             Usuario aux = user.get();
             binder.bindInstanceFields(this);
             binder.setBean(aux);
-            logger.log(Level.INFO, "Usuario autenticado: " + aux.getUsername());
+            logger.log(Level.INFO, () -> "Usuario autenticado: " + aux.getUsername());
         } else {
             logger.log(Level.WARNING, "No hay usuario autenticado");
         }
