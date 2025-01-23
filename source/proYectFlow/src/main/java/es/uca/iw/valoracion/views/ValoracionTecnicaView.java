@@ -6,8 +6,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -25,6 +24,7 @@ import es.uca.iw.usuario.UsuarioService;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -76,7 +76,7 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
     static final String PX = "300px";
     final ProyectoService proyectoService;
     final UsuarioService usuarioService;
-    final IntegerField recHumanos = new IntegerField("Recursos humanos necesarios");
+    final IntegerField recHumanos = new IntegerField();
     Optional<Proyecto> proyecto;
     UUID uuid;
 
@@ -108,60 +108,98 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             InfoProyecto infoProyecto = new InfoProyecto(proyectoService, proyectoAux);
             getContent().add(infoProyecto);
 
-            getContent().add(new H1("Valora de 1 a 10 la idoneidad del proyecto según su: "));
+            getContent().add(new H1("Valora técnicamente el proyecto"));
             BigDecimal costeFinal = proyectoAux.getCoste().subtract(proyectoAux.getAportacionInicial());
-            getContent().add(new H4("Coste total del proyecto: " + costeFinal + " €"));
-            getContent().add(new H4("Presupuesto de la convocatoria actual: " + proyectoAux.getConvocatoria().getPresupuestorestante() + " €"));
+            BigDecimal presupuestototal = proyectoAux.getConvocatoria().getPresupuestototal();
+            BigDecimal porcentajePresupuesto = costeFinal.divide(presupuestototal, 4, RoundingMode.HALF_UP)
+                    .multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_UP);
+            int notaRecomendada;
+            if (porcentajePresupuesto.compareTo(new BigDecimal("50")) > 0) {
+                notaRecomendada = 0;
+            } else {
+                notaRecomendada = 10 - (porcentajePresupuesto.intValue() / 5);
+            }
 
-            //Mostramos el precio total menos la valoración inicial
+            VerticalLayout presupuestoLayout = new VerticalLayout();
+            presupuestoLayout.add(new H3("Presupuesto"));
+            presupuestoLayout.add(new H5("Presupuesto de la convocatoria actual: " + presupuestototal + " €"));
+            presupuestoLayout.add(new H5("Coste total del proyecto: " + costeFinal + " €"));
+            presupuestoLayout.add(new H5("Este proyecto requiere " + porcentajePresupuesto + "% del presupuesto total."));
+            presupuestoLayout.add(new H6("Nota recomendada: " + notaRecomendada));
+
             HorizontalLayout valoracionLayoutPrecio = new HorizontalLayout();
             valoracionLayoutPrecio.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
             RadioButtonGroup<Integer> valoracionGroupPrecio = new RadioButtonGroup<>();
-            valoracionGroupPrecio.setLabel("Precio:");
+            valoracionGroupPrecio.setLabel("Calificación");
             valoracionGroupPrecio.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-            valoracionGroupPrecio.setValue(0); // Valor por defecto
+            valoracionGroupPrecio.setValue(notaRecomendada);
             valoracionGroupPrecio.setEnabled(true);
 
             valoracionLayoutPrecio.add(valoracionGroupPrecio);
-            getContent().add(valoracionLayoutPrecio);
+            presupuestoLayout.add(valoracionLayoutPrecio);
 
             //Dejamos que rellene las horas que estima que tardará y recursos
+            VerticalLayout rrhhLayout = new VerticalLayout();
+
+            Integer recursosHumanosTotal = proyectoAux.getConvocatoria().getRecHumanosDisponibles();
+            rrhhLayout.add(new H3("Horas y Recursos Humanos"));
+            rrhhLayout.add(new H5("Recursos humanos totales: " + recursosHumanosTotal));
+            rrhhLayout.add(new H5("Recursos humanos necesarios: "));
+
+            recHumanos.setRequired(true);
+            recHumanos.setValue(0);
+
+            H5 rrhhMensaje = new H5("Porcentaje de recursos humanos necesarios: 0%");
+            recHumanos.addValueChangeListener(eventrrhh -> {
+                if (recursosHumanosTotal != null && recursosHumanosTotal != 0) {
+                    double porcentajeRRHH = (eventrrhh.getValue() * 100.0) / recursosHumanosTotal;
+                    rrhhMensaje.setText("Porcentaje de recursos humanos necesarios: " + String.format("%.2f", porcentajeRRHH) + "%");
+                } else {
+                    rrhhMensaje.setText("Porcentaje de recursos humanos necesarios: 0%");
+                }
+            });
+
             HorizontalLayout valoracionLayoutHoras = new HorizontalLayout();
             valoracionLayoutHoras.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
             RadioButtonGroup<Integer> valoracionGroupHoras = new RadioButtonGroup<>();
-            valoracionGroupHoras.setLabel("Horas / Recursos necesarios:");
+            valoracionGroupHoras.setLabel("Calificación");
             valoracionGroupHoras.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-            valoracionGroupHoras.setValue(0); // Valor por defecto
+            valoracionGroupHoras.setValue(0);
             valoracionGroupHoras.setEnabled(true);
 
             valoracionLayoutHoras.add(valoracionGroupHoras);
-            getContent().add(valoracionLayoutHoras);
+            rrhhLayout.add(recHumanos, rrhhMensaje, valoracionLayoutHoras);
 
             //Idoneidad técnica
+            VerticalLayout tecnicaLayout = new VerticalLayout();
+            tecnicaLayout.add(new H3("Idoneidad técnica"));
+            tecnicaLayout.add(new H5("* Indique un 0 en idoneidad técnica si el proyecto viola alguna norma o ley."));
+
             HorizontalLayout valoracionLayoutIT = new HorizontalLayout();
             valoracionLayoutIT.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
             RadioButtonGroup<Integer> valoracionGroupIT = new RadioButtonGroup<>();
-            valoracionGroupIT.setLabel("Idoneidad técnica:");
+            valoracionGroupIT.setLabel("Calificación");
             valoracionGroupIT.setItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-            valoracionGroupIT.setValue(0); // Valor por defecto
+            valoracionGroupIT.setValue(0);
             valoracionGroupIT.setEnabled(true);
 
             valoracionLayoutIT.add(valoracionGroupIT);
-            getContent().add(valoracionLayoutIT);
+            tecnicaLayout.add(valoracionLayoutIT);
+
+            VerticalLayout jefeLayout = new VerticalLayout();
+            jefeLayout.add(new H3("Asignación de jefe de proyecto"));
 
             ComboBox<Usuario> jefes = new ComboBox<>();
             jefes.setLabel("Jefe de proyecto");
             jefes.setItems(usuarioService.get(Roles.OTP));
             jefes.setItemLabelGenerator(usuario -> usuario.getNombre() + " " + usuario.getApellido());
             jefes.setRequired(true);
-            getContent().add(jefes);
 
-            recHumanos.setLabel("Recursos humanos necesarios");
-            recHumanos.setRequired(true);
-            getContent().add(recHumanos);
+            jefeLayout.add(jefes);
+            getContent().add(presupuestoLayout, rrhhLayout, tecnicaLayout, jefeLayout);
 
             Button guardar = new Button("Guardar");
             guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -184,7 +222,6 @@ public class ValoracionTecnicaView extends Composite<VerticalLayout> implements 
             buttonLayout.setWidthFull();
             buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
             getContent().add(buttonLayout);
-            getContent().add(new H4("* Indique un 0 en idoneidad técnica si el proyecto viola alguna norma / ley."));
         }
     }
 }
