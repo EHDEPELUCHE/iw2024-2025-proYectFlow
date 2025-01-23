@@ -22,7 +22,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-
 import es.uca.iw.convocatoria.Convocatoria;
 import es.uca.iw.convocatoria.ConvocatoriaService;
 import es.uca.iw.global.DownloadPdfComponent;
@@ -35,6 +34,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -43,26 +43,26 @@ import java.util.Arrays;
  * La clase ProyectosView representa una vista para gestionar proyectos en la aplicación.
  * Está anotada con varias anotaciones de Vaadin y Spring Security para definir su
  * ruta, título de la página, orden en el menú y control de acceso.
- * 
+ * <p>
  * Se crea una instancia de esta clase con un ProyectoService, que se utiliza para
  * interactuar con el backend para operaciones relacionadas con proyectos.
- * 
+ * <p>
  * La vista consta de un título, filtros y una cuadrícula para mostrar los proyectos.
- * 
+ * <p>
  * Los filtros permiten a los usuarios buscar proyectos en función de varios criterios como
  * nombre, promotor, rango de fechas y estado del proyecto.
- * 
+ * <p>
  * La cuadrícula muestra los detalles del proyecto e incluye columnas para varios atributos del
  * proyecto como nombre, descripción, interesados, alcance, promotor, coste,
  * aportación inicial, fecha de solicitud y estado. También incluye botones para
  * descargar un PDF del proyecto y editar el proyecto.
- * 
+ * <p>
  * La clase Filters es una clase interna estática abstracta que define los componentes de filtro
  * y su comportamiento. Implementa la interfaz Specification para proporcionar la lógica de filtrado.
- * 
+ * <p>
  * El método createDownloadButton crea un botón para descargar un PDF del
  * proyecto, y el método createEditButton crea un botón para editar el proyecto.
- * 
+ * <p>
  * El método refreshGrid actualiza los datos de la cuadrícula.
  */
 @PageTitle("Proyectos")
@@ -74,8 +74,8 @@ public class ProyectosView extends Div {
     static final String ARIALABEL = "aria-label";
     static final String NOMBRE = "nombre";
     static final String FECHA_SOLICITUD = "fechaSolicitud";
-    private final ProyectoService proyectoService;
     protected final ConvocatoriaService convocatoriaService;
+    private final ProyectoService proyectoService;
     private Grid<Proyecto> grid;
     private Filters filters;
 
@@ -167,11 +167,11 @@ public class ProyectosView extends Div {
         grid.addColumn(proyecto -> proyecto.getJefe() != null ?
                 proyecto.getJefe().getNombre() + " " + proyecto.getJefe().getApellido() :
                 "Sin jefe").setHeader("Jefe de proyecto").setAutoWidth(true);
-        grid.addColumn(proyecto-> proyecto.getDirector() != null ?
-                proyecto.getDirector() :  "Sin director").setHeader("Director").setAutoWidth(true);
+        grid.addColumn(proyecto -> proyecto.getDirector() != null ?
+                proyecto.getDirector() : "Sin director").setHeader("Director").setAutoWidth(true);
         grid.addColumn(proyecto -> proyecto.getConvocatoria() != null ?
-            proyecto.getConvocatoria().getNombre() :
-            "Sin convocatoria").setHeader("Convocatoria").setAutoWidth(true);
+                proyecto.getConvocatoria().getNombre() :
+                "Sin convocatoria").setHeader("Convocatoria").setAutoWidth(true);
         grid.addComponentColumn(this::createDownloadButton).setHeader("PDF").setAutoWidth(true);
         grid.addComponentColumn(this::createEditButton).setHeader("Acciones").setAutoWidth(true);
     }
@@ -225,12 +225,20 @@ public class ProyectosView extends Div {
             Div actions = new Div(resetBtn, searchBtn);
             actions.addClassName(LumoUtility.Gap.SMALL);
             actions.addClassName("actions");
+
             HorizontalLayout horizontalLayout = new HorizontalLayout();
             horizontalLayout.setSpacing(true);
             horizontalLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+            horizontalLayout.addClassName("responsive-filters");
             horizontalLayout.add(nombre, promotor, createDateRangeFilter(), estado, convocatoria, actions);
-            add(horizontalLayout);
+
+            // Envolver los filtros y el navbar en un contenedor común
+            VerticalLayout container = new VerticalLayout();
+            container.addClassName("navbar-filters-container");
+            container.add(horizontalLayout);
+
+            add(container);
         }
 
         private Button createResetButton(Runnable onSearch) {

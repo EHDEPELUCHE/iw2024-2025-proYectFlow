@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -102,6 +104,14 @@ public class Usuario extends AbstractEntity implements UserDetails {
     @JoinColumn(name = "last_modified_by_id")
     @LastModifiedBy
     private Usuario lastModifiedBy;
+
+    @Column(name = "created_date", nullable = false, updatable = false)
+    @CreatedDate
+    private long createdDate;
+
+    @Column(name = "modified_date")
+    @LastModifiedDate
+    private long modifiedDate;
 
     public Usuario(String nombre, String username, String apellido, String correo, String contrasenna) {
         this.nombre = nombre;
