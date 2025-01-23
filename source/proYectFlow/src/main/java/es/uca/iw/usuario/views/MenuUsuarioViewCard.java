@@ -51,7 +51,7 @@ public class MenuUsuarioViewCard extends ListItem {
         //DESCRIPCION
         if (title != null) {
             Paragraph description = new Paragraph(descriptionText != null ? descriptionText :
-                    "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.");
+                    "");
             description.addClassName(Margin.Vertical.MEDIUM);
             add(description);
         }
