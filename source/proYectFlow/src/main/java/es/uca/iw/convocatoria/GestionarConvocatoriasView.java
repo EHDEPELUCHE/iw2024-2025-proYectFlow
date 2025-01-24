@@ -21,17 +21,17 @@ import es.uca.iw.proyecto.Proyecto;
 import es.uca.iw.proyecto.ProyectoService;
 import es.uca.iw.usuario.UsuarioService;
 import es.uca.iw.usuario.views.GestionarUsuariosView;
-import jakarta.annotation.Resource;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
+
 import java.util.List;
 
 /**
  * La clase GestionarConvocatoriasView representa una vista para gestionar convocatorias (llamadas a proyectos).
  * Extiende la clase Div y está anotada con varias anotaciones de Vaadin y Spring para enrutamiento, seguridad y procesamiento asincrónico.
- * 
+ * <p>
  * Anotaciones:
  * - @Route: Define la ruta para esta vista.
  * - @PageTitle: Establece el título de la página.
@@ -39,15 +39,15 @@ import java.util.List;
  * - @Uses: Especifica la clase Icon a utilizar.
  * - @RolesAllowed: Restringe el acceso a usuarios con el rol ROLE_ADMIN.
  * - @EnableAsync: Habilita el procesamiento asincrónico.
- * 
+ * <p>
  * Campos:
  * - convocatoriaService: Servicio para gestionar convocatorias.
  * - usuarioService: Servicio para gestionar usuarios.
  * - proyectoService: Servicio para gestionar proyectos.
- * 
+ * <p>
  * Constructor:
  * - Inicializa la vista con los servicios proporcionados, establece el tamaño y estilo, y añade los componentes principales del diseño.
- * 
+ * <p>
  * Métodos:
  * - crearGridDatosConvocatoria: Crea y configura un componente Grid para mostrar datos de convocatorias.
  * - editarConvocatoria: Crea un botón para editar una convocatoria y navega a la vista de edición.
@@ -64,9 +64,6 @@ public class GestionarConvocatoriasView extends Div {
     private final ConvocatoriaService convocatoriaService;
     private final UsuarioService usuarioService;
     private final ProyectoService proyectoService;
-
-    @Resource
-    private GestionarConvocatoriasView gcv;
 
     public GestionarConvocatoriasView(ConvocatoriaService convocatoriaService, UsuarioService usuarioService, ProyectoService proyectoService) {
         this.convocatoriaService = convocatoriaService;
@@ -129,7 +126,7 @@ public class GestionarConvocatoriasView extends Div {
         editarButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("EditarConvocatoria/" + convocatoria.getId())));
         return editarButton;
     }
-    
+
     public Component estadoConvocatoria(Convocatoria convocatoria) {
         if (Boolean.FALSE.equals(convocatoria.getActiva())) {
             Button activarButton = new Button("Activar");
@@ -146,7 +143,7 @@ public class GestionarConvocatoriasView extends Div {
                     }
                     convocatoriaService.hacerVigente(convocatoria);
                     Notification.show("Convocatoria activada");
-                    gcv.guardarPromotores();
+                    guardarPromotores();
                     UI.getCurrent().getPage().reload();
                 } catch (IllegalArgumentException ex) {
                     Notification errorNotification = new Notification(ex.getMessage(), 3000, Notification.Position.MIDDLE);
@@ -166,5 +163,5 @@ public class GestionarConvocatoriasView extends Div {
         Thread thread = new Thread(gu::guardarPromotores);
         thread.start();
     }
-    
+
 }

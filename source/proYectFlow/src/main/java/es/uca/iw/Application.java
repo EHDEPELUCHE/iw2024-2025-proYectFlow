@@ -26,7 +26,7 @@ import javax.sql.DataSource;
 public class Application implements AppShellConfigurator {
 
 
-    //@Autowired
+    // @Autowired
     //private AuthenticatedUser authenticatedUser;
 
     public Application(UsuarioService usuarioService, ProyectoService proyectoService, ConvocatoriaService convocatoriaService) {
@@ -36,9 +36,9 @@ public class Application implements AppShellConfigurator {
         SpringApplication.run(Application.class, args);
     }
 
-    //@Bean
+    // @Bean
     //public AuditorAware<Usuario> auditorProvider() {
-    //    return new SpringSecurityAuditorAware(authenticatedUser);
+    //   return new SpringSecurityAuditorAware(authenticatedUser);
     //}
 
     @Bean
